@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'home_page/home_page_view.dart';
-import 'tabBar/tabBar_view.dart';
+import 'page/home_page_view.dart';
+import 'widget/tabBar_view.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();

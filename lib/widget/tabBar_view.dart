@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rentify/home_page/home_page_view.dart';
+import 'package:rentify/page/home_page_view.dart';
 class PageMain extends StatefulWidget {
   const PageMain({super.key});
 
@@ -33,7 +33,7 @@ class _PageState extends State<PageMain> {
           NavigationDestination(icon :Icon(Icons.search), label: 'kham pha'),
           NavigationDestination(icon: Badge(
             child: Icon(Icons.favorite),
-            label: Text('thong bao'),
+            label: Text('1'),
           ),
             label: 'Danh sach yeu thich',
           ),
