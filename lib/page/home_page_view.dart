@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:rentify/firebase_options.dart';
-
+import 'package:rentify/page/detailpage.dart';
+import 'package:rentify/page/item_explore.dart';
 class HomePageView extends StatelessWidget {
   const HomePageView({super.key});
 
@@ -56,33 +57,45 @@ class BodyHomePage2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 450,
-
       child: ListView.separated(
-          padding: EdgeInsets.all(20),
-          //Gioi han phan tu truoc
-          itemCount: 10,
-          itemBuilder:(context, index) =>Container
-            (alignment: Alignment.center,
-            width:  200,
-            height: 400,margin: EdgeInsets.all(10),
-            decoration:BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Colors.blue,
-        ),
-            child: Text('Text $index'),
-      ),
-        separatorBuilder: (BuildContext context, int index) {
-            return Container
-              (alignment: Alignment.center,
-              width:  200,
-              height: 10,
-              decoration:BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.black,
+        padding: EdgeInsets.all(20),
+        itemCount: 10,
+        itemBuilder: (context, index) => GestureDetector(
+          onTap: () {
+            // go to detailpage
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DetailPage(index: index),
               ),
             );
+          },
+           child: AirbnbExploreItem2(
+             imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPGbuIGw19IKId0kGKreJbLPkccOMJ0NFU5A&s',
+             location: 'Ho Chi Minh City, Vietnam',
+             title: 'Modern Apartment Downtown',
+             price: 75.50,
+             rating: 4.7,),
+        ),
+        separatorBuilder: (BuildContext context, int index) {
+          return Container(
+            alignment: Alignment.center,
+            width: 200,
+            height: 10,
+          );
         },
-    ),
+      ),
+    );
+  }
+}
+
+class PreviewDetail extends StatelessWidget {
+  const PreviewDetail({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      
     );
   }
 }

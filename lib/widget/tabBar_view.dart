@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rentify/page/home_page_view.dart';
+
 class PageMain extends StatefulWidget {
   const PageMain({super.key});
 
@@ -30,16 +31,16 @@ class _PageState extends State<PageMain> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex,
         destinations: [
-          NavigationDestination(icon :Icon(Icons.search), label: 'kham pha'),
+          NavigationDestination(icon :Icon(Icons.search), label: 'Travel'),
           NavigationDestination(icon: Badge(
             child: Icon(Icons.favorite),
             label: Text('1'),
           ),
-            label: 'Danh sach yeu thich',
+            label: 'Favorite',
           ),
-          NavigationDestination(icon :Icon(Icons.home), label: 'home'),
-          NavigationDestination(icon :Icon(Icons.messenger), label: 'tin nhan '),
-          NavigationDestination(icon :Icon(Icons.account_circle_outlined), label: 'tai khoan'),
+          NavigationDestination(icon :Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon :Icon(Icons.messenger), label: 'Message'),
+          NavigationDestination(icon :Icon(Icons.account_circle_outlined), label: 'User'),
         ],
         onDestinationSelected: (value){
           setState(() {
