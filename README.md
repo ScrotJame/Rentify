@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # rentify
 
 A new Flutter project.
