@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:rentify/morewidget/widText.dart';
+import 'package:rentify/morewidget/widShowMore.dart';
+import 'package:rentify/page/detailspage/amenities_page.dart';
 import 'package:rentify/page/item_explore.dart';
 import 'package:rentify/page/utilities_page.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class DetailPage extends StatefulWidget {
   final int index;
-
-  const DetailPage({super.key, required this.index});
+  final List<Map<String, dynamic>> amenities;
+  const DetailPage({super.key, required this.index, required this.amenities});
 
   @override
   State<DetailPage> createState() => listDetail();
@@ -17,6 +20,8 @@ class DetailPage extends StatefulWidget {
 //hinh anh bia
 class listDetail extends State<DetailPage> {
   bool isFavorite = false;
+  //amenities
+  bool showAll = false;
 
   void toggleFavorite() {
     setState(() {
@@ -37,6 +42,17 @@ class listDetail extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    //amenities
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AmenitiesPage(amenities: widget.amenities),
+        ),
+      );
+    });
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -133,6 +149,7 @@ class listDetail extends State<DetailPage> {
                 ],
               ),
             ),
+            //Owner
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
@@ -142,6 +159,55 @@ class listDetail extends State<DetailPage> {
                   ClipOval(child:
                   Image.asset('assets/images/avtdefault.jpg', width: 75),
                   ),
+                  Text("Chu ho"),
+                  Divider(color: Colors.grey[300], thickness: 1),
+                ],
+              ),
+            ),
+            //Item house have
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Nơi này có những gì cho bạn",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  SizedBox(height: 8),
+                  Divider(color: Colors.grey[300], thickness: 1),
+                  SizedBox(height: 8),
+                  Column(
+                    children: displayAmenities.map((e) => e).toList(),
+                  ),
+                  if (widget.amenities.length > 5)
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          showAll = !showAll;
+                        });
+                      },
+                      child: Text(showAll ? "Ẩn bớt" : "Hiển thị tất cả ${widget.amenities.length} tiện ích"),
+                    ),
+                  Divider(color: Colors.grey[300], thickness: 1),
+                ],
+              ),
+            ),
+            //Map
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Map here"),
+                  Divider(color: Colors.grey[300], thickness: 1),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Tinh trang phong"),
                   Divider(color: Colors.grey[300], thickness: 1),
                 ],
               ),
@@ -152,8 +218,7 @@ class listDetail extends State<DetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //Thong tin them
-                 Text("Moi nay co"),
-                  UtilitiesPage(),
+                  Text("Chinh sach huy"),
                   Divider(color: Colors.grey[300], thickness: 1),
                 ],
               ),
@@ -164,9 +229,7 @@ class listDetail extends State<DetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //Thong tin them
-                  ClipOval(child:
-                  Image.asset('assets/images/avtdefault.jpg', width: 75),
-                  ),
+                  Text("Noi quy noi o"),
                   Divider(color: Colors.grey[300], thickness: 1),
                 ],
               ),
@@ -177,9 +240,7 @@ class listDetail extends State<DetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //Thong tin them
-                  ClipOval(child:
-                  Image.asset('assets/images/avtdefault.jpg', width: 75),
-                  ),
+                  Text("Thong tin an toan"),
                   Divider(color: Colors.grey[300], thickness: 1),
                 ],
               ),

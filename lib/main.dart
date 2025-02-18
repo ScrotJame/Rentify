@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'page/home_page_view.dart';
+import 'page/detailspage/amenities_page.dart';
 import 'widget/tabBar_view.dart';
 
 Future<void> main() async{
