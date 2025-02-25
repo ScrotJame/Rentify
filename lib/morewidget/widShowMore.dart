@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../page/detailspage/amenities_page.dart';
+import '../page/detail/amentity_item.dart';
 
 class ShowMoreText extends StatefulWidget {
   final String text;
@@ -28,8 +28,16 @@ class _ShowMoreAmenitiesState extends State<ShowMoreAmenities> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (var amenity in displayedAmenities)
-          AmenityItem(icon: amenity['icon']!, text: amenity['text']!),
+        ...displayedAmenities.map((amenity) {
+          final icon = amenity['icon'] as IconData?;
+          final text = amenity['text'] as String?;
+          if (icon != null && text != null) {
+            return AmenityItem( text: text);
+          } else {
+            // Xử lý trường hợp 'icon' hoặc 'text' là null
+            return const SizedBox.shrink(); // Hoặc widget hiển thị thông báo lỗi
+          }
+        }).toList(),
 
         // Nếu số lượng tiện ích > 5, hiển thị nút "Hiển thị tất cả"
         if (widget.amenities.length > 5)

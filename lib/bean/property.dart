@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:convert' show json;
+import 'dart:convert' show json, jsonDecode;
+
+import 'package:rentify/bean/property_image.dart';
+import 'package:rentify/bean/property_amenities.dart';
 
 class DetailProperty {
   final int id;
@@ -14,8 +17,9 @@ class DetailProperty {
   final String propertyType;
   final String status;
   final int userId;
-  final List<String> amenities;
-  final List<String> imgProperty;
+  final List<PropertyAmenities> amenities;
+  final List<PropertyImage> images;
+  final List<String> rating;
 
   // Constructor
   DetailProperty({
@@ -32,7 +36,8 @@ class DetailProperty {
     required this.status,
     required this.userId,
     required this.amenities,
-    required this.imgProperty,
+    required this.images,
+    required this.rating,
   });
 
   // Factory constructor để ánh xạ từ JSON
@@ -44,14 +49,19 @@ class DetailProperty {
       area: json['area'] ?? 0,
       title: json['title'] ?? '',
       description: json['description'] ?? '',
-      location: json['address'] ?? '',
+      location: json['location'] ?? '',
       price: json['price'] ?? '',
       restroomType: json['restroom_type'] ?? '',
       propertyType: json['property_type'] ?? '',
       status: json['status'] ?? '',
       userId: json['user_id'] ?? 0,
-      amenities: List<String>.from(json['amenities'] as List),
-      imgProperty: List<String>.from(json['image_url'] as List),
+      amenities: (json['amenities'] as List<dynamic>)
+            .map((amenity) => PropertyAmenities.fromJson(amenity))
+            .toList(),
+      images: (json['image'] as List<dynamic>)
+          .map((image) => PropertyImage.fromJson(image))
+          .toList(),
+      rating: json['rating'] == null ? [] : List<String>.from(json['rating'] as List),
     );
   }
 
@@ -71,42 +81,51 @@ class DetailProperty {
       'status': status,
       'user_id': userId,
       'amenities': amenities,
-      'image_url': imgProperty,
+      'image': images,
+      'rating': rating,
     };
   }
 }
 
-class AllProperty{
-  final int id2;
-  final String title2;
-  final String location2;
-  final String price2;
-  final List<String> imgProperty2;
+class AllProperty {
+  final int id;
+  final String title;
+  final String location;
+  final String price;
+  final List<PropertyImage> image;
 
   AllProperty({
-    required this.id2,
-    required this.title2,
-    required this.location2,
-    required this.price2,
-    required this.imgProperty2,
+    required this.id,
+    required this.title,
+    required this.location,
+    required this.price,
+    required this.image,
   });
 
   factory AllProperty.fromJson(Map<String, dynamic> json) {
     return AllProperty(
-      id2: json['id'] ?? 0,
-      title2: json['title'] ?? '',
-      location2: json['address'] ?? '',
-      price2: json['price'] ?? '',
-      imgProperty2: List<String>.from(json['image_url'] ?? []),
+      id: json['id'] as int,
+      title: json['title'] as String,
+      location: json['location'] as String,
+      price: json['price'] as String,
+      image: (json['image'] as List<dynamic>)
+          .map((e) => PropertyImage.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
-      'id': id2,
-      'title': title2,
-      'location': location2,
-      'price': price2,
-      'image_url': imgProperty2,
+      'id': id,
+      'title': title,
+      'location': location,
+      'price': price,
+      'image': image,
     };
+  }
+
+  List<AllProperty> parseProperties(String jsonString) {
+    final List<dynamic> parsed = jsonDecode(jsonString)[0];
+    return parsed.map((json) => AllProperty.fromJson(json)).toList();
   }
 }

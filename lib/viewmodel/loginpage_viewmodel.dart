@@ -1,1 +1,0 @@
-import 'package:rentify/firebase_options.dart';

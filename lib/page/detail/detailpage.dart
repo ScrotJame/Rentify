@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:rentify/morewidget/widShowMore.dart';
 import 'package:rentify/page/detail/amenities_page.dart';
+import 'package:rentify/page/detail/amentity_item.dart';
 import 'package:rentify/page/item_explore.dart';
 import 'package:rentify/viewmodel/home_page_modelview.dart';
 
@@ -102,7 +103,7 @@ class _DetailPageState extends State<DetailPage> {
                   children: [
                     PageView.builder(
                       controller: _pageController,
-                      itemCount: property.imgProperty.length,
+                      itemCount: property.images.length,
                       // Sử dụng số lượng ảnh từ property
                       onPageChanged: (index) {
                         setState(() {
@@ -111,7 +112,7 @@ class _DetailPageState extends State<DetailPage> {
                       },
                       itemBuilder: (context, index) {
                         return Image.network(
-                          property.imgProperty, // Sử dụng URL ảnh từ property
+                          property.images[index] as String, // Sử dụng URL ảnh từ property
                           fit: BoxFit.cover,
                           width: double.infinity,
                         );
@@ -128,7 +129,7 @@ class _DetailPageState extends State<DetailPage> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          "${_currentIndex + 1}/${property.imgProperty.length}",
+                          "${_currentIndex + 1}/${property.images.length}",
                           // Sử dụng số lượng ảnh từ property
                           style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
@@ -200,24 +201,25 @@ class _DetailPageState extends State<DetailPage> {
                     SizedBox(height: 8),
                     Divider(color: Colors.grey[300], thickness: 1),
                     SizedBox(height: 8),
-                    Column(
-                      children: property.amenities.map((amenity) =>
-                          AmenityItem(text: amenity)).toList(),
-                    ),
-                    if (property.amenities.length > 5)
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  AmenitiesPage(propertyId: widget.propertyId),
-                            ),
-                          );
-                        },
-                        child: Text("Hiển thị tất cả ${property.amenities
-                            .length} tiện ích"),
-                      ),
+                    // Column(
+                    //   children: property.amenities.map((amenity) =>
+                    //       AmenityItem(text: amenity.getAmenityName())
+                    //   ).toList(),
+                    // // ),
+                    // if (property.amenities.length > 5)
+                      // TextButton(
+                      //   // onPressed: () {
+                      //   //   Navigator.push(
+                      //   //     context,
+                      //   //     MaterialPageRoute(
+                      //   //       builder: (context) =>
+                      //   //           AmenitiesPage(propertyId: widget.propertyId),
+                      //   //     ),
+                      //   //   );
+                      //   // },
+                      //   // child: Text("Hiển thị tất cả ${property.amenities
+                      //   //     .length} tiện ích"),
+                      // ),
                     Divider(color: Colors.grey[300], thickness: 1),
                   ],
                 ),

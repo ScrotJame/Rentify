@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:rentify/bean/property.dart';
-import 'package:rentify/http/API.dart'; // Giả sử bạn có class API ở đây
+import 'package:rentify/http/API.dart';
+import '../bean/property_amenities.dart';
 
 class PropertyViewModel extends ChangeNotifier {
   // Không cần _repository nữa
   // final PropertyViewModel _repository = PropertyViewModel();
   List<DetailProperty> _properties = [];
   List<AllProperty> _allproperties = [];
+  List<PropertyAmenities> _propertyAmenities = [];
+  List<String> _allAmenities = [];
+
   bool _isLoading = false;
   String? _errorMessage;
   DetailProperty? _selectedProperty;
 
   List<DetailProperty> get properties => _properties;
   List<AllProperty> get allproperties => _allproperties;
+  List<PropertyAmenities> get propertyAmenities => _propertyAmenities;
+  List<String> get allAmenities => _allAmenities;
 
   bool get isLoading => _isLoading;
 
@@ -20,7 +26,7 @@ class PropertyViewModel extends ChangeNotifier {
 
   DetailProperty? get selectedProperty => _selectedProperty;
 
-  Future<void> fetchProperties() async {
+  Future<void> fetchProperties(int propertyId) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners(); // Cập nhật UI trước khi bắt đầu fetch
@@ -28,31 +34,38 @@ class PropertyViewModel extends ChangeNotifier {
     try {
       // Gọi trực tiếp API.fetchProperties()
       _properties = await API
-          .fetchProperties(); // Giả sử API.fetchProperties() trả về List<DetailProperty>
+          .fetchProperties(propertyId);
     } catch (e) {
-      // Xử lý lỗi cụ thể hơn nếu có thể
       _errorMessage = "Đã xảy ra lỗi: ${e.toString()}";
-      // Ví dụ:
-      // if (e is TimeoutException) {
-      //   _errorMessage = "Kết nối quá thời gian";
-      // } else if (e is SocketException) {
-      //   _errorMessage = "Lỗi kết nối mạng";
-      // } else {
-      //   _errorMessage = "Đã xảy ra lỗi không xác định";
-      // }
     } finally {
       _isLoading = false;
       notifyListeners(); // Cập nhật UI sau khi fetch xong (thành công hoặc thất bại)
     }
   }
+//  All Property
   Future<void> fetchAllProperty() async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
     try {
-      _allproperties = await API
-          .fetchAllProperty();
-    } catch (e) {
+      _allproperties = await API.fetchAllProperty();
+      print("Dữ liệu API trả về: $_allproperties");
+      if (_allproperties.isNotEmpty) {
+        print("Number of properties loaded: ${_allproperties.length}");
+        // In dữ liệu chi tiết của từng AllProperty
+        print("Dữ liệu API trả về:");
+        for (var property in _allproperties) {
+          print("  ID: ${property.id}");
+          print("  Title: ${property.title}");
+          print("  Location: ${property.location}");
+          print("  Price: ${property.price}");
+          print("  Image: ${property.image}");
+          // ... in các trường khác ...
+        }
+      } else {
+        _errorMessage = 'No data';
+        print("API Error: No data");
+      }} catch (e) {
       // Xử lý lỗi cụ thể hơn nếu có thể
       _errorMessage = "Đã xảy ra lỗi: ${e.toString()}";
     } finally {
@@ -60,20 +73,24 @@ class PropertyViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-  Future<void> fetchAmentitiesProperty(int propertyId) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
 
-    try {
-      _allproperties = await API
-          .fetchAllProperty();
-    } catch (e) {
-      // Xử lý lỗi cụ thể hơn nếu có thể
-      _errorMessage = "Đã xảy ra lỗi: ${e.toString()}";
-    } finally {
-      _isLoading = false;
+
+    Future<void> fetchAmentitiesProperty(int propertyId) async {
+      _isLoading = true;
+      _errorMessage = null;
       notifyListeners();
+
+      try {
+        // Lấy chi tiết bất động sản
+        DetailProperty property = await API.fetchAmentitiesProperty(propertyId);
+        // Lấy danh sách tiện ích từ chi tiết bất động sản
+        _propertyAmenities = property.amenities;
+      } catch (e) {
+        // Xử lý lỗi cụ thể hơn nếu có thể
+        _errorMessage = "Đã xảy ra lỗi: ${e.toString()}";
+      } finally {
+        _isLoading = false;
+        notifyListeners();
+      }
     }
-  }
 }

@@ -10,9 +10,9 @@ class API {
 
   static final HttpRequest _httpRequest = HttpRequest(BASER_URL_API);
 
-  static Future<List<DetailProperty>> fetchProperties() async {
+  static Future<List<DetailProperty>> fetchProperties(int propertyId) async {
     try {
-      final response = await _httpRequest.get(DETAIL_PROPERTIES_ENDPOINT);
+      final response = await _httpRequest.get('$DETAIL_PROPERTIES_ENDPOINT$propertyId');
       // Xử lý dữ liệu trả về
       if (response is List) {
         return response.map((item) => DetailProperty.fromJson(item)).toList();
@@ -26,16 +26,25 @@ class API {
   static Future<List<AllProperty>> fetchAllProperty() async {
     try {
       final response = await _httpRequest.get(ALL_PROPERTIES_ENDPOINT);
-      // Xử lý dữ liệu trả về
+      print('fetchAllProperty response: $response'); // Debug dữ liệu trả về
+
       if (response is List) {
         return response.map((item) => AllProperty.fromJson(item)).toList();
-      } else {
-        throw Exception('Dữ liệu trả về không phải là một danh sách');
+      } else if (response is Map<String, dynamic>){
+        List<AllProperty> properties = [];
+        for (var key in response.keys) {
+          properties.add(AllProperty.fromJson(response[key]));
+        }
+        return properties;
+      }
+      else {
+        throw Exception('Dữ liệu trả về không đúng định dạng');
       }
     } catch (e) {
-      throw Exception('Lỗi khi lấy danh sách bất động sản: ${e.toString()}');
+      throw Exception('Lỗi khi lấy danh sách: ${e.toString()}');
     }
   }
+
 
   static Future<DetailProperty> fetchAmentitiesProperty(int propertyId) async {
 
@@ -51,17 +60,24 @@ class API {
     }
   }
 
-  static Future<DetailProperty> fetchAllAmentities(int propertyId) async {
-
+  static Future<List<String>> fetchAllAmentities() async {
     try {
       final response = await _httpRequest.get(ALL_AMENITIES);
-      if (response is Map<String, dynamic>) {
-        return DetailProperty.fromJson(response);
-      } else {
+      if (response is List) {
+        // Giả sử API trả về danh sách các tiện nghi dưới dạng List<String>
+        return List<String>.from(response);
+      } else if (response is Map<String, dynamic>){
+        List<String> amenities = [];
+        for (var key in response.keys) {
+          amenities.add(response[key].toString());
+        }
+        return amenities;
+      }
+      else {
         throw Exception('Dữ liệu trả về không đúng định dạng');
       }
     } catch (e) {
-      throw Exception('Lỗi khi lấy chi tiết bất động sản: ${e.toString()}');
+      throw Exception('Lỗi khi lấy danh sách tiện nghi: ${e.toString()}');
     }
   }
 
