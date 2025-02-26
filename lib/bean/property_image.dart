@@ -14,8 +14,11 @@ class PropertyImage {
     );
   }
 
-  List<PropertyImage> propertyImagesFromJson(List<dynamic> jsonList) {
-    return jsonList.map((json) => PropertyImage.fromJson(json)).toList();
-  }
+  Map<String, dynamic> toJson() { // Thêm phương thức toJson() ở đây
+    return {
+      'property_id': propertyId,
+      'image_url': imageUrl,
+    };
 
+}
 }

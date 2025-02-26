@@ -2,33 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:rentify/bean/property.dart';
 import 'package:rentify/http/API.dart';
 import '../bean/property_amenities.dart';
+import '../bean/property_image.dart';
 
 class PropertyViewModel extends ChangeNotifier {
-  // Không cần _repository nữa
-  // final PropertyViewModel _repository = PropertyViewModel();
+
   List<DetailProperty> _properties = [];
   List<AllProperty> _allproperties = [];
   List<PropertyAmenities> _propertyAmenities = [];
+  List<PropertyImage> _propertyImages = [];
   List<String> _allAmenities = [];
 
   bool _isLoading = false;
   String? _errorMessage;
+
   DetailProperty? _selectedProperty;
+  AllProperty? _AllProperty;
 
   List<DetailProperty> get properties => _properties;
   List<AllProperty> get allproperties => _allproperties;
   List<PropertyAmenities> get propertyAmenities => _propertyAmenities;
+  List<PropertyImage> get propertyImages => _propertyImages;
   List<String> get allAmenities => _allAmenities;
 
   bool get isLoading => _isLoading;
-
   String? get errorMessage => _errorMessage;
 
   DetailProperty? get selectedProperty => _selectedProperty;
 
+
   Future<void> fetchProperties(int propertyId) async {
     _isLoading = true;
     _errorMessage = null;
+    _AllProperty=null;
     notifyListeners(); // Cập nhật UI trước khi bắt đầu fetch
 
     try {
@@ -46,6 +51,7 @@ class PropertyViewModel extends ChangeNotifier {
   Future<void> fetchAllProperty() async {
     _isLoading = true;
     _errorMessage = null;
+    _allproperties = [];
     notifyListeners();
     try {
       _allproperties = await API.fetchAllProperty();
@@ -55,12 +61,14 @@ class PropertyViewModel extends ChangeNotifier {
         // In dữ liệu chi tiết của từng AllProperty
         print("Dữ liệu API trả về:");
         for (var property in _allproperties) {
+
           print("  ID: ${property.id}");
           print("  Title: ${property.title}");
           print("  Location: ${property.location}");
           print("  Price: ${property.price}");
-          print("  Image: ${property.image}");
-          // ... in các trường khác ...
+         for(var image in property.image){
+           print("  Image: ${image.imageUrl}");
+         }
         }
       } else {
         _errorMessage = 'No data';
@@ -93,4 +101,11 @@ class PropertyViewModel extends ChangeNotifier {
         notifyListeners();
       }
     }
+  void reset() {
+    _allproperties = [];
+    _selectedProperty = null;
+    _isLoading = false;
+    _errorMessage = null;
+    notifyListeners();
+  }
 }

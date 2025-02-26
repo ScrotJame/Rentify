@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-
-import '../bean/property_image.dart';
+import 'package:cached_network_image/cached_network_image.dart'; // Thêm nếu dùng cached_network_image
 
 class AirbnbExploreItem2 extends StatefulWidget {
-  final List<PropertyImage> imageUrl;
+  final int propertyId;
   final String location;
   final String title;
   final String price;
-  // final double rating;
+  final String imageUrl; // Giữ lại nếu cần, nhưng chỉ dùng một ảnh
 
   const AirbnbExploreItem2({
     Key? key,
-    required this.imageUrl,
+    required this.propertyId,
     required this.location,
     required this.title,
     required this.price,
-    // required this.rating,
+    required this.imageUrl,
   }) : super(key: key);
 
   @override
@@ -43,32 +42,14 @@ class _AirbnbExploreItem2State extends State<AirbnbExploreItem2> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-                child: widget.imageUrl.isNotEmpty
-                  ? Image.network(
-                  widget.imageUrl[0].imageUrl, // Lấy ảnh đầu tiên
-                  height: 180,
-                  width: double.infinity,
+                child: CachedNetworkImage( // Sử dụng CachedNetworkImage thay vì ImgWidget
+                  imageUrl: widget.imageUrl,
                   fit: BoxFit.cover,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                            : null,
-                      ),
-                    );
-                  },
-                  errorBuilder: (BuildContext context, Object exception,
-                      StackTrace? stackTrace) {
-                    return const Center(
-                      child: Icon(Icons.error),
-                    );
-                  },
-                )
-                    : const Center(child: Text('No Image')), // Show text if no image
+                  placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
+                  width: double.infinity,
+                  height: 200, // Đặt kích thước phù hợp
+                ),
               ),
               Positioned(
                 top: 10,
@@ -90,16 +71,10 @@ class _AirbnbExploreItem2State extends State<AirbnbExploreItem2> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(widget.title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(widget.location, style: TextStyle(color: Colors.grey)),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text('VND ${widget.price}/month', style: TextStyle(color: Colors.red)),
-                // Row(
-                //   children: [
-                //     Icon(Icons.star, color: Colors.orange, size: 16),
-                //     Text(widget.rating.toString(), style: TextStyle(fontWeight: FontWeight.bold)),
-                //   ],
-                // ),
               ],
             ),
           ),
@@ -108,5 +83,3 @@ class _AirbnbExploreItem2State extends State<AirbnbExploreItem2> {
     );
   }
 }
-
-

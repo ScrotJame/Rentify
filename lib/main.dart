@@ -10,6 +10,9 @@ import 'page/home_page_view.dart';
 import 'viewmodel/home_page_modelview.dart';
 import 'widget/tabBar_view.dart';
 
+import 'package:rentify/viewmodel/image_property_viewmodel.dart';
+import 'package:rentify/page/home_page_view.dart';
+
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -28,6 +31,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PropertyViewModel()),
+        // ChangeNotifierProvider(create: (_) => ImagesProorety()),
         // Thêm các provider khác nếu cần
       ],
       child: MaterialApp(
