@@ -64,6 +64,7 @@ class _ImgWidgetState extends State<ImgWidget> {
                   );
                 }).toList(),
                 options: CarouselOptions(
+                  autoPlay: true,
                   initialPage: 0,
                   viewportFraction: 1.0,
                   enableInfiniteScroll: false,

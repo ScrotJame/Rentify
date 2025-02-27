@@ -15,7 +15,7 @@ class ImagesProorety extends ChangeNotifier{
     _errorMessage = null;
    try{
         _propertyImages = await API.fetchPropertyImages(propertyId);
-        print("Dữ liệu API trả về: $_propertyImages");
+        print("Dữ liệu API ảnh bất động sản: ${_propertyImages.map((image) => image.imageUrl).toList()}");
    }
    catch(e){
      _errorMessage = "Đã xảy ra lỗi: ${e.toString()}";

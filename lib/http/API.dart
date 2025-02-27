@@ -8,14 +8,13 @@ class API {
   static const String ALL_PROPERTIES_ENDPOINT = '/api/allproperties';
   static const String DETAIL_PROPERTIES_ENDPOINT = '/api/detailproperty/';
   static const String AMENTITIES_DETAIL_ID= 'api/protities/amentities/';
-  static const String ALL_AMENITIES= 'api/allamenities';
-  static const String IMAGE_PROPERTY= 'api/imageproperty/';
+  static const String ALL_AMENITIES= '/api/allamenities';
+  static const String IMAGE_PROPERTY= '/api/imageproperty';
   static final HttpRequest _httpRequest = HttpRequest(BASER_URL_API);
 
   static Future<List<DetailProperty>> fetchProperties(int propertyId) async {
     try {
       final response = await _httpRequest.get('$DETAIL_PROPERTIES_ENDPOINT$propertyId');
-      // Xử lý dữ liệu trả về
       if (response is List) {
         return response.map((item) => DetailProperty.fromJson(item)).toList();
       } else {
@@ -28,8 +27,6 @@ class API {
   static Future<List<AllProperty>> fetchAllProperty() async {
     try {
       final response = await _httpRequest.get(ALL_PROPERTIES_ENDPOINT);
-      print('fetchAllProperty response: $response'); // Debug dữ liệu trả về
-
       if (response is List) {
         return response.map((item) => AllProperty.fromJson(item)).toList();
       } else if (response is Map<String, dynamic>){
@@ -48,7 +45,7 @@ class API {
   }
   static Future<List<PropertyImage>> fetchPropertyImages(int propertyId) async {
     try {
-      final response = await _httpRequest.get('$IMAGE_PROPERTY$propertyId');
+      final response = await _httpRequest.get('$IMAGE_PROPERTY/$propertyId');
       print('fetchAllProperty response: $response'); // Debug dữ liệu trả về
 
       if (response is List) {
