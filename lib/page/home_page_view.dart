@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:rentify/firebase_options.dart';
+import '../widget/sreach_bar.dart';
 import 'package:rentify/page/detailpage.dart';
 import 'package:rentify/page/item_explore.dart';
 class HomePageView extends StatelessWidget {
@@ -10,7 +9,11 @@ class HomePageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        flexibleSpace: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 50.0, 16.0, 0),
+          child: SearchBar(),
+        ),toolbarHeight: 100,
+        elevation: 0,
       ),
       body: BodyHomePage2(),
     );
@@ -56,6 +59,7 @@ class BodyHomePage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+
       width: 450,
       child: ListView.separated(
         padding: EdgeInsets.all(20),
@@ -95,7 +99,7 @@ class PreviewDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      
+
     );
   }
 }
