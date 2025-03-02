@@ -1,55 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:rentify/page/home_page_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rentify/common/enum/drawer_item.dart';
+import 'package:rentify/page/property/home_page_view.dart';
 
-class PageMain extends StatefulWidget {
-  const PageMain({super.key});
-
-  @override
-  State<PageMain> createState() => _PageState();
-}
+import '../../main_cubit.dart';
 
 
+class PageMain extends StatelessWidget { // Callback để thông báo khi chọn tab
+  static const String route= 'Pagemain';
+   PageMain({
+    super.key,
+  });
+   int selectedIndex =2;
+   Widget build(BuildContext context) {
+     return  BlocBuilder<MainCubit, MainState>(
+  builder: (context, state) {
+    final pages = [
+      Container(child: Text('Travel')),
+      Container(child: Text('Favorite')),
+      HomePageView(), // Tab Home hiển thị HomePageView
+      Container(child: Text('Message')),
+      Container(child: Text('User')),
+    ];
 
-class _PageState extends State<PageMain> {
-  int selectedIndex =2;
-  @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
-      body: [
-        Container(child: Text('home'),
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: Center(
+          child: Padding(
+          padding: const EdgeInsets.fromLTRB(46.0, 16.0, 46.0, 10),
+            child: SearchBar(),
+        ),
+        ),
+        toolbarHeight: 65,
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: Icon(state.isLightTheme ? Icons.dark_mode : Icons.light_mode),
+            onPressed: () => context.read<MainCubit>().toggleTheme(),
           ),
-        Container(child: Text('tim kiem'),
-          ),
-        Container( child: HomePageView(),
-          ),
-        Container(child: Text('tin nhan'),
-          ),
-        Container(child: Text('ho so'),
-        ),]
-
-      [selectedIndex],
+        ],
+      ),
+      body: pages[state.selected.index], // Hiển thị tab theo selected
       bottomNavigationBar: NavigationBar(
-        selectedIndex: selectedIndex,
-        destinations: [
-          NavigationDestination(icon :Icon(Icons.search), label: 'Travel'),
-          NavigationDestination(icon: Badge(
-            child: Icon(Icons.favorite),
-            label: Text('1'),
-          ),
+        selectedIndex: state.selected.index,
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.search), label: 'Travel'),
+          NavigationDestination(
+            icon: Badge(child: Icon(Icons.favorite), label: Text('1')),
             label: 'Favorite',
           ),
-          NavigationDestination(icon :Icon(Icons.home), label: 'Home'),
-          NavigationDestination(icon :Icon(Icons.messenger), label: 'Message'),
-          NavigationDestination(icon :Icon(Icons.account_circle_outlined), label: 'User'),
+          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.messenger), label: 'Message'),
+          NavigationDestination(icon: Icon(Icons.account_circle_outlined), label: 'User'),
         ],
-        onDestinationSelected: (value){
-          setState(() {
-            selectedIndex= value;
-          });
-        },
+        onDestinationSelected: (index) => context.read<MainCubit>().changeTab(index as TabItem),
       ),
     );
-  }
+  },
+     );
+   }
 }
 
 
