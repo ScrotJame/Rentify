@@ -1,6 +1,66 @@
 part of 'property_cubit.dart';
 
-@immutable
-sealed class PropertyState {}
+class PropertyState {
+  final List<AllProperty> properties;
+  final bool isLoading;
+  final String? error;
 
-final class PropertyInitial extends PropertyState {}
+//<editor-fold desc="Data Methods">
+  const PropertyState({
+    required this.properties,
+    required this.isLoading,
+    this.error,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PropertyState &&
+          runtimeType == other.runtimeType &&
+          properties == other.properties &&
+          isLoading == other.isLoading &&
+          error == other.error);
+
+  @override
+  int get hashCode => properties.hashCode ^ isLoading.hashCode ^ error.hashCode;
+
+  @override
+  String toString() {
+    return 'PropertyState{' +
+        ' properties: $properties,' +
+        ' isLoading: $isLoading,' +
+        ' error: $error,' +
+        '}';
+  }
+
+  PropertyState copyWith({
+    List<AllProperty>? properties,
+    bool? isLoading,
+    String? error,
+  }) {
+    return PropertyState(
+      properties: properties ?? this.properties,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'properties': this.properties,
+      'isLoading': this.isLoading,
+      'error': this.error,
+    };
+  }
+
+  factory PropertyState.fromMap(Map<String, dynamic> map) {
+    return PropertyState(
+      properties: map['properties'] as List<AllProperty>,
+      isLoading: map['isLoading'] as bool,
+      error: map['error'] as String,
+    );
+  }
+
+//</editor-fold>
+}
+

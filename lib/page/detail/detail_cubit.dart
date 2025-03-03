@@ -1,8 +1,25 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+
+import '../../http/API.dart';
+import '../../model/propertities.dart';
 
 part 'detail_state.dart';
 
 class DetailCubit extends Cubit<DetailState> {
-  DetailCubit() : super(DetailInitial());
+  final API api;
+
+  DetailCubit(this.api) : super(DetailState(isLoading: false));
+
+  Future<void> fetchPropertyDetail(int id) async {
+    emit(state.copyWith(isLoading: true, error: null));
+    try {
+      final property = await api.getProperty(id);
+      emit(state.copyWith(property: property, isLoading: false));
+    } catch (e) {
+      emit(state.copyWith(error: e.toString(), isLoading: false));
+    }
+  }
 }

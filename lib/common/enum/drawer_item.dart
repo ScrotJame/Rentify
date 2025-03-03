@@ -1,1 +1,1 @@
-enum DrawerItem { Home, Setting }
+enum TabItem { Travel, Favorite, Home, Message, User }

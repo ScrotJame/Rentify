@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rentify/model/propertities.dart'; // File chứa AllProperty
 
 class AirbnbExploreItem2 extends StatefulWidget {
+  final int ID;
   final String imageUrl;
   final String location;
   final String title;
@@ -9,12 +11,25 @@ class AirbnbExploreItem2 extends StatefulWidget {
 
   const AirbnbExploreItem2({
     Key? key,
+    required this.ID,
     required this.imageUrl,
     required this.location,
     required this.title,
     required this.price,
     required this.rating,
   }) : super(key: key);
+
+  // Factory constructor để tạo từ AllProperty
+  factory AirbnbExploreItem2.fromAllProperty(AllProperty property) {
+    return AirbnbExploreItem2(
+      ID: property.id!,
+      imageUrl: property.image.isNotEmpty ? property.image.first.imageUrl : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPGbuIGw19IKId0kGKreJbLPkccOMJ0NFU5A&s',
+      location: property.location,
+      title: property.title,
+      price: double.parse(property.price) / 1000000, // Chuyển đổi giá từ VNĐ sang triệu (giả định giá trong JSON là VNĐ)
+      rating: 4.7, // Có thể thêm rating từ API nếu cần
+    );
+  }
 
   @override
   _AirbnbExploreItem2State createState() => _AirbnbExploreItem2State();
@@ -46,6 +61,9 @@ class _AirbnbExploreItem2State extends State<AirbnbExploreItem2> {
                   height: 180,
                   width: double.infinity,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(Icons.error, size: 50); // Hiển thị icon lỗi nếu load hình thất bại
+                  },
                 ),
               ),
               Positioned(
@@ -71,7 +89,7 @@ class _AirbnbExploreItem2State extends State<AirbnbExploreItem2> {
                 SizedBox(height: 5),
                 Text(widget.location, style: TextStyle(color: Colors.grey)),
                 SizedBox(height: 5),
-                Text('VND ${widget.price.toStringAsFixed(2)}/month', style: TextStyle(color: Colors.red)),
+                Text('VND ${widget.price.toStringAsFixed(2)} triệu/month', style: TextStyle(color: Colors.red)),
                 Row(
                   children: [
                     Icon(Icons.star, color: Colors.orange, size: 16),
@@ -86,5 +104,3 @@ class _AirbnbExploreItem2State extends State<AirbnbExploreItem2> {
     );
   }
 }
-
-

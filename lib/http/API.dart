@@ -3,11 +3,13 @@ import 'package:rentify/model/propertities.dart';
 abstract class API{
   Future<bool> checkLogin(Login login);
 
-  Future<double> getTotal();
+  Future<List<AllProperty>> getAllProperty();
 
-  Future<List<String>> getMonths();
+  Future<DetailProperty> getProperty(int userId);
 
-  Future<List<DetailProperty>> getTransactions(String month);
+  Future<List<DetailProperty>> searchProperties(String keyword);
+
+
 
   Future<void> addTransaction(DetailProperty transaction);
 

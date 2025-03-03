@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/common/enum/drawer_item.dart';
 import 'package:rentify/page/property/home_page_view.dart';
+import 'sreach_bar.dart';
+import '../main_cubit.dart';
 
-import '../../main_cubit.dart';
 
 
 class PageMain extends StatelessWidget { // Callback để thông báo khi chọn tab
@@ -27,11 +28,11 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
       appBar: AppBar(
         flexibleSpace: Center(
           child: Padding(
-          padding: const EdgeInsets.fromLTRB(46.0, 16.0, 46.0, 10),
-            child: SearchBar(),
+          padding: const EdgeInsets.all(0),
+            child: Search_Bar(),
         ),
         ),
-        toolbarHeight: 65,
+        toolbarHeight: 85,
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
@@ -44,12 +45,12 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
       bottomNavigationBar: NavigationBar(
         selectedIndex: state.selected.index,
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.search), label: 'Travel'),
+          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
           NavigationDestination(
             icon: Badge(child: Icon(Icons.favorite), label: Text('1')),
             label: 'Favorite',
           ),
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+          NavigationDestination(icon: Icon(Icons.search), label: 'Explore'),
           NavigationDestination(icon: Icon(Icons.messenger), label: 'Message'),
           NavigationDestination(icon: Icon(Icons.account_circle_outlined), label: 'User'),
         ],

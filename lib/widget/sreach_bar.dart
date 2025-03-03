@@ -1,31 +1,38 @@
 import 'package:flutter/material.dart';
+import '../page/search/search_page.dart';
 
-class SreachBar extends StatelessWidget {
-
+class Search_Bar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(46.0, 16.0, 46.0, 10),
       child: Stack(
         children: [
-          TextField(
-            decoration: InputDecoration(
-              hintText: "Where are you going?",
-              hintStyle: TextStyle(color: Colors.white70),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30.0),
-                borderSide: BorderSide.none,
-              ),
-              filled: true,
-              fillColor: Colors.black,
-            ),
-            style: TextStyle(color: Colors.white),
-          ),
-          Positioned(
-            right: 10,
-            top: 10,
-            child: Icon(Icons.location_on, color: Colors.red, size: 30),
-          ),
+    GestureDetector(
+      onTap: () {  Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Search_Page(),),
+      ); },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: Colors.grey,
+    borderRadius: BorderRadius.circular(30.0),
+        ),
+    child: Row(
+      children: [
+    const Expanded(
+      child: Text(
+        "Where are you going?",
+        style: TextStyle(color: Colors.white70, fontSize: 16),
+      ),
+    ),
+        const Icon(Icons.location_on, color: Colors.red, size: 30),
+      ],
+    ),
+      ),
+    ),
+
         ],
       ),
     );

@@ -2,7 +2,6 @@ part of 'login_cubit.dart';
 
 class LoginState {
   final LoadStatus loadStatus;
-
   const LoginState.init({this.loadStatus = LoadStatus.Init});
 
 //<editor-fold desc="Data Methods">
