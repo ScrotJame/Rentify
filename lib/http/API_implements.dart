@@ -11,7 +11,7 @@ import 'log/log.dart';
 
 class API_implements implements API{
   late Log log;
-  final String baseUrl='http://192.168.1.2:8000/api';
+  final String baseUrl='http://192.168.1.23:8000/api';
   API_implements(this.log);
 
   Future<void> delay() async {

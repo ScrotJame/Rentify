@@ -32,7 +32,7 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
             child: Search_Bar(),
         ),
         ),
-        toolbarHeight: 85,
+        toolbarHeight: 70,
         automaticallyImplyLeading: false,
         actions: [
           IconButton(

@@ -14,7 +14,7 @@ class Search_Bar extends StatelessWidget {
         MaterialPageRoute(builder: (context) => Search_Page(),),
       ); },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.grey,
     borderRadius: BorderRadius.circular(30.0),
@@ -23,11 +23,11 @@ class Search_Bar extends StatelessWidget {
       children: [
     const Expanded(
       child: Text(
-        "Where are you going?",
-        style: TextStyle(color: Colors.white70, fontSize: 16),
+        "Bạn muốn tìm gì ?",
+        style: TextStyle(color: Colors.white70, fontSize: 11),
       ),
     ),
-        const Icon(Icons.location_on, color: Colors.red, size: 30),
+        const Icon(Icons.location_on, color: Colors.white, size: 16),
       ],
     ),
       ),

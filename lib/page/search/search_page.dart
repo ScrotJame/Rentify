@@ -8,21 +8,16 @@ class Search_Page extends StatelessWidget {
   static const String route = 'search';
 
   final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _areaController = TextEditingController();
 
   void _handleSearch(BuildContext context) {
-    final query = _locationController.text.trim(); // Lấy và cắt khoảng trắng
+    final query = _locationController.text.trim();
     if (query.isNotEmpty) {
-      // Cập nhật từ khóa trong SearchCubit
       context.read<SearchCubit>().updateQuery(query);
-      // Điều hướng đến ResultPage
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ResultPage()),
       );
     } else {
-      // Hiển thị thông báo nếu từ khóa rỗng
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Vui lòng nhập từ khóa tìm kiếm')));
     }
   }
@@ -34,7 +29,7 @@ class Search_Page extends StatelessWidget {
         title: Text('Tìm kiếm bất động sản'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context), // Quay lại PageMain
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Padding(
