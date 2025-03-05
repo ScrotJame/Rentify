@@ -7,7 +7,7 @@ import 'package:rentify/page/item_explore.dart';
 import 'package:rentify/page/moreamenities/more_amenities_page.dart';
 import 'package:rentify/page/moreamenities/moreamenities_cubit.dart';
 import '../../../model/propertities.dart';
-import '../../../widget/booking_bar.dart';
+import '../../widget/booking/booking_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -24,10 +24,10 @@ class UtilitiesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => MoreamenitiesCubit(context.read<API>())
-        ..fetchAllPropertiesAmenities(id!), // Gọi API một lần khi khởi tạo
+        ..fetchAllPropertiesAmenities(id!),
       child: Scaffold(
         appBar: AppBar(),
-        body: ListAmenities(id: id), // Bỏ BodyBuild vì không cần thiết
+        body: ListAmenities(id: id),
       ),
     );
   }

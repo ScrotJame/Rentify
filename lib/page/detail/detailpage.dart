@@ -5,12 +5,16 @@ import 'package:flutter_svg/svg.dart'; // Đã có
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rentify/page/item_explore.dart';
 import 'package:rentify/page/moreamenities/more_amenities_page.dart';
+import '../../http/API.dart';
 import '../../model/propertities.dart';
-import '../../widget/booking_bar.dart';
+import '../../widget/booking/booking_bar.dart';
+import '../../widget/booking/booking_cubit.dart';
 import '../owner.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import '../viewing/date_cubit.dart';
+import '../viewing/viewings_page.dart';
 import 'detail_cubit.dart';
 
 class DetailPage extends StatelessWidget {
@@ -24,7 +28,13 @@ class DetailPage extends StatelessWidget {
     context.read<DetailCubit>().fetchPropertyDetail(id!);
     bool isFavorite = false;
 
-    return Scaffold(
+    return MultiBlocProvider(
+        providers: [
+        BlocProvider(create: (context) => DetailCubit(context.read<API>())..fetchPropertyDetail(id!)),
+        BlocProvider(create: (context) => BookingCubit()),
+        BlocProvider(create: (context) => DateCubit()),
+    ],
+    child: Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         actions: [
@@ -132,12 +142,11 @@ class DetailPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Chủ nhà (không thay đổi)
+                // Chủ nhà
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
                   child: Row(
                     children: [
-                      Spacer(),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -158,7 +167,7 @@ class DetailPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 25),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -167,7 +176,7 @@ class DetailPage extends StatelessWidget {
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            "Xếp hạng: 4.8 ⭐", // Có thể lấy từ API nếu cần
+                            "Xếp hạng: 4.8 ⭐",
                             style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                           ),
                         ],
@@ -233,7 +242,6 @@ class DetailPage extends StatelessWidget {
                   ),
                 ),
                 Divider(color: Colors.grey, thickness: 1),
-                // Thông tin thêm (Maps, đánh giá) - Không thay đổi
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
@@ -247,7 +255,10 @@ class DetailPage extends StatelessWidget {
                       ),
                       Divider(color: Colors.grey, thickness: 1),
                       Text("Đánh giá", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                      Text("4.5 | 120 đánh giá", style: TextStyle(fontSize: 16, color: Colors.grey)),
+                      Row(children: [
+                        Icon(Icons.star, color: Colors.amber, size: 20),
+                        Text("4.5 | 120 đánh giá", style: TextStyle(fontSize: 16, color: Colors.grey)),
+                      ],),
                       Divider(color: Colors.grey, thickness: 1),
                     ],
                   ),
@@ -263,7 +274,7 @@ class DetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Thông tin của chủ nhà:', style: TextStyle(fontSize: 14)),
-                          // Text(property.user.bio, style: TextStyle(fontSize: 14, color: Colors.grey)),
+                           Text(property.user.bio, style: TextStyle(fontSize: 14, color: Colors.grey)),
                         ],
                       ),
                       Align(
@@ -297,7 +308,25 @@ class DetailPage extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: BookingBar(),
+      bottomNavigationBar: BlocBuilder<DetailCubit, DetailState>(
+        builder: (context, state) {
+          final _property = state.property;
+          if (_property == null) {
+            return SizedBox.shrink(); // Trả về widget rỗng nếu property là null
+          }
+          return BookingBar(
+            onBookPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: false,
+                builder: (context) => BookingWidget(property: _property),
+              );
+            },
+            property: _property,
+          );
+        },
+      ),
+    ),
     );
   }
 }

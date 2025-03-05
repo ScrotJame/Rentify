@@ -12,6 +12,20 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit(this.api) : super(LoginState.init());
 
   Future<void> checkLogin(Login login) async {
+    if (login.username.isEmpty || login.password.isEmpty) {
+      emit(state.copyWith(loadStatus: LoadStatus.Error));
+      return;
+    }
+
+    emit(state.copyWith(loadStatus: LoadStatus.Loading));
+    var result = await api.checkLogin(login);
+    if (result) {
+      emit(state.copyWith(loadStatus: LoadStatus.Done));
+    } else {
+      emit(state.copyWith(loadStatus: LoadStatus.Error));
+    }
+  }
+  Future<void> Register(Login login) async {
     emit(state.copyWith(loadStatus: LoadStatus.Loading));
     var result = await api.checkLogin(login);
     if (result) {

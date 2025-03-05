@@ -32,14 +32,14 @@ class Login {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'username': this.username,
       'password': this.password,
     };
   }
 
-  factory Login.fromMap(Map<String, dynamic> map) {
+  factory Login.fromJson(Map<String, dynamic> map) {
     return Login(
       username: map['username'] as String,
       password: map['password'] as String,

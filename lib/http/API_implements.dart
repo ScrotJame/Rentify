@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:rentify/model/propertities.dart';
 import 'package:rentify/model/viewing.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../model/amenities.dart';
-import '../model/pivot.dart';
 import '../model/user.dart';
 import '../model/images.dart';
 import 'API.dart';
@@ -16,7 +16,7 @@ class API_implements implements API{
   API_implements(this.log);
 
   Future<void> delay() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 2));
   }
   @override
   Future<void> addTransaction(DetailProperty transaction) {
@@ -25,12 +25,39 @@ class API_implements implements API{
   }
 
   @override
-  Future<bool> checkLogin(Login login) {
+  Future<bool> checkLogin(Login login) async {
     delay();
-    if (login.username== '1' && login.password == '1'){
-      return Future.value(true);
-    }else{
-      return Future.value(false);
+    try {
+      // Gửi request POST đến API
+      final response = await http.post(
+        Uri.parse("http://192.168.1.23:8000/api/login"),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(login.toJson()),
+      );
+
+      // Kiểm tra response
+      if (response.statusCode == 200) {
+        // Đăng nhập thành công
+        final data = jsonDecode(response.body);
+        final token = data['token'];
+
+        // Lưu token vào SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('auth_token', token);
+
+        return true;
+      } else {
+        // Đăng nhập thất bại (401 hoặc lỗi khác)
+        print('Login failed: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      // Xử lý lỗi mạng hoặc ngoại lệ
+      print('Error during login: $e');
+      return false;
     }
   }
 
@@ -49,8 +76,23 @@ class API_implements implements API{
   @override
   Future<List<AllProperty>> getAllProperty() async {
     delay();
+    final prefs = await SharedPreferences.getInstance(); // Khởi tạo SharedPreferences
+    final token = prefs.getString('auth_token'); // Lấy token đã lưu
+
+    if (token == null) {
+      throw Exception('No token found. Please login first.');
+    }
+
     try {
-      final response = await http.get(Uri.parse('$baseUrl/allproperties'));
+      final response = await http.get(
+        Uri.parse('$baseUrl/allproperties'),
+        headers: {
+          'Authorization': 'Bearer $token', // Thêm token vào header
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         return data.map((json) => AllProperty.fromJson(json)).toList();
