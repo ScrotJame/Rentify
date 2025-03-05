@@ -4,7 +4,7 @@ import 'package:rentify/morewidget/widText.dart';
 import 'package:flutter_svg/svg.dart'; // Đã có
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rentify/page/item_explore.dart';
-import 'package:rentify/page/utilities_page.dart';
+import 'package:rentify/page/moreamenities/more_amenities_page.dart';
 import '../../model/propertities.dart';
 import '../../widget/booking_bar.dart';
 import '../owner.dart';
@@ -16,7 +16,7 @@ import 'detail_cubit.dart';
 class DetailPage extends StatelessWidget {
   final int? id;
   static const String route = 'detail';
-  final String baseUrl = 'http://192.168.1.23:8000/api';
+  final String baseUrl = 'http://192.168.1.2:8000/api';
   const DetailPage({super.key, required this.id});
 
   @override
@@ -26,6 +26,7 @@ class DetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         actions: [
           IconButton(
             icon: const Icon(Icons.share, color: Colors.grey),
@@ -216,7 +217,7 @@ class DetailPage extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => UtilitiesPage()),
+                              MaterialPageRoute(builder: (context) => UtilitiesPage(id: property.id)),
                             );
                           },
                           style: ElevatedButton.styleFrom(

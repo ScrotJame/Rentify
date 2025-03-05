@@ -4,7 +4,7 @@ class BookingBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 80, // Giới hạn chiều cao của thanh đặt phòng
+      height: 80,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
@@ -20,7 +20,6 @@ class BookingBar extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // Giá tiền
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
