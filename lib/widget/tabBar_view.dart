@@ -2,64 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/common/enum/drawer_item.dart';
 import 'package:rentify/page/property/home_page_view.dart';
-import 'sreach_bar.dart';
-import '../main_cubit.dart';
 
+import '../../main_cubit.dart';
 
 
 class PageMain extends StatelessWidget { // Callback để thông báo khi chọn tab
   static const String route= 'Pagemain';
-   PageMain({
+  PageMain({
     super.key,
   });
-   int selectedIndex =2;
-   Widget build(BuildContext context) {
-     return  BlocBuilder<MainCubit, MainState>(
-  builder: (context, state) {
-    final pages = [
-      Container(child: Text('Travel')),
-      Container(child: Text('Favorite')),
-      HomePageView(), // Tab Home hiển thị HomePageView
-      Container(child: Text('Message')),
-      Container(child: Text('User')),
-    ];
+  int selectedIndex =2;
+  Widget build(BuildContext context) {
+    return  BlocBuilder<MainCubit, MainState>(
+      builder: (context, state) {
+        final pages = [
+          Container(child: Text('Travel')),
+          Container(child: Text('Favorite')),
+          HomePageView(), // Tab Home hiển thị HomePageView
+          Container(child: Text('Message')),
+          Container(child: Text('User')),
+        ];
 
-    return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Center(
-          child: Padding(
-          padding: const EdgeInsets.all(0),
-            child: Search_Bar(),
-        ),
-        ),
-        toolbarHeight: 70,
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: Icon(state.isLightTheme ? Icons.dark_mode : Icons.light_mode),
-            onPressed: () => context.read<MainCubit>().toggleTheme(),
+        return Scaffold(
+          appBar: AppBar(
+            flexibleSpace: Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(46.0, 16.0, 46.0, 10),
+                child: SearchBar(),
+              ),
+            ),
+            toolbarHeight: 65,
+            automaticallyImplyLeading: false,
+            actions: [
+              IconButton(
+                icon: Icon(state.isLightTheme ? Icons.dark_mode : Icons.light_mode),
+                onPressed: () => context.read<MainCubit>().toggleTheme(),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: pages[state.selected.index], // Hiển thị tab theo selected
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: state.selected.index,
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-          NavigationDestination(
-            icon: Badge(child: Icon(Icons.favorite), label: Text('1')),
-            label: 'Favorite',
+          body: pages[state.selected.index], // Hiển thị tab theo selected
+          bottomNavigationBar: NavigationBar(
+            selectedIndex: state.selected.index,
+            destinations: const [
+              NavigationDestination(icon: Icon(Icons.search), label: 'Travel'),
+              NavigationDestination(
+                icon: Badge(child: Icon(Icons.favorite), label: Text('1')),
+                label: 'Favorite',
+              ),
+              NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+              NavigationDestination(icon: Icon(Icons.messenger), label: 'Message'),
+              NavigationDestination(icon: Icon(Icons.account_circle_outlined), label: 'User'),
+            ],
+            onDestinationSelected: (int index) {
+              context.read<MainCubit>().changeTab(TabItem.values[index]);
+            },
           ),
-          NavigationDestination(icon: Icon(Icons.search), label: 'Explore'),
-          NavigationDestination(icon: Icon(Icons.messenger), label: 'Message'),
-          NavigationDestination(icon: Icon(Icons.account_circle_outlined), label: 'User'),
-        ],
-        onDestinationSelected: (index) => context.read<MainCubit>().changeTab(index as TabItem),
-      ),
+        );
+      },
     );
-  },
-     );
-   }
+  }
 }
 
 

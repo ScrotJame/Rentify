@@ -17,9 +17,4 @@ abstract class API{
 
 
 
-  Future<void> addTransaction(DetailProperty transaction);
-
-  Future<void> editTransaction(DetailProperty transaction);
-
-  Future<void> deleteTransaction(String dateTime);
 }

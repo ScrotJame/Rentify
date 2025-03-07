@@ -8,7 +8,7 @@ part of 'main_cubit.dart';
   //<editor-fold desc="Data Methods">
    const MainState.init ({
      this.isLightTheme=false,
-     this.selected= TabItem.Home,
+     required this.selected,
   });
 
   //<editor-fold desc="Data Methods">

@@ -20,7 +20,7 @@ import 'detail_cubit.dart';
 class DetailPage extends StatelessWidget {
   final int? id;
   static const String route = 'detail';
-  final String baseUrl = 'http://192.168.1.2:8000/api';
+  final String baseUrl = 'http://192.168.1.5:8000/api';
   const DetailPage({super.key, required this.id});
 
   @override
