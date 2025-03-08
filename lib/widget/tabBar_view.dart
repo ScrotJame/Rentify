@@ -4,6 +4,7 @@ import 'package:rentify/common/enum/drawer_item.dart';
 import 'package:rentify/page/property/home_page_view.dart';
 
 import '../../main_cubit.dart';
+//import '../page/user/profile_page.dart';
 
 
 class PageMain extends StatelessWidget { // Callback để thông báo khi chọn tab
@@ -16,11 +17,12 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
     return  BlocBuilder<MainCubit, MainState>(
       builder: (context, state) {
         final pages = [
-          Container(child: Text('Travel')),
-          Container(child: Text('Favorite')),
+          Container(child: Text('Travel-đang cập nhật')),
+          Container(child: Text('Favorite-đang cập nhật')),
           HomePageView(), // Tab Home hiển thị HomePageView
-          Container(child: Text('Message')),
-          Container(child: Text('User')),
+          Container(child: Text('Message-đang cập nhật')),
+          Container(child: Text('Message-đang cập nhật')),
+          //UserProfilePage(),
         ];
 
         return Scaffold(

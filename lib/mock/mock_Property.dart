@@ -5,7 +5,7 @@
 // import '../model/amenities.dart';
 // import '../model/pivot.dart';
 // import '../model/propertities.dart';
-// import '../model/user.dart';
+// import '../model/profile.dart';
 // import '../model/images.dart';
 // import '../model/amenities.dart';
 // import '../http/API.dart';
@@ -58,7 +58,7 @@
 //         propertyType: "Nhà trọ",
 //         status: "Còn trống",
 //         userId: userId,
-//         user: User(id: userId, name: "Nguyen Van A",avatar: '', bio: ''),
+//         profile: User(id: userId, name: "Nguyen Van A",avatar: '', bio: ''),
 //         amenities: [
 //           Amenity(
 //             idAmenities: 1,
@@ -88,7 +88,7 @@
 //         propertyType: "Chung cư",
 //         status: "Còn trống",
 //         userId: userId,
-//         user: User(id: userId, name: "Tran Thi B",  avatar: '', bio: ''),
+//         profile: User(id: userId, name: "Tran Thi B",  avatar: '', bio: ''),
 //         amenities: [
 //           Amenity(
 //             idAmenities: 1,

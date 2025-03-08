@@ -4,21 +4,21 @@ import 'amenities.dart';
 import 'user.dart';
 
 class DetailProperty {
-  int? id;
+  int id;
   String title;
   String description;
   String location;
   String price;
-  int? bedrooms;
-  int? bathrooms;
-  int? area;
+  int bedrooms;
+  int bathrooms;
+  int area;
   String typeRestroom;
   String propertyType;
   String status;
-  int? userId;
+  int userId;
   User user;
-  List<Amenity> amenities;
   List<Image> image;
+  List<Amenity> amenities;
 
   DetailProperty({
     required this.id,
@@ -34,12 +34,12 @@ class DetailProperty {
     required this.status,
     required this.userId,
     required this.user,
-    required this.amenities,
     required this.image,
+    required this.amenities,
   });
 
   factory DetailProperty.fromJson(Map<String, dynamic> json) => DetailProperty(
-    id: json["id"] as int ?? 0,
+    id: json["id"],
     title: json["title"],
     description: json["description"],
     location: json["location"],
@@ -52,8 +52,8 @@ class DetailProperty {
     status: json["status"],
     userId: json["user_id"],
     user: User.fromJson(json["user"]),
-    amenities: List<Amenity>.from(json["amenities"].map((x) => Amenity.fromJson(x))),
     image: List<Image>.from(json["image"].map((x) => Image.fromJson(x))),
+    amenities: List<Amenity>.from(json["amenities"].map((x) => Amenity.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -70,8 +70,8 @@ class DetailProperty {
     "status": status,
     "user_id": userId,
     "user": user.toJson(),
-    "amenities": List<dynamic>.from(amenities.map((x) => x.toJson())),
     "image": List<dynamic>.from(image.map((x) => x.toJson())),
+    "amenities": List<dynamic>.from(amenities.map((x) => x.toJson())),
   };
 }
 

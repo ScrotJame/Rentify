@@ -12,7 +12,7 @@ import 'log/log.dart';
 
 class API_implements implements API {
   late Log log;
-  final String baseUrl = 'http://192.168.1.5:8000/api';
+  final String baseUrl = 'http://192.168.1.24:8000/api';
 
   API_implements(this.log);
 
@@ -143,12 +143,24 @@ class API_implements implements API {
       log.i1('API_implements', 'GetProperty API Response: ${response.statusCode} - ${response.body}');
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
+        if (response.body.isEmpty) {
+          log.i('API_implements', 'Empty response body for userId: $userId');
+          throw Exception('Không tìm thấy bất động sản');
+        }
+
+        final decodedData = jsonDecode(response.body);
+        if (decodedData == null || decodedData is! Map<String, dynamic>) {
+          log.i('API_implements', 'Invalid response format: $decodedData');
+          throw Exception('Dữ liệu trả về không hợp lệ');
+        }
+
+        final Map<String, dynamic> data = decodedData;
         print('Debug: Decoded getProperty data: $data');
         if (data.isEmpty) {
           log.i('API_implements', 'No property data found for userId: $userId');
           throw Exception('Không tìm thấy bất động sản');
         }
+
         print('Debug: Before parsing DetailProperty');
         final detailProperty = DetailProperty.fromJson(data);
         print('Debug: After parsing DetailProperty: ${detailProperty.toJson()}');
@@ -231,5 +243,46 @@ class API_implements implements API {
   Future<List<DetailProperty>> searchProperties(String keyword) {
     // TODO: implement searchProperties
     throw UnimplementedError();
+  }
+
+  @override
+  Future<User> getUser() async{
+    await delay();
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('auth_token');
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/profile'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      print('Debug: GetProperty response status: ${response.statusCode}');
+      print('Debug: GetProperty response body: ${response.body}');
+      log.i1('API_implements', 'GetProperty API Response: ${response.statusCode} - ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        print('Debug: Decoded getProperty data: $data');
+        if (data.isEmpty) {
+          throw Exception('Không tìm thấy bất động sản');
+        }
+        print('Debug: Before parsing DetailProperty');
+        final user = User.fromJson(data);
+        print('Debug: After parsing profile: ${user.toJson()}');
+        return user;
+      } else {
+        throw Exception('Failed to load profile properties: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Debug: Exception in getProperty: $e');
+      log.i('API_implements', 'Error fetching profile properties: $e');
+      rethrow;
+    }
   }
 }

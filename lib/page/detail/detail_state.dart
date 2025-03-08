@@ -1,30 +1,30 @@
 part of 'detail_cubit.dart';
 
- class DetailState {
-   final DetailProperty? property;
-   final bool isLoading;
-   final String? error;
+class DetailState {
+  final DetailProperty? property;
+  final bool isLoading;
+  final String? error;
 
   //<editor-fold desc="Data Methods">
-   const DetailState({
+  const DetailState({
     this.property,
     required this.isLoading,
     this.error,
   });
 
-   @override
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is DetailState &&
-          runtimeType == other.runtimeType &&
-          property == other.property &&
-          isLoading == other.isLoading &&
-          error == other.error);
+          (other is DetailState &&
+              runtimeType == other.runtimeType &&
+              property == other.property &&
+              isLoading == other.isLoading &&
+              error == other.error);
 
-   @override
+  @override
   int get hashCode => property.hashCode ^ isLoading.hashCode ^ error.hashCode;
 
-   @override
+  @override
   String toString() {
     return 'DetailState{' +
         ' property: $property,' +
@@ -33,7 +33,7 @@ part of 'detail_cubit.dart';
         '}';
   }
 
-   DetailState copyWith({
+  DetailState copyWith({
     DetailProperty? property,
     bool? isLoading,
     String? error,
@@ -45,7 +45,7 @@ part of 'detail_cubit.dart';
     );
   }
 
-   Map<String, dynamic> toMap() {
+  Map<String, dynamic> toMap() {
     return {
       'property': this.property,
       'isLoading': this.isLoading,
@@ -61,7 +61,5 @@ part of 'detail_cubit.dart';
     );
   }
 
-  //</editor-fold>
+//</editor-fold>
 }
-
-

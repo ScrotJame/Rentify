@@ -2,6 +2,8 @@ import 'package:rentify/model/amenities.dart';
 import 'package:rentify/model/login.dart';
 import 'package:rentify/model/propertities.dart';
 import 'package:rentify/model/viewing.dart';
+
+import '../model/user.dart';
 abstract class API{
   Future<bool> checkLogin(Login login);
 
@@ -15,6 +17,5 @@ abstract class API{
 
   Future<Booking> addBooking(Booking booking);
 
-
-
+  Future<User> getUser();
 }
