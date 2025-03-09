@@ -83,7 +83,7 @@ class DetailPage extends StatelessWidget {
                             return CachedNetworkImage(
                               imageUrl: property.image[id].imageUrl.startsWith('http')
                                   ? property.image[id].imageUrl
-                                  : '$baseUrl/${property.image[id].imageUrl}.jpg',
+                                  : '$baseUrl/${property.image[id].imageUrl}',
                               width: 200,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Center(child: CircularProgressIndicator()),

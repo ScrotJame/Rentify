@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rentify/model/propertities.dart'; // File chứa AllProperty
+import 'package:rentify/model/propertities.dart';
 
 class AirbnbExploreItem2 extends StatefulWidget {
   final int ID;
@@ -26,8 +26,18 @@ class AirbnbExploreItem2 extends StatefulWidget {
       imageUrl: property.image.isNotEmpty ? property.image.first.imageUrl : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPGbuIGw19IKId0kGKreJbLPkccOMJ0NFU5A&s',
       location: property.location,
       title: property.title,
-      price: double.parse(property.price) / 1000000, // Chuyển đổi giá từ VNĐ sang triệu (giả định giá trong JSON là VNĐ)
+      price: double.parse(property.price) / 1000000, // Chuyển đổi giá từ VNĐ sang triệu
       rating: 4.7, // Có thể thêm rating từ API nếu cần
+    );
+  }
+  factory AirbnbExploreItem2.fromResultProperty(ResultProperty property) {
+    return AirbnbExploreItem2(
+      ID: property.id!,
+      imageUrl: property.image.isNotEmpty ? property.image.first.imageUrl : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPGbuIGw19IKId0kGKreJbLPkccOMJ0NFU5A&s',
+      location: property.location,
+      title: property.title,
+      price: double.parse(property.price) / 1000000,
+      rating: 4.7,
     );
   }
 

@@ -6,7 +6,7 @@ import 'common/enum/drawer_item.dart';
 part 'main_state.dart';
 
 class MainCubit extends Cubit<MainState> {
-  MainCubit() : super(MainState.init(selected: TabItem.Home));
+  MainCubit() : super(MainState.initial());
 
   void toggleTheme() {
     emit(state.copyWith(isLightTheme: !state.isLightTheme));

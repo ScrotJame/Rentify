@@ -13,7 +13,7 @@ abstract class API{
 
   Future<List<Amenity>> getAmenitiesProperty(int userId);
 
-  Future<List<DetailProperty>> searchProperties(String keyword);
+  Future<List<ResultProperty>> searchProperties(String keyword);
 
   Future<Booking> addBooking(Booking booking);
 

@@ -2,18 +2,16 @@ part of 'search_cubit.dart';
 
 class SearchState {
   final String? query;
-  final List<DetailProperty> properties;
+  final List<ResultProperty> result;
   final bool isLoading;
   final String? error;
-  final String? currentPage;
 
 //<editor-fold desc="Data Methods">
   SearchState({
     this.query,
-    required this.properties,
+    required this.result,
     required this.isLoading,
     this.error,
-    this.currentPage='search',
   });
 
   @override
@@ -22,63 +20,57 @@ class SearchState {
       (other is SearchState &&
           runtimeType == other.runtimeType &&
           query == other.query &&
-          properties == other.properties &&
+          result == other.result &&
           isLoading == other.isLoading &&
-          error == other.error &&
-          currentPage == other.currentPage);
+          error == other.error );
 
   @override
   int get hashCode =>
       query.hashCode ^
-      properties.hashCode ^
+      result.hashCode ^
       isLoading.hashCode ^
-      error.hashCode ^
-      currentPage.hashCode;
+      error.hashCode;
 
   @override
   String toString() {
     return 'SearchState{' +
         ' query: $query,' +
-        ' properties: $properties,' +
+        ' properties: $result,' +
         ' isLoading: $isLoading,' +
         ' error: $error,' +
-        ' currentPage: $currentPage,' +
         '}';
   }
 
   SearchState copyWith({
     String? query,
-    List<DetailProperty>? properties,
+    List<ResultProperty>? result,
     bool? isLoading,
     String? error,
     String? currentPage,
   }) {
     return SearchState(
       query: query ?? this.query,
-      properties: properties ?? this.properties,
+      result: result ?? this.result,
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
-      currentPage: currentPage ?? this.currentPage,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'query': this.query,
-      'properties': this.properties,
+      'properties': this.result,
       'isLoading': this.isLoading,
       'error': this.error,
-      'currentPage': this.currentPage,
     };
   }
 
   factory SearchState.fromMap(Map<String, dynamic> map) {
     return SearchState(
       query: map['query'] as String,
-      properties: map['properties'] as List<DetailProperty>,
+      result: map['properties'] as List<ResultProperty>,
       isLoading: map['isLoading'] as bool,
       error: map['error'] as String,
-      currentPage: map['currentPage'] as String,
     );
   }
 

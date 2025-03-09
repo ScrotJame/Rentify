@@ -1,44 +1,22 @@
 part of 'main_cubit.dart';
 
- class MainState {
-   final bool isLightTheme;
-   final TabItem selected;
+class MainState {
+  final bool isLightTheme;
+  final TabItem selected;
 
-
-  //<editor-fold desc="Data Methods">
-   const MainState.init ({
-     this.isLightTheme=false,
-     required this.selected,
-  });
-
-  //<editor-fold desc="Data Methods">
-   const MainState({
+  const MainState({
     required this.isLightTheme,
     required this.selected,
   });
 
-   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is MainState &&
-          runtimeType == other.runtimeType &&
-          isLightTheme == other.isLightTheme &&
-          selected == other.selected);
+  factory MainState.initial() => const MainState(
+    isLightTheme: true, // Mặc định theme sáng
+    selected: TabItem.Home, // Mặc định tab Home
+  );
 
-   @override
-  int get hashCode => isLightTheme.hashCode ^ selected.hashCode;
-
-   @override
-  String toString() {
-    return 'MainState{' +
-        ' isLightTheme: $isLightTheme,' +
-        ' selected: $selected,' +
-        '}';
-  }
-
-   MainState copyWith({
+  MainState copyWith({
     bool? isLightTheme,
-     TabItem? selected,
+    TabItem? selected,
   }) {
     return MainState(
       isLightTheme: isLightTheme ?? this.isLightTheme,
@@ -46,21 +24,21 @@ part of 'main_cubit.dart';
     );
   }
 
-   Map<String, dynamic> toMap() {
-    return {
-      'isLightTheme': this.isLightTheme,
-      'selected': this.selected,
-    };
-  }
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+          (other is MainState &&
+              runtimeType == other.runtimeType &&
+              isLightTheme == other.isLightTheme &&
+              selected == other.selected);
 
-  factory MainState.fromMap(Map<String, dynamic> map) {
-    return MainState(
-      isLightTheme: map['isLightTheme'] as bool,
-      selected: map['selected'] as TabItem,
-    );
-  }
+  @override
+  int get hashCode => isLightTheme.hashCode ^ selected.hashCode;
 
-  //</editor-fold>
+  @override
+  String toString() {
+    return 'MainState{isLightTheme: $isLightTheme, selected: $selected}';
+  }
 }
 
 

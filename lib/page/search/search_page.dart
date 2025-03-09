@@ -3,59 +3,59 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/page/search/search_cubit.dart';
 
 import '../result/result_page.dart';
+import 'package:rentify/http/API.dart';
+
 
 class Search_Page extends StatelessWidget {
-  static const String route = 'search';
+  static const String route = 'Search_Page';
+  final TextEditingController _controller = TextEditingController();
 
-  final TextEditingController _locationController = TextEditingController();
-
-  void _handleSearch(BuildContext context) {
-    final query = _locationController.text.trim();
-    if (query.isNotEmpty) {
-      context.read<SearchCubit>().updateQuery(query);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ResultPage()),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Vui lòng nhập từ khóa tìm kiếm')));
-    }
-  }
+  Search_Page({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tìm kiếm bất động sản'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _locationController,
-              decoration: const InputDecoration(
-                labelText: 'Nhập nơi ở bạn muốn tìm',
-                prefixIcon: Icon(Icons.location_on),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(50.0)),
+        child: BlocConsumer<SearchCubit, SearchState>(
+          listener: (context, state) {
+            if (!state.isLoading && state.error == null && state.result.isNotEmpty) {
+              Navigator.pushNamed(context, ResultPage.route);
+            }
+          },
+          builder: (context, state) {
+            return Column(
+              children: [
+                TextField(
+                  controller: _controller,
+                  decoration: const InputDecoration(
+                    labelText: 'Nhập từ khóa ',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => _handleSearch(context), // Truyền context vào hàm
-                child: const Text('Tìm kiếm'),
-              ),
-            ),
-          ],
+                const SizedBox(height: 16),
+                if (state.isLoading)
+                  const CircularProgressIndicator()
+                else
+                  ElevatedButton(
+                    onPressed: () {
+                      context.read<SearchCubit>().navigateToResult(_controller.text);
+                    },
+                    child: const Text('Tìm kiếm'),
+                  ),
+                if (state.error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      state.error!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
       ),
     );

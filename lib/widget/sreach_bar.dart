@@ -5,7 +5,7 @@ class Search_Bar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(46.0, 16.0, 46.0, 10),
+      padding: const EdgeInsets.fromLTRB(5.0,  0,16.0, 0),
       child: Stack(
         children: [
     GestureDetector(

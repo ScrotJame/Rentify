@@ -27,7 +27,7 @@ class PropertyList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => DetailPage(id: property.id!), // Truyền id không null
+                  builder: (context) => DetailPage(id: property.id),
                 ),
               );
             } else {

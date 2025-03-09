@@ -107,6 +107,71 @@ class AllProperty {
   };
 }
 
+class ResultProperty {
+  int id;
+  String title;
+  String description;
+  String location;
+  String price;
+  int bedrooms;
+  int bathrooms;
+  int area;
+  String typeRestroom;
+  String propertyType;
+  String status;
+  int userId;
+  List<Image> image;
+
+  ResultProperty({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.location,
+    required this.price,
+    required this.bedrooms,
+    required this.bathrooms,
+    required this.area,
+    required this.typeRestroom,
+    required this.propertyType,
+    required this.status,
+    required this.userId,
+    required this.image,
+  });
+
+  factory ResultProperty.fromJson(Map<String, dynamic> json) => ResultProperty(
+    id: json["id"],
+    title: json["title"],
+    description: json["description"],
+    location: json["location"],
+    price: json["price"],
+    bedrooms: json["bedrooms"],
+    bathrooms: json["bathrooms"],
+    area: json["area"],
+    typeRestroom: json["type_restroom"],
+    propertyType: json["property_type"],
+    status: json["status"],
+    userId: json["user_id"],
+    image: List<Image>.from(json["image"].map((x) => Image.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "title": title,
+    "description": description,
+    "location": location,
+    "price": price,
+    "bedrooms": bedrooms,
+    "bathrooms": bathrooms,
+    "area": area,
+    "type_restroom": typeRestroom,
+    "property_type": propertyType,
+    "status": status,
+    "user_id": userId,
+    "image": List<dynamic>.from(image.map((x) => x.toJson())),
+  };
+}
+
+
 
 
 

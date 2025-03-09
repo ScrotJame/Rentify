@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:rentify/http/API_implements.dart';
 import 'package:rentify/http/log/log.dart';
-import 'package:rentify/main_cubit.dart';
+import 'package:rentify/page/search/search_cubit.dart';
+import 'main_cubit.dart';
 import 'package:rentify/page/detail/detail_cubit.dart';
 import 'package:rentify/page/login/login_page.dart';
 import 'package:rentify/page/property/property_cubit.dart';
@@ -93,7 +94,9 @@ class Provider extends StatelessWidget {
           create: (context) => PropertyCubit(context.read<API>(),)
         ),
         BlocProvider(
-          create: (context) => DetailCubit(context.read<API>()),)
+          create: (context) => DetailCubit(context.read<API>()),),
+        BlocProvider(create: (context) => SearchCubit(context.read<API>()),
+        ),
       ],
       child: App(),
     );
