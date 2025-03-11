@@ -26,3 +26,39 @@ class User {
     "bio": bio,
   };
 }
+
+class UserProfile {
+  int id;
+  String name;
+  String phone;
+  String avatar;
+  dynamic bio;
+  String role;
+
+  UserProfile({
+    required this.id,
+    required this.name,
+    required this.phone,
+    required this.avatar,
+    required this.bio,
+    required this.role,
+  });
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) => UserProfile(
+    id: json["id"],
+    name: json["name"],
+    phone: json["phone"],
+    avatar: json["avatar"],
+    bio: json["bio"],
+    role: json["role"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "phone": phone,
+    "avatar": avatar,
+    "bio": bio,
+    "role": role,
+  };
+}

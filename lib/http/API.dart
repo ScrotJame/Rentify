@@ -5,7 +5,9 @@ import 'package:rentify/model/viewing.dart';
 
 import '../model/user.dart';
 abstract class API{
-  Future<bool> checkLogin(Login login);
+  Future<Map<String, dynamic>> checkLogin(String username, String password);
+
+  Future<Map<String, dynamic>> register(String username,  String password, String email);
 
   Future<List<AllProperty>> getAllProperty();
 
@@ -18,4 +20,6 @@ abstract class API{
   Future<Booking> addBooking(Booking booking);
 
   Future<User> getUser();
+
+  Future <void> logoutUser();
 }

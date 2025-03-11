@@ -13,28 +13,34 @@ import 'log/log.dart';
 
 class API_implements implements API {
   late Log log;
-  final String baseUrl = 'http://192.168.1.24:8000/api';
+  final String baseUrl = 'http://192.168.181.247:8000/api';
 
   API_implements(this.log);
 
+  Future<String> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    if (token == null) throw Exception('No token found');
+    return token;
+  }
   Future<void> delay() async {
     await Future.delayed(Duration(seconds: 2));
   }
 
   @override
-  Future<bool> checkLogin(Login login) async {
-    log.i1('API_implements', 'Attempting to login with: ${login.toJson()}');
+  Future<Map<String, dynamic>> checkLogin(String username, String password) async {
+    log.i1('API_implements', 'Attempting to login with: {username: $username, password: $password}');
     await delay();
 
     try {
-      print('Debug: Sending login request to $baseUrl/login with data: ${login.toJson()}');
+      print('Debug: Sending login request to $baseUrl/login with data: {username: $username, password: $password}');
       final response = await http.post(
         Uri.parse("$baseUrl/login"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: jsonEncode(login.toJson()),
+        body: jsonEncode({"username": username, "password": password}),
       );
 
       print('Debug: Login response status: ${response.statusCode}');
@@ -53,17 +59,27 @@ class API_implements implements API {
         print('Debug: Token saved: $token');
 
         log.i1('API_implements', 'Login successful, token saved.');
-        return true;
+        return {
+          "message": "Login successful",
+          "token": token
+        };
       } else {
         log.i('API_implements', 'Login failed: ${response.body}');
-        return false;
+        return {
+          "success": false,
+          "message": jsonDecode(response.body)['message'] ?? "Login failed"
+        };
       }
     } catch (e) {
       print('Debug: Exception during login: $e');
       log.i('API_implements', 'Error during login: $e');
-      return false;
+      return {
+        "success": false,
+        "message": "An error occurred: $e"
+      };
     }
   }
+
 
   @override
   Future<List<AllProperty>> getAllProperty() async {
@@ -337,6 +353,74 @@ class API_implements implements API {
       print('Debug: Exception in getProperty: $e');
       log.i('API_implements', 'Error fetching profile properties: $e');
       rethrow;
+    }
+  }
+
+  @override
+  Future<void> logoutUser() async {
+    try {
+      final token = await _getToken();
+      final url = Uri.parse('$baseUrl/logout');
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Xóa token khỏi SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('auth_token');
+      } else {
+        throw Exception('Failed to logout: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Debug: Logout error: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> register(String username,  String password, String email) async {
+    print('Debug: Starting register with username: $username, email: $email');
+
+    try {
+      // Gửi yêu cầu đăng ký
+      print('Debug: Sending register request to $baseUrl/register');
+      print('Debug: Request body: ${jsonEncode(
+          {'username': username, 'email': email, 'password': password})}');
+      final response = await http.post(
+        Uri.parse('$baseUrl/register'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(
+            {'username': username, 'email': email, 'password': password}),
+      );
+
+      // Debug response
+      print('Debug: Register response status: ${response.statusCode}');
+      print('Debug: Register response body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        print('Debug: Decoded register data: $data');
+        return data;
+      } else {
+        final errorData = jsonDecode(response.body);
+        print('Debug: Register failed with status: ${response
+            .statusCode}, error: $errorData');
+        throw Exception(
+            'Register failed: ${errorData['message'] ?? response.body}');
+      }
+    } catch (e) {
+      // Debug lỗi nếu có exception
+      print('Debug: Exception during register: $e');
+      throw Exception('Register failed: $e');
     }
   }
 }

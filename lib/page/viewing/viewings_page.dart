@@ -4,42 +4,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../model/propertities.dart';
 import 'date_cubit.dart';
 
-class BookingWidget extends StatelessWidget {
+class BookingPage extends StatelessWidget {
   final DetailProperty property;
-
-  const BookingWidget({super.key, required this.property});
+  static const String router = 'booking';
+  const BookingPage({super.key, required this.property});
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: BlocProvider(
-        create: (context) => DateCubit(),
-        child: DraggableScrollableSheet(
-          initialChildSize: 0.7, // Lúc đầu chiếm 50% màn hình
-          minChildSize: 0.5, // Giới hạn nhỏ nhất là 50%
-          maxChildSize: 1, // Giới hạn lớn nhất là 70%
-          builder: (context, scrollController) {
-            return FractionallySizedBox(
-              heightFactor: 0.7,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                ),
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints( // Giới hạn chiều cao max
-                    ),
-                    child: BodyContain(property: property),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-
+    return  Scaffold(
+      appBar: AppBar(
+        title: const Text('Đặt phòng'),
       ),
+      body: BlocProvider(
+          create: (context) => DateCubit(),
+
+        ),
     );
   }
 }
@@ -101,7 +80,7 @@ class BodyContain extends StatelessWidget {
           CachedNetworkImage(
             imageUrl: property.user.avatar.startsWith('http')
                 ? property.user.avatar
-                : 'http://192.168.1.2:8000/api/${property.user.avatar}', // Fallback nếu không phải URL
+                : 'http://192.168.181.247:8000/api/${property.user.avatar}', // Fallback nếu không phải URL
             width: 75,
             height: 75,
             fit: BoxFit.cover,

@@ -20,7 +20,7 @@ import 'detail_cubit.dart';
 class DetailPage extends StatelessWidget {
   final int? id;
   static const String route = 'detail';
-  final String baseUrl = 'http://192.168.1.5:8000/api';
+  final String baseUrl = 'http://192.168.181.247:8000/api';
   const DetailPage({super.key, required this.id});
 
   @override
@@ -308,24 +308,24 @@ class DetailPage extends StatelessWidget {
             );
           },
         ),
-        bottomNavigationBar: BlocBuilder<DetailCubit, DetailState>(
-          builder: (context, state) {
-            final _property = state.property;
-            if (_property == null) {
-              return SizedBox.shrink(); // Trả về widget rỗng nếu property là null
-            }
-            return BookingBar(
-              onBookPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: false,
-                  builder: (context) => BookingWidget(property: _property),
-                );
-              },
-              property: _property,
-            );
-          },
-        ),
+        // bottomNavigationBar: BlocBuilder<DetailCubit, DetailState>(
+        //   builder: (context, state) {
+        //     final _property = state.property;
+        //     if (_property == null) {
+        //       return SizedBox.shrink(); // Trả về widget rỗng nếu property là null
+        //     }
+        //     return BookingBar(
+        //       onBookPressed: () {
+        //         Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //             builder: (context) => BookingPage(property: ,),
+        //         );
+        //       },
+        //       property: _property,
+        //     );
+        //   },
+        // ),
       ),
     );
   }

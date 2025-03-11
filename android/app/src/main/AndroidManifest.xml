@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.rentify"> <!-- Đảm bảo có package -->
     <application
+        android:enableOnBackInvokedCallback="true"
         android:label="rentify"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

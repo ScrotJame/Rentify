@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/page/user/profile/profile_page.dart';
+
+import '../../http/API.dart';
 
 class UserPage extends StatelessWidget {
   @override
@@ -37,7 +40,7 @@ class UserProfileBody extends StatelessWidget {
           _buildSectionTitle("Favorites"),
           _buildFavoriteList(),
           SizedBox(height: 20),
-          _buildLogoutButton(),
+          _buildLogoutButton(context),
         ],
       ),
     );
@@ -97,11 +100,18 @@ class UserProfileBody extends StatelessWidget {
     );
   }
 
-  Widget _buildLogoutButton() {
+  Widget _buildLogoutButton(BuildContext context) {
     return Center(
-      child: TextButton(
-        onPressed: () {},
-        child: Text("Logout", style: TextStyle(color: Colors.redAccent)),
+      child: ElevatedButton(
+        onPressed: () async {
+          try {
+            await context.read<API>().logoutUser();
+            Navigator.pushNamed(context, 'LoginScreen');
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi đăng xuất: $e')));
+          }
+        },
+        child: const Text('Đăng xuất'),
       ),
     );
   }

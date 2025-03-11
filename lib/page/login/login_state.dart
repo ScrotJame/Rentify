@@ -1,46 +1,45 @@
 part of 'login_cubit.dart';
 
 class LoginState {
-  final LoadStatus loadStatus;
-  const LoginState.init({this.loadStatus = LoadStatus.Init});
+  final bool isLoading;
+  final bool isAuthenticated;
+  final String? error;
+  final String? token;
+  final String? message;
 
-//<editor-fold desc="Data Methods">
+  factory LoginState.initial() => LoginState(
+    isLoading: false,
+    isAuthenticated: false,
+    token: null,
+    message: null,
+  );
+
   const LoginState({
-    required this.loadStatus,
+    required this.isLoading,
+    required this.isAuthenticated,
+    this.error,
+    this.token,
+    this.message,
   });
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          (other is LoginState && runtimeType == other.runtimeType && loadStatus == other.loadStatus);
-
-  @override
-  int get hashCode => loadStatus.hashCode;
+  LoginState copyWith({
+    bool? isLoading,
+    bool? isAuthenticated,
+    String? error,
+    String? token,
+    String? message,
+  }) {
+    return LoginState(
+      isLoading: isLoading ?? this.isLoading,
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      error: error ?? this.error,
+      token: token ?? this.token,
+      message: message ?? this.message,
+    );
+  }
 
   @override
   String toString() {
-    return 'LoginState{' + ' loadStatus: $loadStatus,' + '}';
+    return 'LoginState{isLoading: $isLoading, isAuthenticated: $isAuthenticated, error: $error, token: $token, message: $message}';
   }
-
-  LoginState copyWith({
-    LoadStatus? loadStatus,
-  }) {
-    return LoginState(
-      loadStatus: loadStatus ?? this.loadStatus,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'loadStatus': this.loadStatus,
-    };
-  }
-
-  factory LoginState.fromMap(Map<String, dynamic> map) {
-    return LoginState(
-      loadStatus: map['loadStatus'] as LoadStatus,
-    );
-  }
-
-//</editor-fold>
 }

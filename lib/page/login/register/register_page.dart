@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../common/enum/load_status.dart';
-import '../../model/login.dart';
-import '../../http/API.dart';
+import '../../../common/enum/load_status.dart';
+import '../../../model/login.dart';
+import '../../../http/API.dart';
 
-import '../../widget/noti_bar.dart';
-import '../../widget/tabBar_view.dart';
-import 'login_cubit.dart';
-class LoginScreen extends StatelessWidget {
-  static const String route = "LoginScreen";
+import '../../../widget/noti_bar.dart';
+import '../../../widget/tabBar_view.dart';
+import '../login_cubit.dart';
+class RegisterScreen extends StatelessWidget {
+  static const String route = "RegisterScreen";
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,7 @@ class LoginScreen extends StatelessWidget {
 class Page extends StatelessWidget {
   String _username = "";
   String _password = "";
+  String _email = "";
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class Page extends StatelessWidget {
       body: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state.isAuthenticated) {
-            Navigator.pushReplacementNamed(context, PageMain.route);
+            Navigator.pushReplacementNamed(context, '/main');
           } else if (state.error != null) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Lỗi: ${state.error}')),
@@ -73,22 +74,14 @@ class Page extends StatelessWidget {
                     obscureText: true,
                     onChanged: (value) => _password = value,
                   ),
+                  const SizedBox(height: 20),
+                  _buildTextField(
+                    hintText: "Email@gmail.com",
+                    icon: Icons.mail,
+                    onChanged: (value) => _email = value,
+                  ),
                   const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () {
-                  context.read<LoginCubit>().login(
-                    _username,
-                    _password,
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.blue,
-                ),
-                child: const Text("Login", style: TextStyle(fontSize: 16)),
-              ),
+                  _buildRegisterButton(context),
                   const SizedBox(height: 20),
                   _buildFooter(context),
                 ],
@@ -123,33 +116,40 @@ class Page extends StatelessWidget {
     );
   }
 
+  Widget _buildRegisterButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed:  () {
+        context.read<LoginCubit>().register(
+          _username,
+          _password,
+          _email,
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.blue,
+
+      ),
+      child: const Text("Register", style: TextStyle(fontSize: 16)),
+    );
+  }
 
   Widget _buildFooter(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+
             TextButton(
               onPressed: () {
-                // Điều hướng sang màn hình quên mật khẩu
+                Navigator.pushNamed(context, 'LoginScreen');
               },
               child: const Text(
-                "Forgot password?",
+                "Signin",
                 style: TextStyle(color: Colors.white),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, 'RegisterScreen');
-              },
-              child: const Text(
-                "Not have account?",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
+
         const Divider(color: Colors.grey, thickness: 1),
         const SizedBox(height: 10),
         const Text("Or login with", style: TextStyle(color: Colors.white)),
