@@ -1,66 +1,37 @@
 part of 'viewing_cubit.dart';
 
 class ViewngState {
-  final Booking? booking;
   final bool isLoading;
+  final bool isSuccess;
   final String? error;
+  final Map<String, dynamic>? bookingData;
 
-//<editor-fold desc="Data Methods">
-  const ViewngState({
-    this.booking,
+  ViewngState({
     required this.isLoading,
+    required this.isSuccess,
     this.error,
+    this.bookingData,
   });
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is ViewngState &&
-          runtimeType == other.runtimeType &&
-          booking == other.booking &&
-          isLoading == other.isLoading &&
-          error == other.error);
-
-  @override
-  int get hashCode => booking.hashCode ^ isLoading.hashCode ^ error.hashCode;
-
-  @override
-  String toString() {
-    return 'ViewngState{' +
-        ' booking: $booking,' +
-        ' isLoading: $isLoading,' +
-        ' error: $error,' +
-        '}';
-  }
+  ViewngState.initial()
+      : isLoading = false,
+        isSuccess = false,
+        error = null,
+        bookingData = null;
 
   ViewngState copyWith({
-    Booking? booking,
     bool? isLoading,
+    bool? isSuccess,
     String? error,
+    Map<String, dynamic>? bookingData,
   }) {
     return ViewngState(
-      booking: booking ?? this.booking,
       isLoading: isLoading ?? this.isLoading,
+      isSuccess: isSuccess ?? this.isSuccess,
       error: error ?? this.error,
+      bookingData: bookingData ?? this.bookingData,
     );
   }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'booking': this.booking,
-      'isLoading': this.isLoading,
-      'error': this.error,
-    };
-  }
-
-  factory ViewngState.fromMap(Map<String, dynamic> map) {
-    return ViewngState(
-      booking: map['booking'] as Booking,
-      isLoading: map['isLoading'] as bool,
-      error: map['error'] as String,
-    );
-  }
-
-//</editor-fold>
 }
+
 

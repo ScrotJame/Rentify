@@ -17,7 +17,7 @@ abstract class API{
 
   Future<List<ResultProperty>> searchProperties(String keyword);
 
-  Future<Booking> addBooking(Booking booking);
+  Future<Map<String, dynamic>> addBooking(int propertyId, String viewingTime);
 
   Future<User> getUser();
 

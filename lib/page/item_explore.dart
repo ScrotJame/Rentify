@@ -58,7 +58,6 @@ class _AirbnbExploreItem2State extends State<AirbnbExploreItem2> {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 4,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

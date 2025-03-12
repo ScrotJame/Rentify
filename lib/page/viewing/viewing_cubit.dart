@@ -8,21 +8,25 @@ part 'viewing_state.dart';
 
 class ViewngCubit extends Cubit<ViewngState> {
   final API api;
-  ViewngCubit(this.api) : super(ViewngState(isLoading: false));
-  Future<void> addBooking(int propertyId, int userId, DateTime viewingTime, int id) async {
+  ViewngCubit(this.api) : super(ViewngState(isLoading: false, isSuccess: false));
+  Future<void> addBooking(int propertyId, String viewingTime) async {
     emit(state.copyWith(isLoading: true, error: null));
     try {
-      final booking = Booking(
-        propertyId: propertyId,
-        userId: userId,
-        viewingTime: viewingTime,
-        status: 'pending',
-        id: id
+      final response = await api.addBooking(
+         propertyId, viewingTime
       );
-      final newBooking = await api.addBooking(booking);
-      emit(state.copyWith(booking: newBooking, isLoading: false));
+      emit(state.copyWith(
+        isLoading: false,
+        isSuccess: true,
+        error: null,
+        bookingData: response['data'],
+      ));
     } catch (e) {
-      emit(state.copyWith(error: e.toString(), isLoading: false));
+      emit(state.copyWith(
+        isLoading: false,
+        isSuccess: false,
+        error: e.toString(),
+      ));
     }
   }
 }

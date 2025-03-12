@@ -13,7 +13,7 @@ import 'log/log.dart';
 
 class API_implements implements API {
   late Log log;
-  final String baseUrl = 'http://192.168.181.247:8000/api';
+  final String baseUrl = 'http://192.168.1.18:8000/api';
 
   API_implements(this.log);
 
@@ -80,7 +80,7 @@ class API_implements implements API {
     }
   }
 
-
+//lay tat ca cac phong
   @override
   Future<List<AllProperty>> getAllProperty() async {
     log.i1('API_implements', 'Fetching all properties...');
@@ -127,7 +127,7 @@ class API_implements implements API {
       rethrow;
     }
   }
-
+//thong tin chi tiet phong
   @override
   Future<DetailProperty> getProperty(int userId) async {
     log.i1('API_implements', 'Fetching property details for userId: $userId');
@@ -189,7 +189,7 @@ class API_implements implements API {
       rethrow;
     }
   }
-
+//lay thong cac tien ich cu phong
   @override
   Future<List<Amenity>> getAmenitiesProperty(int propertyId) async {
     log.i1('API_implements', 'Fetching amenities for propertyId: $propertyId');
@@ -219,42 +219,65 @@ class API_implements implements API {
     }
   }
 
+//dat phong
   @override
-  Future<Booking> addBooking(Booking booking) async {
-    log.i1('API_implements', 'Adding new booking: ${booking.toJson()}');
+  Future<Map<String, dynamic>> addBooking(int propertyId, String viewingTime) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+
+    // Debug: Kiểm tra token có tồn tại không
+    print('Debug: Token retrieved: $token');
+    if (token == null) {
+      throw Exception('No token available. Please login first.');
+    }
+
+    // Debug: In thông tin yêu cầu gửi đi
+    print('Debug: Booking property with property_id: $propertyId, viewing_time: $viewingTime');
+
+    final requestBody = {
+      'property_id': propertyId,
+      'viewing_time': viewingTime,
+    };
+    print('Debug: Request body: ${jsonEncode(requestBody)}'); // In body để kiểm tra
 
     try {
-      print('Debug: Sending POST request to $baseUrl/bookings with data: ${booking.toJson()}');
       final response = await http.post(
         Uri.parse('$baseUrl/bookings'),
         headers: {
+          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: jsonEncode(booking.toJson()),
+        body: jsonEncode(requestBody),
       );
 
-      print('Debug: AddBooking response status: ${response.statusCode}');
-      print('Debug: AddBooking response body: ${response.body}');
-      log.i1('API_implements', 'AddBooking API Response: ${response.statusCode} - ${response.body}');
+      // Debug: In trạng thái và phản hồi từ server
+      print('Debug: Booking response status: ${response.statusCode}');
+      print('Debug: Booking response body: ${response.body}');
 
       if (response.statusCode == 201) {
-        final json = jsonDecode(response.body)['data'];
-        print('Debug: Decoded booking data: $json');
-        return Booking.fromJson(json);
+        final responseData = jsonDecode(response.body);
+
+        // Debug: Kiểm tra user_id trong phản hồi
+        if (responseData.containsKey('data') && responseData['data'].containsKey('user_id')) {
+          print('Debug: Booking created for user_id: ${responseData['data']['user_id']}');
+        } else {
+          print('Debug: user_id not found in response');
+        }
+
+        return responseData;
       } else {
-        final error = jsonDecode(response.body)['error'] ?? 'Unknown error';
-        print('Debug: AddBooking error: $error');
-        throw Exception('Failed to add booking: $error (Status: ${response.statusCode})');
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData['error'] ?? 'Booking failed with status: ${response.statusCode}');
       }
     } catch (e) {
-      print('Debug: Exception in addBooking: $e');
-      log.i('API_implements', 'Error adding booking: $e');
-      rethrow;
+      print('Debug: Exception during booking: $e');
+      throw Exception('Booking failed: $e');
     }
   }
 
-  @override
+
+
   @override
   Future<List<ResultProperty>> searchProperties(String keyword, {int page = 1}) async {
     await Future.delayed(const Duration(seconds: 1));
