@@ -3,6 +3,7 @@ import 'package:rentify/model/login.dart';
 import 'package:rentify/model/propertities.dart';
 import 'package:rentify/model/viewing.dart';
 
+import '../model/pay/paymentAccounts.dart';
 import '../model/user.dart';
 abstract class API{
   Future<Map<String, dynamic>> checkLogin(String username, String password);
@@ -20,6 +21,7 @@ abstract class API{
   Future<Map<String, dynamic>> addBooking(int propertyId, String viewingTime);
 
   Future<User> getUser();
+  Future<Map<String, dynamic>> addPaymentAccount(PaymentAccount paymentAccount);
 
   Future <void> logoutUser();
 }

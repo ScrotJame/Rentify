@@ -20,7 +20,7 @@ import 'detail_cubit.dart';
 class DetailPage extends StatelessWidget {
   final int? id;
   static const String route = 'detail';
-  final String baseUrl = 'http://192.168.1.18:8000/api';
+  final String baseUrl = 'http://192.168.1.13:8000/api';
   const DetailPage({super.key, required this.id});
 
   @override
@@ -274,7 +274,7 @@ class DetailPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Thông tin của chủ nhà:', style: TextStyle(fontSize: 14)),
-                            Text(property.user.bio, style: TextStyle(fontSize: 14, color: Colors.grey)),
+                            Text(property.user.bio!, style: TextStyle(fontSize: 14, color: Colors.grey)),
                           ],
                         ),
                         Align(

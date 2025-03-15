@@ -45,11 +45,7 @@ class Page extends StatelessWidget {
             height: double.infinity,
             width: double.infinity,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue.shade600, Colors.blue.shade300],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+            color: Color(0xFFFFEEDB),
             ),
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(32, 60, 32, 20),
@@ -58,7 +54,7 @@ class Page extends StatelessWidget {
                 children: [
                   const Image(
                     image: AssetImage("assets/images/logo.png"),
-                    height: 200,
+                    height: 150,
                   ),
                   const SizedBox(height: 40),
                   _buildTextField(
@@ -85,9 +81,9 @@ class Page extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   backgroundColor: Colors.white,
-                  foregroundColor: Colors.blue,
+                  foregroundColor: Color(0xFFFFEEDB),
                 ),
-                child: const Text("Login", style: TextStyle(fontSize: 16)),
+                child: const Text("Login", style: TextStyle(fontSize: 16, color: Color(0xFF96705B),)),
               ),
                   const SizedBox(height: 20),
                   _buildFooter(context),
@@ -112,7 +108,7 @@ class Page extends StatelessWidget {
         filled: true,
         fillColor: Colors.white,
         hintText: hintText,
-        prefixIcon: Icon(icon, color: Colors.blue),
+        prefixIcon: Icon(icon, color: Color(0xFF96705B)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
@@ -136,7 +132,7 @@ class Page extends StatelessWidget {
               },
               child: const Text(
                 "Forgot password?",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Color(0xFF96705B)),
               ),
             ),
             TextButton(
@@ -145,14 +141,14 @@ class Page extends StatelessWidget {
               },
               child: const Text(
                 "Not have account?",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Color(0xFF96705B)),
               ),
             ),
           ],
         ),
         const Divider(color: Colors.grey, thickness: 1),
         const SizedBox(height: 10),
-        const Text("Or login with", style: TextStyle(color: Colors.white)),
+        const Text("Or login with", style: TextStyle(color: Color(0xFF96705B))),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

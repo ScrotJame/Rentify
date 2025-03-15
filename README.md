@@ -1,6 +1,6 @@
 
 # rentify
-
+color light: Color(0xFFFFEEDB), brown: Color(0xFF96705B)
 A new Flutter project.
 
 ## Getting Started

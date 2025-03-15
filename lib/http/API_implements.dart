@@ -5,6 +5,7 @@ import 'package:rentify/model/propertities.dart';
 import 'package:rentify/model/viewing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/amenities.dart';
+import '../model/pay/paymentAccounts.dart';
 import '../model/search.dart';
 import '../model/user.dart';
 import '../model/images.dart';
@@ -13,7 +14,7 @@ import 'log/log.dart';
 
 class API_implements implements API {
   late Log log;
-  final String baseUrl = 'http://192.168.1.18:8000/api';
+  final String baseUrl = 'http://192.168.1.13:8000/api';
 
   API_implements(this.log);
 
@@ -276,8 +277,6 @@ class API_implements implements API {
     }
   }
 
-
-
   @override
   Future<List<ResultProperty>> searchProperties(String keyword, {int page = 1}) async {
     await Future.delayed(const Duration(seconds: 1));
@@ -337,7 +336,6 @@ class API_implements implements API {
     }
   }
 
-
   @override
   Future<User> getUser() async{
     await delay();
@@ -347,7 +345,7 @@ class API_implements implements API {
       final token = prefs.getString('auth_token');
 
       final response = await http.get(
-        Uri.parse('$baseUrl/profile'),
+        Uri.parse('$baseUrl/user'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -446,4 +444,43 @@ class API_implements implements API {
       throw Exception('Register failed: $e');
     }
   }
+
+  @override
+  Future<Map<String, dynamic>> addPaymentAccount(PaymentAccount paymentAccount) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+
+    try{
+      final response = await http.post(
+        Uri.parse('$baseUrl/insertpayments'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(paymentAccount.toJson()),
+      );
+      final responseData = jsonDecode(response.body);
+      if (response.statusCode == 201) {
+        return {
+          'success': true,
+          'message': responseData['message'],
+          'data': PaymentAccount.fromJson(responseData['data']),
+        };
+      } else {
+        return {
+          'success': false,
+          'message': responseData['message'],
+          'errors': responseData['errors'],
+        };
+      }
+    }
+    catch (e) {
+      print('Debug: Exception in getAmenitiesProperty: $e');
+      log.i('API_implements', 'Error fetching amenities: $e');
+      rethrow;
+    }
+  }
+
+
 }

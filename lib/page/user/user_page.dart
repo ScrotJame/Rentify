@@ -1,104 +1,292 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/page/user/profile/profile_page.dart';
+import 'package:rentify/page/user/user_cubit.dart';
 
 import '../../http/API.dart';
+import '../viewing/payment/payment_page.dart';
 
 class UserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: UserProfileBody(),
+    return BlocProvider(
+      create: (context) =>
+      UserCubit(context.read<API>())
+        .. fecthUser(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: UserProfileBody(),
+      ),
     );
   }
 }
 
 class UserProfileBody extends StatelessWidget {
-  final String userName = "John Doe";
-  final String userEmail = "johndoe@example.com";
-  final String userAvatar = "";
 
-  final List<Map<String, String>> bookings = [
-    {"title": "Luxury Apartment", "status": "Confirmed"},
-    {"title": "Cozy House", "status": "Pending"},
-  ];
-
-  final List<String> favorites = ["Beachfront Villa", "Modern Loft"];
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildProfileHeader(context),
-          SizedBox(height: 20),
-          _buildSectionTitle("Bookings"),
-          _buildBookingList(),
-          SizedBox(height: 20),
-          _buildSectionTitle("Favorites"),
-          _buildFavoriteList(),
-          SizedBox(height: 20),
-          _buildLogoutButton(context),
-        ],
-      ),
+    return BlocBuilder<UserCubit, UserState>(
+      builder: (context, state) {
+        if (state.isLoading) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (state.error != null) {
+          return Center(child: Text('Lỗi: ${state.error}'));
+        }
+        if (state.userCb == null) {
+          return Center(child: Text('Không tìm thấy bất động sản'));
+        }
+        final user = state.userCb!;
+        return SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildProfileHeader(context, user),
+              SizedBox(height: 20),
+              _buildSectionTitle("Settings"),
+              _buildSettingWigdet(context),
+              SizedBox(height: 20),
+              _buildSectionTitle("Welcome tenant"),
+              _buildWelcomeWigdet(context),
+              SizedBox(height: 20),
+              _buildSectionTitle("Supports"),
+              _buildSupportsWigdet(context),
+              SizedBox(height: 20),
+              _buildSectionTitle("Legal"),
+              SizedBox(height: 20),
+              _buildLogoutButton(context),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildProfileHeader(BuildContext context) {
+  Widget _buildProfileHeader(BuildContext context, dynamic user) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ProfilePage(),)
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
         );
       },
       child: Row(
         children: [
           CircleAvatar(
             radius: 40,
-            backgroundImage: NetworkImage(userAvatar),
+            backgroundImage: CachedNetworkImageProvider(
+              user.avatar,
+            ),
           ),
           SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(userName, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              Text(userEmail, style: TextStyle(color: Colors.grey[600])),
+              Text(user.name,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              Text(user.phone ?? 'Chưa có số điện thoại', style: TextStyle(color: Colors.grey[600])),
+              Text(user.bio ?? 'Chưa có tiểu sử', style: TextStyle(color: Colors.grey[600])),
             ],
           ),
         ],
       ),
     );
   }
+  Widget _buildSettingWigdet(BuildContext context){
+     return Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: (){print("Đăng nhập và bảo mật được nhấn");},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Đăng nhập và bảo mật",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),
+                        ],
+                      ),
+                    ),
+                    Divider(thickness: 0.5, color: Colors.grey),
+                    GestureDetector(
+                      onTap: (){Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PaymentPage()),
+                      );},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Thanh toán và chi trả",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
+            ],
+          ),
+          ),
+        ],
+      );
+  }
+
+  Widget _buildWelcomeWigdet(BuildContext context){
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 5,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: (){},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Đăng nhập và bảo mật",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),
+                        ],
+                      ),
+                    ),
+                    Divider(thickness: 0.5, color: Colors.grey),
+                    GestureDetector(
+                      onTap: (){},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Thanh toán và chi trả",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSupportsWigdet(BuildContext context){
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 5,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: (){},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Đăng nhập và bảo mật",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),
+                        ],
+                      ),
+                    ),
+                    Divider(thickness: 0.5, color: Colors.grey),
+                    GestureDetector(
+                      onTap: (){},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Thanh toán và chi trả",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget _buildSectionTitle(String title) {
-    return Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
+    return Text(
+        title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
   }
 
-  Widget _buildBookingList() {
-    return Column(
-      children: bookings.map((booking) {
-        return ListTile(
-          leading: Icon(Icons.hotel, color: Colors.blueAccent),
-          title: Text(booking["title"]!),
-          trailing: Chip(label: Text(booking["status"]!)),
-        );
-      }).toList(),
-    );
-  }
 
-  Widget _buildFavoriteList() {
-    return Column(
-      children: favorites.map((fav) {
-        return ListTile(
-          leading: Icon(Icons.favorite, color: Colors.redAccent),
-          title: Text(fav),
-        );
-      }).toList(),
-    );
-  }
 
   Widget _buildLogoutButton(BuildContext context) {
     return Center(
@@ -108,7 +296,8 @@ class UserProfileBody extends StatelessWidget {
             await context.read<API>().logoutUser();
             Navigator.pushNamed(context, 'LoginScreen');
           } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Lỗi đăng xuất: $e')));
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Lỗi đăng xuất: $e')));
           }
         },
         child: const Text('Đăng xuất'),
