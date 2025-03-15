@@ -1,8 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-
 import '../../http/API.dart';
-import '../../model/viewing.dart';
 
 part 'viewing_state.dart';
 

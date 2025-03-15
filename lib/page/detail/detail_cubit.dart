@@ -1,8 +1,4 @@
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-
 import '../../http/API.dart';
 import '../../model/propertities.dart';
 

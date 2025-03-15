@@ -1,5 +1,4 @@
 import 'pivot.dart';
-import 'dart:convert';
 class Amenity {
   int id;
   String nameAmenities;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:rentify/http/API_implements.dart';
 import 'package:rentify/http/log/log.dart';
 import 'package:rentify/page/search/search_cubit.dart';
@@ -10,8 +9,6 @@ import 'package:rentify/page/property/property_cubit.dart';
 import 'package:rentify/routers.dart';
 import 'http/API.dart';
 import 'http/log/log_impl.dart';
-import 'page/property/home_page_view.dart';
-import 'widget/tabBar_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Định nghĩa SimpleBlocObserver từ base code

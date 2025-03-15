@@ -23,8 +23,8 @@ class PaymentAccount {
   factory PaymentAccount.fromJson(Map<String, dynamic> json) {
     return PaymentAccount(
       accountNumber: json['account_number'],
-      accountName: json['account_name'],
-      paymentMethod: json['payment_method'],
+      accountName: json['account_name'] ?? 'Unknown',
+      paymentMethod: json['payment_method'] ?? 'unknown',
       providerName: json['provider_name'],
       cardType: json['card_type'],
       expirationDate: json['expiration_date'],

@@ -1,20 +1,17 @@
-import 'package:rentify/model/login.dart';
 import 'package:http/http.dart' as http;
+import 'package:rentify/model/pay/payment.dart';
 import 'dart:convert';
 import 'package:rentify/model/propertities.dart';
-import 'package:rentify/model/viewing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/amenities.dart';
 import '../model/pay/paymentAccounts.dart';
-import '../model/search.dart';
 import '../model/user.dart';
-import '../model/images.dart';
 import 'API.dart';
 import 'log/log.dart';
 
 class API_implements implements API {
   late Log log;
-  final String baseUrl = 'http://192.168.1.13:8000/api';
+  final String baseUrl = 'http://192.168.1.15:8000/api';
 
   API_implements(this.log);
 
@@ -482,5 +479,44 @@ class API_implements implements API {
     }
   }
 
+  @override
+  Future<AllPayment> getAllPayment() async {
+    print('Fetching all payment...'); // Thay log.i1 nếu không có thư viện log
+    await Future.delayed(Duration(seconds: 1)); // Thay delay() nếu không định nghĩa
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    print('Debug: Retrieved token from SharedPreferences: $token');
+
+    if (token == null) {
+      print('No token found. User must login first.');
+      throw Exception('No token found. Please login first.');
+    }
+
+    try {
+      print('Debug: Sending GET request to $baseUrl/userpayments with token: $token');
+      final response = await http.get(
+        Uri.parse('$baseUrl/userpayments'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      print('Debug: GetAllPayment response status: ${response.statusCode}');
+      print('Debug: GetAllPayment response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return AllPayment.fromJson(data);
+      } else {
+        throw Exception('Failed to load payments: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Debug: Exception in getAllPayment: $e');
+      rethrow;
+    }
+  }
 
 }

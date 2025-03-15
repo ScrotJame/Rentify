@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/morewidget/widText.dart';
-import 'package:flutter_svg/svg.dart'; // Đã có
+import 'package:flutter_svg/svg.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:rentify/page/item_explore.dart';
 import 'package:rentify/page/moreamenities/more_amenities_page.dart';
 import '../../http/API.dart';
-import '../../model/propertities.dart';
 import '../../widget/booking/booking_bar.dart';
 import '../../widget/booking/booking_cubit.dart';
 import '../owner.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 import '../viewing/date_cubit.dart';
 import '../viewing/viewings_page.dart';
