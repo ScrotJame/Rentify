@@ -5,7 +5,6 @@ import '../../../http/API.dart';
 import '../../../model/pay/paymentAccounts.dart';
 
 class PaymentPage extends StatelessWidget {
-
   static const String route = 'payment';
   const PaymentPage({super.key});
 
@@ -61,8 +60,8 @@ class BodyPage extends StatelessWidget {
                       return const Center(child: Text('Chưa có tài khoản nào.'));
                     }
                     return ListView.builder(
-                      shrinkWrap: true, // Đảm bảo ListView không chiếm toàn bộ chiều cao
-                      physics: const NeverScrollableScrollPhysics(), // Ngăn cuộn riêng trong ListView
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: state.allpaymentAccounts.length,
                       itemBuilder: (context, index) {
                         final payment = state.allpaymentAccounts[index];
@@ -91,14 +90,14 @@ class BodyPage extends StatelessWidget {
                           ),
                         );
                       },
-
                     );
                   } else if (state is PaymentError) {
                     return Center(child: Text(state.message));
                   }
                   return const Center(child: Text('Đang tải danh sách...'));
                 },
-              ),ElevatedButton(
+              ),
+              ElevatedButton(
                 onPressed: () {
                   final paymentCubit = context.read<PaymentCubit>();
                   showModalBottomSheet(
@@ -106,24 +105,23 @@ class BodyPage extends StatelessWidget {
                     isScrollControlled: true,
                     builder: (bottomSheetContext) => BlocProvider.value(
                       value: paymentCubit,
-                      child: _addPayment(),
+                      child: const AddPayment(),
                     ),
                   );
                 },
-                  child: Row(
-                   crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add_circle_outline, color: Colors.black54, size: 15),
-                      SizedBox(width: 10),
-                      Text(
-                        "Thêm tài khoản thanh toán",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-              )
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_circle_outline, color: Colors.black54, size: 15),
+                    SizedBox(width: 10),
+                    Text(
+                      "Thêm tài khoản thanh toán",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
             ],
-
           ),
         ),
       ),
@@ -131,71 +129,145 @@ class BodyPage extends StatelessWidget {
   }
 }
 
-class _addPayment extends StatelessWidget {
-  _addPayment({super.key});
+class AddPayment extends StatefulWidget {
+  const AddPayment({super.key});
 
+  @override
+  State<AddPayment> createState() => _AddPaymentState();
+}
+
+class _AddPaymentState extends State<AddPayment> {
   final _accountNumberController = TextEditingController();
   final _accountNameController = TextEditingController();
-  final _paymentMethodController = TextEditingController();
+  final _paymentCvvController = TextEditingController();
+  final _paymentEndDateController = TextEditingController();
+
+  final List<String> paymentMethods = [
+    "bank_transfer",
+    "credit_card",
+    "paypal",
+    "momo",
+    "zalopay",
+    "vn pay",
+    "apple pay",
+  ];
+  String? selectedPaymentMethod;
 
   @override
   Widget build(BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TextField(
-          controller: _accountNumberController,
-          decoration: const InputDecoration(
-            labelText: 'Số tài khoản',
-            border: OutlineInputBorder(),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 60,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: paymentMethods.map((method) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: ChoiceChip(
+                      label: Text(method.toUpperCase()),
+                      selected: selectedPaymentMethod == method,
+                      onSelected: (selected) {
+                        setState(() {
+                          selectedPaymentMethod = selected ? method : null;
+                        });
+                      },
+                      selectedColor: Colors.blue, // Màu xanh khi được chọn
+                      labelStyle: TextStyle(
+                        color: selectedPaymentMethod == method ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        TextField(
-          controller: _accountNameController,
-          decoration: const InputDecoration(
-            labelText: 'Tên tài khoản',
-            border: OutlineInputBorder(),
+          const SizedBox(height: 20),
+          TextField(
+            controller: _accountNameController,
+            decoration: const InputDecoration(
+              labelText: 'Tên tài khoản',
+              border: OutlineInputBorder(),
+              suffixIcon: Icon(Icons.account_circle),
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        TextField(
-          controller: _paymentMethodController,
-          decoration: const InputDecoration(
-            labelText: 'Phương thức thanh toán',
-            border: OutlineInputBorder(),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _accountNumberController,
+            decoration: const InputDecoration(
+              labelText: 'Số thẻ',
+              border: OutlineInputBorder(),
+              suffixIcon: Icon(Icons.lock),
+            ),
+            keyboardType: TextInputType.number,
           ),
-        ),
-        const SizedBox(height: 20),
-        BlocConsumer<PaymentCubit, PaymentState>(
-          listener: (context, state) {
-            if (state is PaymentSuccess) {
-              Navigator.pop(context); // Đóng bottom sheet sau khi thêm thành công
-            }
-          },
-          builder: (context, state) {
-            if (state is PaymentLoading) {
-              return const CircularProgressIndicator();
-            }
-            return ElevatedButton(
-              onPressed: () {
-                final paymentAccount = PaymentAccount(
-                  accountNumber: _accountNumberController.text,
-                  accountName: _accountNameController.text,
-                  paymentMethod: _paymentMethodController.text,
-                  isDefault: true,
-                );
-                context.read<PaymentCubit>().addPaymentAccount(paymentAccount);
-              },
-              child: const Text('Thêm'),
-            );
-          },
-        ),
-      ],
-    ),
-  );
+          const SizedBox(height: 10),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _paymentEndDateController,
+                  decoration: const InputDecoration(
+                    labelText: ' Ngày hết hạn',
+                    border: OutlineInputBorder(),
+                    hintText: 'MM/YY',
+                    contentPadding: EdgeInsets.symmetric(vertical: 12.0),
+                  ),
+                  keyboardType: TextInputType.datetime,
+                  textAlignVertical: TextAlignVertical.center,
+                ),
+              ),
+              const SizedBox(width: 5),
+              Expanded(
+                child: TextField(
+                  controller: _paymentCvvController,
+                  decoration: const InputDecoration(
+                    labelText: ' CVV',
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(vertical: 12.0),
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          BlocConsumer<PaymentCubit, PaymentState>(
+            listener: (context, state) {
+              if (state is PaymentSuccess) {
+                Navigator.pop(context);
+              }
+            },
+            builder: (context, state) {
+              if (state is PaymentLoading) {
+                return const CircularProgressIndicator();
+              }
+              return ElevatedButton(
+                onPressed: selectedPaymentMethod == null
+                    ? null
+                    : () {
+                  final paymentAccount = PaymentAccount(
+                    accountNumber: _accountNumberController.text,
+                    accountName: _accountNameController.text,
+                    paymentMethod: selectedPaymentMethod!,
+                    cvv: _paymentCvvController.text,
+                    expirationDate: _paymentEndDateController.text,
+                    isDefault: true,
+                  );
+                  context.read<PaymentCubit>().addPaymentAccount(paymentAccount);
+                },
+                child: const Text('Thêm'),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 }
-}
-

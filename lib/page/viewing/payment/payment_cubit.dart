@@ -8,11 +8,24 @@ part 'payment_state.dart';
 
 class PaymentCubit extends Cubit<PaymentState> {
   final API api;
-
+  String selectedPaymentMethod = '';
   PaymentCubit(this.api) : super(const PaymentInitial()) {
     fetchAllPayments();
   }
+  static const List<String> paymentMethods = [
+    'bank_transfer',
+    'credit_card',
+    'paypal',
+    'momo',
+    'zalopay',
+    'vn_pay',
+    'apple_pay'
+  ];
 
+  void updatePaymentMethod(String newValue) {
+    selectedPaymentMethod = newValue;
+    emit(state); // Cập nhật UI
+  }
   Future<void> fetchAllPayments() async {
     emit(const PaymentLoading());
 

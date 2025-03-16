@@ -444,10 +444,24 @@ class API_implements implements API {
 
   @override
   Future<Map<String, dynamic>> addPaymentAccount(PaymentAccount paymentAccount) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('auth_token');
+    try {
+      // Lấy token từ SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('auth_token');
 
-    try{
+      // Kiểm tra token
+      if (token == null) {
+        return {
+          'success': false,
+          'message': 'No authentication token found',
+          'errors': {'token': ['Token is missing or invalid']},
+        };
+      }
+
+      // Log thông tin gửi đi để debug
+      log.i('API_implements','Debug: Sending payment account data - $paymentAccount');
+
+      // Gửi yêu cầu POST
       final response = await http.post(
         Uri.parse('$baseUrl/insertpayments'),
         headers: {
@@ -455,9 +469,21 @@ class API_implements implements API {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: jsonEncode(paymentAccount.toJson()),
+        body: jsonEncode({
+          'account_number': paymentAccount.accountNumber,
+          'account_name': paymentAccount.accountName,
+          'payment_method': paymentAccount.paymentMethod,
+          'is_default': paymentAccount.isDefault,
+          'expiration_date': paymentAccount.expirationDate, // Thêm trường mới
+          'cvv': paymentAccount.cvv, // Thêm trường mới
+        }),
       );
+
+      // Log phản hồi từ server để debug
+      log.i('API_implements','Debug: Response status code: ${response.statusCode}, Body: ${response.body}');
+
       final responseData = jsonDecode(response.body);
+
       if (response.statusCode == 201) {
         return {
           'success': true,
@@ -467,18 +493,23 @@ class API_implements implements API {
       } else {
         return {
           'success': false,
-          'message': responseData['message'],
-          'errors': responseData['errors'],
+          'message': responseData['message'] ?? 'Unknown error',
+          'errors': responseData['errors'] ?? {'general': ['Server error']},
         };
       }
-    }
-    catch (e) {
-      print('Debug: Exception in getAmenitiesProperty: $e');
-      log.i('API_implements', 'Error fetching amenities: $e');
-      rethrow;
+    } catch (e) {
+      // Log lỗi chi tiết
+      log.i1('API_implements','Debug: Exception in addPaymentAccount: $e');
+      log.i('API_implements', 'Error adding payment account: $e');
+
+      // Trả về lỗi đồng nhất
+      return {
+        'success': false,
+        'message': 'An error occurred while adding payment account',
+        'errors': {'general': ['Exception: $e']},
+      };
     }
   }
-
   @override
   Future<AllPayment> getAllPayment() async {
     print('Fetching all payment...'); // Thay log.i1 nếu không có thư viện log
