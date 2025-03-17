@@ -87,6 +87,9 @@ class BodyPage extends StatelessWidget {
                                   : Icons.circle_outlined,
                               color: payment.isDefault ? Colors.green : Colors.grey,
                             ),
+                            onTap: (){
+                              print("Thay doi dl");
+                            },
                           ),
                         );
                       },

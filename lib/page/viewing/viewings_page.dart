@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/http/API.dart';
 import 'package:rentify/page/viewing/payment/payment_page.dart';
+import 'package:rentify/page/viewing/payment/select_payment.dart';
 import 'package:rentify/page/viewing/viewing_cubit.dart';
 import 'package:rentify/model/propertities.dart';
 import 'date_cubit.dart';
@@ -23,9 +24,9 @@ class BookingPage extends StatelessWidget {
         ),
       ],
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF96705B),
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0xFF96705B),
           elevation: 0,
           title: const Text(
             'Yêu cầu đặt phòng',
@@ -33,7 +34,20 @@ class BookingPage extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        body: BodyContain(property: property),
+    body: Container(
+    // Áp dụng gradient
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,    end: Alignment.bottomCenter,
+        colors: [
+          Color(0xFF96705B),
+          Color(0xFFFFEEDB),
+        ],
+        stops: [0.3, 1.0],
+      ),
+    ),
+      child: BodyContain(property: property),
+    ),
       ),
     );
   }
@@ -201,7 +215,7 @@ class BodyContain extends StatelessWidget {
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
-                    backgroundColor: Colors.red,
+                    backgroundColor: Color(0xFF96705B),
                   ),
                   child: state.isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
@@ -228,9 +242,8 @@ class PaymentWidget extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PaymentPage()),
+          MaterialPageRoute(builder: (context) => SelectPaymentPage()),
         );
-        print("Chuyển đến màn hình chọn phương thức thanh toán");
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -260,7 +273,7 @@ class PaymentWidget extends StatelessWidget {
                   Row(
                     children: [
                       const Text(
-                        "Visa",
+                        "Tên phương thức",
                         style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
@@ -268,7 +281,7 @@ class PaymentWidget extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       const Text(
-                        "•••• 6748",
+                        "Số stk",
                         style: TextStyle(fontSize: 16, color: Colors.black54),
                       ),
                     ],
