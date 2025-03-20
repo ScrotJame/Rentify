@@ -238,61 +238,79 @@ class PaymentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SelectPaymentPage()),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 5,
-              spreadRadius: 2,
+    return BlocBuilder<ViewngCubit, ViewngState>(
+      builder: (context, state) {
+        final selectedAccount = state.selectedAccount;
+
+        // Lấy propertyId từ BodyContain một cách an toàn
+        final bodyContain = context.findAncestorWidgetOfExactType<BodyContain>();
+        final int? propertyId = bodyContain?.property.id; // Kiểm tra null
+        final DateTime? selectedDate = context.read<DateCubit>().state;
+
+        return GestureDetector(
+          onTap: propertyId != null
+              ? () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SelectPaymentPage(
+                  propertyId: propertyId,
+                  viewingTime: selectedDate?.toString() ?? '',
+                ),
+              ),
+            );
+          }
+              : null, // Vô hiệu hóa onTap nếu propertyId là null
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Phương thức thanh toán",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "Tên phương thức",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        "Phương thức thanh toán",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        "Số stk",
-                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(
+                            selectedAccount?.accountName ?? "Chưa chọn phương thức",
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            selectedAccount?.accountNumber ?? "Chưa chọn",
+                            style: const TextStyle(fontSize: 16, color: Colors.black54),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                const Icon(Icons.arrow_forward_ios, color: Colors.black54),
+              ],
             ),
-            const Icon(Icons.arrow_forward_ios, color: Colors.black54),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

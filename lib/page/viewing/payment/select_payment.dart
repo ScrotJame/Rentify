@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rentify/page/viewing/payment/payment_cubit.dart';
-
 import '../../../http/API.dart';
+import '../viewing_cubit.dart';
 
 class SelectPaymentPage extends StatelessWidget {
-  const SelectPaymentPage({super.key});
+  final int propertyId;
+  final String viewingTime;
+
+  const SelectPaymentPage({
+    required this.propertyId,
+    required this.viewingTime,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => PaymentCubit(context.read<API>()),
+      create: (context) => ViewngCubit(context.read<API>())..fetchPaymentAccounts(),
       child: Scaffold(
         backgroundColor: Color(0xFF96705B),
         appBar: AppBar(
-            backgroundColor: Color(0xFF96705B),
+          backgroundColor: Color(0xFF96705B),
+          title: Text('Chọn tài khoản thanh toán'),
         ),
         body: Stack(
           children: [
@@ -33,7 +40,10 @@ class SelectPaymentPage extends StatelessWidget {
               ),
             ),
             // Nội dung chính
-            const SelectPaymentBody(),
+            SelectPaymentBody(
+              propertyId: propertyId,
+              viewingTime: viewingTime,
+            ),
           ],
         ),
       ),
@@ -42,48 +52,51 @@ class SelectPaymentPage extends StatelessWidget {
 }
 
 class SelectPaymentBody extends StatelessWidget {
-  const SelectPaymentBody({super.key});
+  final int propertyId;
+  final String viewingTime;
+
+  const SelectPaymentBody({
+    required this.propertyId,
+    required this.viewingTime,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<PaymentCubit, PaymentState>(
-      listener: (context, state) {
-        if (state is PaymentSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
-        } else if (state is PaymentError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
-        }
-      },
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              const Text(
-                'Danh sách tài khoản thanh toán',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              BlocBuilder<PaymentCubit, PaymentState>(
-                builder: (context, state) {
-                  if (state is PaymentLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is PaymentSuccess) {
-                    if (state.allpaymentAccounts.isEmpty) {
-                      return const Center(child: Text('Chưa có tài khoản nào.'));
-                    }
-                    return ListView.builder(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            const Text(
+              'Danh sách tài khoản thanh toán',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            BlocBuilder<ViewngCubit, ViewngState>(
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state.error != null) {
+                  return Center(child: Text(state.error!));
+                }
+                if (state.paymentAccounts.isEmpty) {
+                  return const Center(child: Text('Chưa có tài khoản nào.'));
+                }
+
+                return Column(
+                  children: [
+                    ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: state.allpaymentAccounts.length,
+                      itemCount: state.paymentAccounts.length,
                       itemBuilder: (context, index) {
-                        final payment = state.allpaymentAccounts[index];
+                        final payment = state.paymentAccounts[index];
+                        final isSelected = state.selectedAccount == payment;
+
                         return Card(
                           elevation: 2,
                           margin: const EdgeInsets.symmetric(vertical: 5),
@@ -101,23 +114,44 @@ class SelectPaymentBody extends StatelessWidget {
                               ],
                             ),
                             trailing: Icon(
-                              payment.isDefault
+                              isSelected
                                   ? Icons.check_circle
                                   : Icons.circle_outlined,
-                              color: payment.isDefault ? Colors.green : Colors.grey,
+                              color: isSelected ? Colors.green : Colors.grey,
                             ),
+                            onTap: () {
+                              context.read<ViewngCubit>().selectPaymentAccount(payment);
+                            },
                           ),
                         );
                       },
-                    );
-                  } else if (state is PaymentError) {
-                    return Center(child: Text(state.message));
-                  }
-                  return const Center(child: Text('Đang tải danh sách...'));
-                },
-              ),
-            ],
-          ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: state.selectedAccount != null
+                          ? () {
+                        Navigator.pushNamed(
+                          context,
+                          '/bookings',
+                          arguments: {
+                            'property_id': propertyId,
+                            'viewing_time': viewingTime,
+                          },
+                        );
+                      }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      ),
+                      child: const Text('Tiếp tục'),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

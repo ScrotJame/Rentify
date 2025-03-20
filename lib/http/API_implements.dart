@@ -11,7 +11,7 @@ import 'log/log.dart';
 
 class API_implements implements API {
   late Log log;
-  final String baseUrl = 'http://192.168.1.109:8000/api';
+  final String baseUrl = 'http://192.168.1.21:8000/api';
 
   API_implements(this.log);
 
@@ -191,10 +191,15 @@ class API_implements implements API {
   @override
   Future<List<Amenity>> getAmenitiesProperty(int propertyId) async {
     log.i1('API_implements', 'Fetching amenities for propertyId: $propertyId');
-
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
     try {
       print('Debug: Sending GET request to $baseUrl/protities/$propertyId/amenities');
-      final response = await http.get(Uri.parse('$baseUrl/protities/$propertyId/amenities'));
+      final response = await http.get(Uri.parse('$baseUrl/protities/$propertyId/amenities'), headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },);
 
       print('Debug: GetAmenitiesProperty response status: ${response.statusCode}');
       print('Debug: GetAmenitiesProperty response body: ${response.body}');

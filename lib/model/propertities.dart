@@ -11,6 +11,7 @@ class DetailProperty {
   String price;
   int bedrooms;
   int bathrooms;
+  int? deposit;
   int area;
   String typeRestroom;
   String propertyType;
@@ -28,6 +29,7 @@ class DetailProperty {
     required this.price,
     required this.bedrooms,
     required this.bathrooms,
+    this.deposit,
     required this.area,
     required this.typeRestroom,
     required this.propertyType,
@@ -46,6 +48,7 @@ class DetailProperty {
     price: json["price"],
     bedrooms: json["bedrooms"],
     bathrooms: json["bathrooms"],
+    deposit: json["deposit"],
     area: json["area"],
     typeRestroom: json["type_restroom"],
     propertyType: json["property_type"],
@@ -64,6 +67,7 @@ class DetailProperty {
     "price": price,
     "bedrooms": bedrooms,
     "bathrooms": bathrooms,
+    "deposit": deposit,
     "area": area,
     "type_restroom": typeRestroom,
     "property_type": propertyType,
