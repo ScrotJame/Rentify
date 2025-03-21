@@ -1,69 +1,64 @@
-import 'dart:convert';
-
 class PaymentAccount {
-  final String? accountNumber;
-  final String accountName;
-  final String paymentMethod;
-  final String? providerName;
-  final String? cardType;
-  final String? expirationDate;
-  final bool isDefault;
-  final String? cvv;
-  final int? addressCode;
-  final int? userId;
+  int? id;
+  int? userId;
+  String accountNumber;
+  String accountName;
+  String paymentMethod;
+  dynamic providerName;
+  dynamic cardType;
+  DateTime? expirationDate;
+  dynamic cvv;
+  dynamic addressCode;
+  bool isDefault;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
   PaymentAccount({
-    this.accountNumber,
+    this.id,
+    this.userId,
+    required this.accountNumber,
     required this.accountName,
     required this.paymentMethod,
     this.providerName,
     this.cardType,
     this.expirationDate,
-    required this.isDefault,
     this.cvv,
     this.addressCode,
-    this.userId,
+    required this.isDefault,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  factory PaymentAccount.fromJson(Map<String, dynamic> json) {
-    return PaymentAccount(
-      accountNumber: json['account_number'] as String?,
-      accountName: json['account_name'] as String? ?? 'Unknown',
-      paymentMethod: json['payment_method'] as String? ?? 'unknown',
-      providerName: json['provider_name'] as String?,
-      cardType: json['card_type'] as String?,
-      expirationDate: json['expiration_date'] as String?,
-      isDefault: _parseIsDefault(json['is_default']),
-      cvv: json['cvv'] as String? ?? 'unknown',
-      addressCode: json['address_code'] != null
-          ? int.tryParse(json['address_code'].toString())
-          : null, // Chuyển đổi an toàn
-      userId: json['user_id'] != null
-          ? int.tryParse(json['user_id'].toString())
-          : null,
-    );
-  }
+  factory PaymentAccount.fromJson(Map<String, dynamic> json) => PaymentAccount(
+    id: json["id"],
+    userId: json["user_id"],
+    accountNumber: json["account_number"],
+    accountName: json["account_name"],
+    paymentMethod: json["payment_method"],
+    providerName: json["provider_name"],
+    cardType: json["card_type"],
+    expirationDate: json["expiration_date"] != null ? DateTime.parse(json["expiration_date"]) : null,
+    cvv: json["cvv"],
+    addressCode: json["address_code"],
+    isDefault: json["is_default"], // Lỗi xảy ra ở đây
+    createdAt: json["created_at"] != null ? DateTime.parse(json["created_at"]) : null,
+    updatedAt: json["updated_at"] != null ? DateTime.parse(json["updated_at"]) : null,
+  );
 
-  static bool _parseIsDefault(dynamic value) {
-    if (value == null) return false;
-    if (value is int) return value == 1;
-    if (value is bool) return value;
-    if (value is String) return value == '1' || value.toLowerCase() == 'true';
-    return false; // Giá trị mặc định nếu không hợp lệ
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'account_number': accountNumber,
-      'account_name': accountName,
-      'payment_method': paymentMethod,
-      'provider_name': providerName,
-      'card_type': cardType,
-      'expiration_date': expirationDate,
-      'is_default': isDefault ? 1 : 0,
-      'cvv': cvv,
-      'address_code': addressCode,
-      'user_id': userId,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    if (id != null) "id": id,
+    if (userId != null) "user_id": userId,
+    "account_number": accountNumber,
+    "account_name": accountName,
+    "payment_method": paymentMethod,
+    if (providerName != null) "provider_name": providerName,
+    if (cardType != null) "card_type": cardType,
+    if (expirationDate != null)
+      "expiration_date": "${expirationDate!.year.toString().padLeft(4, '0')}-${expirationDate!.month.toString().padLeft(2, '0')}-${expirationDate!.day.toString().padLeft(2, '0')}",
+    if (cvv != null) "cvv": cvv,
+    if (addressCode != null) "address_code": addressCode,
+    "is_default": isDefault,
+    if (createdAt != null) "created_at": createdAt!.toIso8601String(),
+    if (updatedAt != null) "updated_at": updatedAt!.toIso8601String(),
+  };
 }

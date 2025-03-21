@@ -5,7 +5,7 @@ import '../../../http/API.dart';
 import '../../../model/pay/paymentAccounts.dart';
 
 class PaymentPage extends StatelessWidget {
-  static const String route = 'payment';
+  static const String route = '/payment';
   const PaymentPage({super.key});
 
   @override
@@ -255,13 +255,35 @@ class _AddPaymentState extends State<AddPayment> {
                 onPressed: selectedPaymentMethod == null
                     ? null
                     : () {
+                  // Parse expirationDate từ MM/YY
+                  DateTime? expirationDate;
+                  try {
+                    final parts = _paymentEndDateController.text.split('/');
+                    if (parts.length == 2) {
+                      final month = int.parse(parts[0]);
+                      final year = int.parse(parts[1]) + 2000; // Giả sử YY là 2 chữ số, cộng 2000 để thành YYYY
+                      expirationDate = DateTime(year, month, 1);
+                    }
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Ngày hết hạn không hợp lệ (MM/YY)')),
+                    );
+                    return;
+                  }
                   final paymentAccount = PaymentAccount(
+                    id: 0, // Đặt id là null vì đây là tài khoản mới
+                    userId: null,
                     accountNumber: _accountNumberController.text,
                     accountName: _accountNameController.text,
                     paymentMethod: selectedPaymentMethod!,
                     cvv: _paymentCvvController.text,
-                    expirationDate: _paymentEndDateController.text,
+                    expirationDate: expirationDate,
+                    providerName: null,
+                    cardType: null,
+                    addressCode: null,
                     isDefault: true,
+                    createdAt: null,
+                    updatedAt: null,
                   );
                   context.read<PaymentCubit>().addPaymentAccount(paymentAccount);
                 },

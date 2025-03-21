@@ -224,12 +224,10 @@ class API_implements implements API {
 
 //dat phong
   @override
-  Future<Map<String, dynamic>> addBooking(int propertyId, String viewingTime) async {
+  Future<Map<String, dynamic>> addBooking(int propertyId, String viewingTime, double amount) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
 
-    // Debug: Kiểm tra token có tồn tại không
-    print('Debug: Token retrieved: $token');
     if (token == null) {
       throw Exception('No token available. Please login first.');
     }
@@ -240,6 +238,7 @@ class API_implements implements API {
     final requestBody = {
       'property_id': propertyId,
       'viewing_time': viewingTime,
+      'amount': amount,
     };
     print('Debug: Request body: ${jsonEncode(requestBody)}'); // In body để kiểm tra
 

@@ -11,7 +11,7 @@ class DetailProperty {
   String price;
   int bedrooms;
   int bathrooms;
-  int? deposit;
+  String? deposit;
   int area;
   String typeRestroom;
   String propertyType;

@@ -29,11 +29,11 @@ class ViewngCubit extends Cubit<ViewngState> {
     emit(state.copyWith(selectedAccount: account));
   }
 
-  Future<void> addBooking(int propertyId, String viewingTime) async {
+  Future<void> addBooking(int propertyId, String viewingTime, double amount) async {
     emit(state.copyWith(isLoading: true, error: null));
     try {
       final response = await api.addBooking(
-          propertyId, viewingTime
+          propertyId, viewingTime, amount
       );
       emit(state.copyWith(
         isLoading: false,

@@ -17,6 +17,7 @@ class DetailPage extends StatelessWidget {
   final int? id;
   static const String route = 'detail';
   final String baseUrl = 'http://192.168.1.13:8000/api';
+
   const DetailPage({super.key, required this.id});
 
   @override
@@ -67,7 +68,8 @@ class DetailPage extends StatelessWidget {
             return Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topCenter,    end: Alignment.bottomCenter,
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                   colors: [
                     Color(0xFF96705B),
                     Color(0xFFFFEEDB),
@@ -80,7 +82,7 @@ class DetailPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Hình ảnh (không thay đổi)
+                    // Hình ảnh
                     SizedBox(
                       height: 250,
                       child: Stack(
@@ -114,7 +116,7 @@ class DetailPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Tiêu đề và mô tả (không thay đổi)
+                    // Tiêu đề và mô tả
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: Column(
@@ -129,20 +131,18 @@ class DetailPage extends StatelessWidget {
                             style: TextStyle(fontSize: 16, color: Colors.grey),
                           ),
                           SizedBox(height: 8),
-                          // Đánh giá
                           Row(
                             children: [
                               Icon(Icons.star, color: Colors.amber, size: 20),
                               SizedBox(width: 8),
                               Text(
-                                "4.5 | 120 đánh giá", // Có thể lấy từ API nếu cần
+                                "4.5 | 120 đánh giá",
                                 style: TextStyle(fontSize: 16, color: Colors.grey),
                               ),
                             ],
                           ),
                           SizedBox(height: 8),
                           Divider(color: Colors.grey, thickness: 1),
-                          // Mô tả (ShowMoreText)
                           ShowMoreText(
                             text: property.description ?? 'Không có mô tả',
                           ),
@@ -166,7 +166,7 @@ class DetailPage extends StatelessWidget {
                               child: CachedNetworkImage(
                                 imageUrl: property.user.avatar.startsWith('http')
                                     ? property.user.avatar
-                                    : '$baseUrl/${property.user.avatar}', // Fallback nếu không phải URL
+                                    : '$baseUrl/${property.user.avatar}',
                                 width: 75,
                                 height: 75,
                                 fit: BoxFit.cover,
@@ -258,20 +258,22 @@ class DetailPage extends StatelessWidget {
                           Text("Maps", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           Container(
                             height: 200,
-                            color: Colors.grey[300], // Placeholder cho bản đồ
+                            color: Colors.grey[300],
                             child: Center(child: Text("Bản đồ vị trí: ${property.location}")),
                           ),
                           Divider(color: Colors.grey, thickness: 1),
                           Text("Đánh giá", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          Row(children: [
-                            Icon(Icons.star, color: Colors.amber, size: 20),
-                            Text("4.5 | 120 đánh giá", style: TextStyle(fontSize: 16, color: Colors.grey)),
-                          ],),
+                          Row(
+                            children: [
+                              Icon(Icons.star, color: Colors.amber, size: 20),
+                              Text("4.5 | 120 đánh giá", style: TextStyle(fontSize: 16, color: Colors.grey)),
+                            ],
+                          ),
                           Divider(color: Colors.grey, thickness: 1),
                         ],
                       ),
                     ),
-                    // Gặp gỡ chủ nhà - Không thay đổi
+                    // Gặp gỡ chủ nhà
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Column(
@@ -288,9 +290,7 @@ class DetailPage extends StatelessWidget {
                           Align(
                             alignment: Alignment.center,
                             child: OutlinedButton(
-                              onPressed: () {
-                                // Thêm logic nhắn tin
-                              },
+                              onPressed: () {},
                               style: OutlinedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -321,15 +321,14 @@ class DetailPage extends StatelessWidget {
           builder: (context, state) {
             final _property = state.property;
             if (_property == null) {
-              return SizedBox.shrink(); // Trả về widget rỗng nếu property là null
+              return SizedBox.shrink();
             }
             return BookingBar(
               onBookPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                    builder: (context) => BookingPage(property: _property),
-                ),
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => PraseAmount(property: _property),
                 );
               },
               property: _property,

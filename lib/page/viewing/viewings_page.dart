@@ -10,9 +10,14 @@ import 'date_cubit.dart';
 
 class BookingPage extends StatelessWidget {
   final DetailProperty property;
+  final double amount; // Thêm tham số amount
   static const String route = 'booking';
 
-  const BookingPage({super.key, required this.property});
+  const BookingPage({
+    super.key,
+    required this.property,
+    required this.amount,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,20 +39,20 @@ class BookingPage extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-    body: Container(
-    // Áp dụng gradient
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,    end: Alignment.bottomCenter,
-        colors: [
-          Color(0xFF96705B),
-          Color(0xFFFFEEDB),
-        ],
-        stops: [0.3, 1.0],
-      ),
-    ),
-      child: BodyContain(property: property),
-    ),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF96705B),
+                Color(0xFFFFEEDB),
+              ],
+              stops: [0.3, 1.0],
+            ),
+          ),
+          child: BodyContain(property: property, amount: amount),
+        ),
       ),
     );
   }
@@ -55,8 +60,13 @@ class BookingPage extends StatelessWidget {
 
 class BodyContain extends StatelessWidget {
   final DetailProperty property;
+  final double amount; // Thêm amount
 
-  const BodyContain({super.key, required this.property});
+  const BodyContain({
+    super.key,
+    required this.property,
+    required this.amount,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -74,17 +84,17 @@ class BodyContain extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(12), // Bo góc cho đẹp
+                borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1), // Màu bóng nhẹ
-                    blurRadius: 6, // Độ mờ bóng
-                    spreadRadius: 2, // Mức lan tỏa của bóng
-                    offset: const Offset(0, 3), // Đổ bóng theo trục y
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 6,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
-              padding: const EdgeInsets.all(12), // Padding để nội dung không dính sát
+              padding: const EdgeInsets.all(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -121,6 +131,11 @@ class BodyContain extends StatelessWidget {
                   Text(
                     'Giá phòng: ${double.parse(property.price) / 1000000} triệu/tháng',
                     style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Số tiền thanh toán: ${amount / 1000000} triệu',
+                    style: const TextStyle(fontSize: 16, color: Colors.blue),
                   ),
                 ],
               ),
@@ -174,7 +189,7 @@ class BodyContain extends StatelessWidget {
               ),
               child: TextField(
                 decoration: const InputDecoration(
-                  labelText: 'Nhăn tin cho chủ nhà',
+                  labelText: 'Nhắn tin cho chủ nhà',
                   border: InputBorder.none,
                 ),
                 maxLines: 5,
@@ -205,6 +220,7 @@ class BodyContain extends StatelessWidget {
                       context.read<ViewngCubit>().addBooking(
                         property.id,
                         selectedDate.toString(),
+                        amount,
                       );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -244,7 +260,7 @@ class PaymentWidget extends StatelessWidget {
 
         // Lấy propertyId từ BodyContain một cách an toàn
         final bodyContain = context.findAncestorWidgetOfExactType<BodyContain>();
-        final int? propertyId = bodyContain?.property.id; // Kiểm tra null
+        final int? propertyId = bodyContain?.property.id;
         final DateTime? selectedDate = context.read<DateCubit>().state;
 
         return GestureDetector(
@@ -260,7 +276,7 @@ class PaymentWidget extends StatelessWidget {
               ),
             );
           }
-              : null, // Vô hiệu hóa onTap nếu propertyId là null
+              : null,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
