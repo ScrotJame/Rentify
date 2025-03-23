@@ -46,9 +46,9 @@ class BookingBar extends StatelessWidget {
                 ),
               ],
             ),
-            ElevatedButton(
+            OutlinedButton(
               onPressed: onBookPressed,
-              style: ElevatedButton.styleFrom(
+              style: OutlinedButton.styleFrom(
                 backgroundColor: Colors.white,
                 shadowColor: const Color(0xFF96705B),
                 elevation: 15,
@@ -115,70 +115,79 @@ class _PraseAmountState extends State<PraseAmount> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  // Tiêu đề
                   const Text(
                     'Tùy chọn giá',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 16),
-                  // Option 1: Giá thuê (price)
-                  ListTile(
-                    title: const Text(
-                      'Thanh toán toàn bộ',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    subtitle: Text(
-                      '${double.parse(widget.property.price) / 1000000} triệu/tháng',
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    trailing: Radio<String>(
-                      value: 'full',
-                      groupValue: selectedOption,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedOption = value;
-                        });
-                      },
-                    ),
-                    onTap: () {
-                      setState(() {
-                        selectedOption = 'full';
-                      });
-                    },
+                  const SizedBox(height: 36),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedOption = 'full';
+                            });
+                          },
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: selectedOption == 'full' ? const Color(0xFF96705B) : Colors.white,
+                            foregroundColor: selectedOption == 'full' ? Colors.white : Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(
+                                color: selectedOption == 'full' ? const Color(0xFF96705B) : Colors.grey,
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          child: Column(
+                            children: [
+                              const Text('Thanh toán toàn bộ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 4),
+                              Text('${double.parse(widget.property.price) / 1000000} triệu/tháng',
+                                  style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: hasDeposit
+                              ? () {
+                            setState(() {
+                              selectedOption = 'deposit';
+                            });
+                          }
+                              : null,
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: selectedOption == 'deposit' ? const Color(0xFF96705B) : Colors.white,
+                            foregroundColor: selectedOption == 'deposit' ? Colors.white : Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(
+                                color: selectedOption == 'deposit' ? const Color(0xFF96705B) : Colors.grey,
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          child: Column(
+                            children: [
+                              const Text('Tiền đặt cọc', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 4),
+                              Text(
+                                hasDeposit ? '${double.parse(widget.property.deposit!) / 1000000} triệu' : 'Không có đặt cọc',
+                                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const Divider(thickness: 1, color: Colors.black),
-                  // Option 2: Đặt cọc (deposit)
-                  ListTile(
-                    title: const Text(
-                      'Tiền đặt cọc',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    subtitle: Text(
-                      hasDeposit
-                          ? '${double.parse(widget.property.deposit!) / 1000000} triệu'
-                          : 'Không có đặt cọc',
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    trailing: Radio<String>(
-                      value: 'deposit',
-                      groupValue: selectedOption,
-                      onChanged: hasDeposit
-                          ? (value) {
-                        setState(() {
-                          selectedOption = value;
-                        });
-                      }
-                          : null,
-                    ),
-                    onTap: hasDeposit
-                        ? () {
-                      setState(() {
-                        selectedOption = 'deposit';
-                      });
-                    }
-                        : null,
-                  ),
-                  const SizedBox(height: 20),
+
+
+                  const SizedBox(height: 50),
                   // Nút xác nhận
                   ElevatedButton(
                     onPressed: selectedOption == null
