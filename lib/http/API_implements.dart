@@ -11,7 +11,7 @@ import 'log/log.dart';
 
 class API_implements implements API {
   late Log log;
-  final String baseUrl = 'http://192.168.1.21:8000/api';
+  final String baseUrl = 'http://192.168.1.15:8000/api';
 
   API_implements(this.log);
 
@@ -27,11 +27,9 @@ class API_implements implements API {
 
   @override
   Future<Map<String, dynamic>> checkLogin(String username, String password) async {
-    log.i1('API_implements', 'Attempting to login with: {username: $username, password: $password}');
     await delay();
 
     try {
-      print('Debug: Sending login request to $baseUrl/login with data: {username: $username, password: $password}');
       final response = await http.post(
         Uri.parse("$baseUrl/login"),
         headers: {
@@ -40,29 +38,19 @@ class API_implements implements API {
         },
         body: jsonEncode({"username": username, "password": password}),
       );
-
-      print('Debug: Login response status: ${response.statusCode}');
-      print('Debug: Login response body: ${response.body}');
-      log.i1('API_implements', 'Login API Response: ${response.statusCode} - ${response.body}');
+      log.i('API_Login', 'Login API Response: ${response.statusCode} - ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print('Debug: Decoded login data: $data');
         final token = data['token'];
-        print('Debug: Extracted token: $token');
 
         final prefs = await SharedPreferences.getInstance();
-        print('Debug: Saving token to SharedPreferences...');
         await prefs.setString('auth_token', token);
-        print('Debug: Token saved: $token');
-
-        log.i1('API_implements', 'Login successful, token saved.');
         return {
           "message": "Login successful",
           "token": token
         };
       } else {
-        log.i('API_implements', 'Login failed: ${response.body}');
         return {
           "success": false,
           "message": jsonDecode(response.body)['message'] ?? "Login failed"
@@ -70,7 +58,6 @@ class API_implements implements API {
       }
     } catch (e) {
       print('Debug: Exception during login: $e');
-      log.i('API_implements', 'Error during login: $e');
       return {
         "success": false,
         "message": "An error occurred: $e"
@@ -81,7 +68,6 @@ class API_implements implements API {
 //lay tat ca cac phong
   @override
   Future<List<AllProperty>> getAllProperty() async {
-    log.i1('API_implements', 'Fetching all properties...');
     await delay();
 
     final prefs = await SharedPreferences.getInstance();
@@ -89,12 +75,10 @@ class API_implements implements API {
     print('Debug: Retrieved token from SharedPreferences: $token');
 
     if (token == null) {
-      log.i('API_implements', 'No token found. User must login first.');
       throw Exception('No token found. Please login first.');
     }
 
     try {
-      print('Debug: Sending GET request to $baseUrl/allproperties with token: $token');
       final response = await http.get(
         Uri.parse('$baseUrl/allproperties'),
         headers: {
@@ -104,39 +88,28 @@ class API_implements implements API {
         },
       );
 
-      print('Debug: GetAllProperty response status: ${response.statusCode}');
-      print('Debug: GetAllProperty response body: ${response.body}');
-      log.i1('API_implements', 'GetAllProperty API Response: ${response.statusCode} - ${response.body}');
-
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
-        print('Debug: Decoded data length: ${data.length}');
-        log.i1('API_implements', 'Fetched ${data.length} properties.');
         return data.map((json) {
-          print('Debug: Parsing AllProperty JSON: $json');
           return AllProperty.fromJson(json);
         }).toList();
       } else {
         throw Exception('Failed to load properties: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      print('Debug: Exception in getAllProperty: $e');
-      log.i('API_implements', 'Error fetching properties: $e');
+      log.i('API_AllProperty', 'Error fetching properties: $e');
       rethrow;
     }
   }
 //thong tin chi tiet phong
   @override
   Future<DetailProperty> getProperty(int userId) async {
-    log.i1('API_implements', 'Fetching property details for userId: $userId');
     await delay();
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
-    print('Debug: Retrieved token for getProperty: $token');
 
     if (token == null) {
-      log.i('API_implements', 'No token found. User must login first.');
       throw Exception('No token found. Please login first.');
     }
 
@@ -150,9 +123,6 @@ class API_implements implements API {
           'Accept': 'application/json',
         },
       );
-
-      print('Debug: GetProperty response status: ${response.statusCode}');
-      print('Debug: GetProperty response body: ${response.body}');
       log.i1('API_implements', 'GetProperty API Response: ${response.statusCode} - ${response.body}');
 
       if (response.statusCode == 200) {
@@ -168,21 +138,15 @@ class API_implements implements API {
         }
 
         final Map<String, dynamic> data = decodedData;
-        print('Debug: Decoded getProperty data: $data');
         if (data.isEmpty) {
-          log.i('API_implements', 'No property data found for userId: $userId');
           throw Exception('Không tìm thấy bất động sản');
         }
-
-        print('Debug: Before parsing DetailProperty');
         final detailProperty = DetailProperty.fromJson(data);
-        print('Debug: After parsing DetailProperty: ${detailProperty.toJson()}');
         return detailProperty;
       } else {
         throw Exception('Failed to load user properties: ${response.statusCode}');
       }
     } catch (e) {
-      print('Debug: Exception in getProperty: $e');
       log.i('API_implements', 'Error fetching user properties: $e');
       rethrow;
     }
@@ -224,7 +188,7 @@ class API_implements implements API {
 
 //dat phong
   @override
-  Future<Map<String, dynamic>> addBooking(int propertyId, String viewingTime, double amount) async {
+  Future<Map<String, dynamic>> addBooking(int propertyId, String viewingTime,int paymentId, double amount) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
 
@@ -238,6 +202,7 @@ class API_implements implements API {
     final requestBody = {
       'property_id': propertyId,
       'viewing_time': viewingTime,
+      'payment_id':paymentId,
       'amount': amount,
     };
     print('Debug: Request body: ${jsonEncode(requestBody)}'); // In body để kiểm tra
@@ -449,11 +414,9 @@ class API_implements implements API {
   @override
   Future<Map<String, dynamic>> addPaymentAccount(PaymentAccount paymentAccount) async {
     try {
-      // Lấy token từ SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('auth_token');
 
-      // Kiểm tra token
       if (token == null) {
         return {
           'success': false,
@@ -463,7 +426,7 @@ class API_implements implements API {
       }
 
       // Log thông tin gửi đi để debug
-      log.i('API_implements','Debug: Sending payment account data - $paymentAccount');
+      log.i('API_addPayment','Debug: Sending payment account data - $paymentAccount');
 
       // Gửi yêu cầu POST
       final response = await http.post(
@@ -502,8 +465,7 @@ class API_implements implements API {
         };
       }
     } catch (e) {
-      // Log lỗi chi tiết
-      log.i1('API_implements','Debug: Exception in addPaymentAccount: $e');
+      log.i1('API_err_','Debug: Exception in addPaymentAccount: $e');
       log.i('API_implements', 'Error adding payment account: $e');
 
       // Trả về lỗi đồng nhất
@@ -514,17 +476,17 @@ class API_implements implements API {
       };
     }
   }
+
   @override
   Future<AllPayment> getAllPayment() async {
-    print('Fetching all payment...'); // Thay log.i1 nếu không có thư viện log
-    await Future.delayed(Duration(seconds: 1)); // Thay delay() nếu không định nghĩa
+
+    await delay();
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
     print('Debug: Retrieved token from SharedPreferences: $token');
 
     if (token == null) {
-      print('No token found. User must login first.');
       throw Exception('No token found. Please login first.');
     }
 
@@ -545,6 +507,41 @@ class API_implements implements API {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         return AllPayment.fromJson(data);
+      } else {
+        throw Exception('Failed to load payments: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Debug: Exception in getAllPayment: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<PaymentAccount> getDefaultPaymentAccount() async{
+
+    await delay();
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    print('Debug: Retrieved token from SharedPreferences: $token');
+
+    if (token == null) {
+      throw Exception('No token found. Please login first.');
+    }
+
+    try {
+      print('Debug: Sending GET request to $baseUrl/defaultaccount with token: $token');
+      final response = await http.get(
+        Uri.parse('$baseUrl/defaultaccount'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        return PaymentAccount.fromJson(data['data']);
       } else {
         throw Exception('Failed to load payments: ${response.statusCode} - ${response.body}');
       }

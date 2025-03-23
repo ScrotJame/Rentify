@@ -56,15 +56,15 @@ class BodyPage extends StatelessWidget {
                   if (state is PaymentLoading) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is PaymentSuccess) {
-                    if (state.allpaymentAccounts.isEmpty) {
+                    if (state.allPaymentAccounts.isEmpty) {
                       return const Center(child: Text('Chưa có tài khoản nào.'));
                     }
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: state.allpaymentAccounts.length,
+                      itemCount: state.allPaymentAccounts.length,
                       itemBuilder: (context, index) {
-                        final payment = state.allpaymentAccounts[index];
+                        final payment = state.allPaymentAccounts[index];
                         return Card(
                           elevation: 2,
                           margin: const EdgeInsets.symmetric(vertical: 5),

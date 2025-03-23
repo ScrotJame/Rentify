@@ -10,6 +10,7 @@ abstract class API{
   Future<Map<String, dynamic>> register(String username,  String password, String email);
   Future<User> getUser();
   Future <void> logoutUser();
+
   //property
   Future<List<AllProperty>> getAllProperty();
   Future<DetailProperty> getProperty(int userId);
@@ -17,12 +18,13 @@ abstract class API{
 
   Future<List<ResultProperty>> searchProperties(String keyword);
 
-  Future<Map<String, dynamic>> addBooking(int propertyId, String viewingTime, double amount);
+  Future<Map<String, dynamic>> addBooking(int propertyId, String viewingTime,int paymentId, double amount);
 
 
   //Payment
   Future<Map<String, dynamic>> addPaymentAccount(PaymentAccount paymentAccount);
   Future<AllPayment> getAllPayment();
+  Future<PaymentAccount> getDefaultPaymentAccount();
 
 
 }

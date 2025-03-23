@@ -2,16 +2,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/http/API.dart';
+import 'package:rentify/page/viewing/payment/payment_cubit.dart';
 import 'package:rentify/page/viewing/payment/payment_page.dart';
 import 'package:rentify/page/viewing/payment/select_payment.dart';
 import 'package:rentify/page/viewing/viewing_cubit.dart';
 import 'package:rentify/model/propertities.dart';
+import '../../model/pay/paymentAccounts.dart';
 import 'date_cubit.dart';
 
 class BookingPage extends StatelessWidget {
   final DetailProperty property;
-  final double amount; // Thêm tham số amount
-  static const String route = 'booking';
+  final double amount;
+  static const String route = '/bookings';
 
   const BookingPage({
     super.key,
@@ -24,9 +26,8 @@ class BookingPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<DateCubit>(create: (context) => DateCubit()),
-        BlocProvider<ViewngCubit>(
-          create: (context) => ViewngCubit(context.read<API>()),
-        ),
+        BlocProvider<ViewngCubit>(create: (context) => ViewngCubit(context.read<API>()),),
+        BlocProvider<PaymentCubit>(create: (context) => PaymentCubit(context.read<API>()),),
       ],
       child: Scaffold(
         backgroundColor: Color(0xFF96705B),
@@ -60,7 +61,7 @@ class BookingPage extends StatelessWidget {
 
 class BodyContain extends StatelessWidget {
   final DetailProperty property;
-  final double amount; // Thêm amount
+  final double amount;
 
   const BodyContain({
     super.key,
@@ -187,8 +188,8 @@ class BodyContain extends StatelessWidget {
                   ),
                 ],
               ),
-              child: TextField(
-                decoration: const InputDecoration(
+              child: const TextField(
+                decoration: InputDecoration(
                   labelText: 'Nhắn tin cho chủ nhà',
                   border: InputBorder.none,
                 ),
@@ -210,35 +211,46 @@ class BodyContain extends StatelessWidget {
                 }
               },
               builder: (context, state) {
-                return ElevatedButton(
-                  onPressed: state.isLoading
-                      ? null
-                      : () {
-                    final selectedDate =
-                        context.read<DateCubit>().state;
-                    if (selectedDate != null) {
-                      context.read<ViewngCubit>().addBooking(
-                        property.id,
-                        selectedDate.toString(),
-                        amount,
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Vui lòng chọn ngày bắt đầu')),
-                      );
+                return BlocBuilder<PaymentCubit, PaymentState>(
+                  builder: (context, paymentState) {
+                    //Chon tai khoan thanh toan
+                    PaymentAccount? selectedAccount;
+                    if (paymentState is PaymentSuccess) {
+                      selectedAccount = paymentState.selectedAccount ?? paymentState.defaultPaymentAccount;
                     }
+
+                    return ElevatedButton(
+                      onPressed: state.isLoading || selectedAccount == null
+                          ? null
+                          : () {
+                        final selectedDate = context.read<DateCubit>().state;
+                        if (selectedDate != null) {
+                          context.read<ViewngCubit>().addBooking(
+                            property.id,
+                            selectedDate.toString(),
+                            selectedAccount!.id!,
+                            amount,
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Vui lòng chọn ngày bắt đầu')
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 50),
+                        backgroundColor: const Color(0xFF96705B),
+                      ),
+                      child: state.isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                        'Xác nhận đặt phòng',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
                   },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                    backgroundColor: Color(0xFF96705B),
-                  ),
-                  child: state.isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text(
-                    'Xác nhận đặt phòng',
-                    style: TextStyle(color: Colors.white),
-                  ),
                 );
               },
             ),
@@ -252,13 +264,38 @@ class BodyContain extends StatelessWidget {
 class PaymentWidget extends StatelessWidget {
   const PaymentWidget({super.key});
 
+  String _maskCardNumber(String? cardNumber) {
+    if (cardNumber == null || cardNumber.length < 4) return "Chưa có tài khoản mặc định";
+    return "************ ${cardNumber.substring(cardNumber.length - 4)}";
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ViewngCubit, ViewngState>(
+    return BlocBuilder<PaymentCubit, PaymentState>(
       builder: (context, state) {
-        final selectedAccount = state.selectedAccount;
+        // Xử lý trạng thái loading
+        if (state is PaymentLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-        // Lấy propertyId từ BodyContain một cách an toàn
+        // Xử lý trạng thái lỗi
+        if (state is PaymentError) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Text(
+              state.message,
+              style: const TextStyle(color: Colors.red),
+            ),
+          );
+        }
+
+        // Lấy defaultPaymentAccount từ PaymentSuccess
+        PaymentAccount? defaultAccount;
+        if (state is PaymentSuccess) {
+          defaultAccount = state.defaultPaymentAccount;
+        }
+
+        // Lấy propertyId và selectedDate
         final bodyContain = context.findAncestorWidgetOfExactType<BodyContain>();
         final int? propertyId = bodyContain?.property.id;
         final DateTime? selectedDate = context.read<DateCubit>().state;
@@ -282,6 +319,10 @@ class PaymentWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: defaultAccount != null ? Colors.blue : Colors.grey,
+                width: 1,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),
@@ -299,29 +340,59 @@ class PaymentWidget extends StatelessWidget {
                     children: [
                       const Text(
                         "Phương thức thanh toán",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 8),
+                      // Hiển thị loại thẻ (paymentMethod)
                       Row(
                         children: [
-                          Text(
-                            selectedAccount?.accountName ?? "Chưa chọn phương thức",
-                            style: const TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
+                          const Text(
+                            "Loại thẻ: ",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
                             ),
                           ),
-                          const SizedBox(width: 8),
                           Text(
-                            selectedAccount?.accountNumber ?? "Chưa chọn",
-                            style: const TextStyle(fontSize: 16, color: Colors.black54),
+                            defaultAccount?.paymentMethod ?? "Chưa chọn",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      // Hiển thị số thẻ (accountNumber)
+                      Row(
+                        children: [
+                          const Text(
+                            "Số thẻ: ",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          Text(
+                            _maskCardNumber(defaultAccount?.accountNumber),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                            ),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                const Icon(Icons.arrow_forward_ios, color: Colors.black54),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.black54,
+                ),
               ],
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rentify/model/pay/paymentAccounts.dart';
 import '../../model/propertities.dart';
 import '../../page/viewing/viewings_page.dart';
 
@@ -70,7 +71,7 @@ class BookingBar extends StatelessWidget {
 
 class PraseAmount extends StatefulWidget {
   final DetailProperty property;
-
+  static const String route = '/praseAmount';
   const PraseAmount({super.key, required this.property});
 
   @override
@@ -78,14 +79,13 @@ class PraseAmount extends StatefulWidget {
 }
 
 class _PraseAmountState extends State<PraseAmount> {
-  String? selectedOption; // Lưu lựa chọn của người dùng: "deposit" hoặc "full"
-
+  String? selectedOption;
   @override
   Widget build(BuildContext context) {
-    // Kiểm tra xem deposit có giá trị hợp lệ hay không
     bool hasDeposit = widget.property.deposit != null && widget.property.deposit!.isNotEmpty;
 
     return DraggableScrollableSheet(
+      expand: false,
       initialChildSize: 0.5,
       minChildSize: 0.2,
       maxChildSize: 0.8,
@@ -94,13 +94,6 @@ class _PraseAmountState extends State<PraseAmount> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, -2),
-              ),
-            ],
           ),
           child: SingleChildScrollView(
             controller: scrollController,
@@ -175,7 +168,7 @@ class _PraseAmountState extends State<PraseAmount> {
                           selectedOption = value;
                         });
                       }
-                          : null, // Vô hiệu hóa nếu không có deposit
+                          : null,
                     ),
                     onTap: hasDeposit
                         ? () {
@@ -183,7 +176,7 @@ class _PraseAmountState extends State<PraseAmount> {
                         selectedOption = 'deposit';
                       });
                     }
-                        : null, // Vô hiệu hóa nếu không có deposit
+                        : null,
                   ),
                   const SizedBox(height: 20),
                   // Nút xác nhận
@@ -198,11 +191,7 @@ class _PraseAmountState extends State<PraseAmount> {
                       } else {
                         amount = hasDeposit ? double.parse(widget.property.deposit!) : 0;
                       }
-
-                      // Đóng bottom sheet
                       Navigator.pop(context);
-
-                      // Chuyển đến BookingPage và truyền amount
                       Navigator.push(
                         context,
                         MaterialPageRoute(

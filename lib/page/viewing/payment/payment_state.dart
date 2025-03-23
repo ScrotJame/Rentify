@@ -1,8 +1,11 @@
 part of 'payment_cubit.dart';
 
 
-abstract class PaymentState {
+abstract class PaymentState extends Equatable {
   const PaymentState();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class PaymentInitial extends PaymentState {
@@ -15,29 +18,43 @@ class PaymentLoading extends PaymentState {
 
 class PaymentSuccess extends PaymentState {
   final String message;
-  final PaymentAccount? paymentAccount; // Tài khoản cụ thể (nullable)
-  final List<PaymentAccount> allpaymentAccounts; // Danh sách tất cả
+  final PaymentAccount? selectedAccount;
+  final List<PaymentAccount> allPaymentAccounts;
+  final PaymentAccount? defaultPaymentAccount;
+  final String? selectedPaymentMethod;
 
   const PaymentSuccess({
     required this.message,
-    this.paymentAccount,
-    required this.allpaymentAccounts,
+    this.selectedAccount,
+    required this.allPaymentAccounts,
+    this.defaultPaymentAccount,
+    this.selectedPaymentMethod,
   });
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is PaymentSuccess &&
-              runtimeType == other.runtimeType &&
-              message == other.message &&
-              paymentAccount == other.paymentAccount &&
-              listEquals(allpaymentAccounts, other.allpaymentAccounts);
+  PaymentSuccess copyWith({
+    String? message,
+    PaymentAccount? selectedAccount,
+    List<PaymentAccount>? allPaymentAccounts,
+    PaymentAccount? defaultPaymentAccount,
+    String? selectedPaymentMethod,
+  }) {
+    return PaymentSuccess(
+      message: message ?? this.message,
+      selectedAccount: selectedAccount ?? this.selectedAccount,
+      allPaymentAccounts: allPaymentAccounts ?? this.allPaymentAccounts,
+      defaultPaymentAccount: defaultPaymentAccount ?? this.defaultPaymentAccount,
+      selectedPaymentMethod: selectedPaymentMethod ?? this.selectedPaymentMethod,
+    );
+  }
 
   @override
-  int get hashCode =>
-      message.hashCode ^
-      (paymentAccount?.hashCode ?? 0) ^
-      allpaymentAccounts.hashCode;
+  List<Object?> get props => [
+    message,
+    selectedAccount,
+    allPaymentAccounts,
+    defaultPaymentAccount,
+    selectedPaymentMethod,
+  ];
 }
 
 class PaymentError extends PaymentState {
@@ -50,13 +67,5 @@ class PaymentError extends PaymentState {
   });
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is PaymentError &&
-              runtimeType == other.runtimeType &&
-              message == other.message &&
-              errors == other.errors;
-
-  @override
-  int get hashCode => message.hashCode ^ (errors?.hashCode ?? 0);
+  List<Object?> get props => [message, errors];
 }

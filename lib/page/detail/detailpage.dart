@@ -327,7 +327,7 @@ class DetailPage extends StatelessWidget {
               onBookPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  isScrollControlled: true,
+                  isScrollControlled: false ,
                   builder: (context) => PraseAmount(property: _property),
                 );
               },
