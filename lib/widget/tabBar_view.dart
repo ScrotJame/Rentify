@@ -5,12 +5,13 @@ import 'package:rentify/page/property/home_page_view.dart';
 import 'package:rentify/widget/sreach_bar.dart';
 
 import '../../main_cubit.dart';
+import '../page/lease/lease_page.dart';
 import '../page/user/user_page.dart';
 //import '../page/user/profile_page.dart';
 
 
 class PageMain extends StatelessWidget { // Callback để thông báo khi chọn tab
-  static const String route= 'Pagemain';
+  static const String route= '/pagemain';
   PageMain({
     super.key,
   });
@@ -19,8 +20,8 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
     return  BlocBuilder<MainCubit, MainState>(
       builder: (context, state) {
         final pages = [
-          Container(child: Text('Travel-đang cập nhật')),
-          Container(child: Text('Favorite-đang cập nhật')),
+          LeasePage(),
+          Container( child: Text('Favorite-đang cập nhật')),
           HomePageView(), // Tab Home hiển thị HomePageView
           Container(child: Text('Message-đang cập nhật')),
           UserPage(),
@@ -28,6 +29,7 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
         ];
 
         return Scaffold(
+          backgroundColor: Color(0xFFFFEEDB),
           appBar: AppBar(
             backgroundColor: Color(0xFFFFEEDB),
             flexibleSpace: Center(
@@ -47,15 +49,16 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
           ),
           body: pages[state.selected.index], // Hiển thị tab theo selected
           bottomNavigationBar: NavigationBar(
+            height: 55,
             backgroundColor: Color(0xFFFFEEDB),
             selectedIndex: state.selected.index,
             destinations: const [
-              NavigationDestination(icon: Icon(Icons.search), label: 'Travel'),
+              NavigationDestination(icon: Icon(Icons.home), label: 'House'),
               NavigationDestination(
                 icon: Badge(child: Icon(Icons.favorite), label: Text('1')),
                 label: 'Favorite',
               ),
-              NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+              NavigationDestination(icon: Icon(Icons.search), label: 'Explore'),
               NavigationDestination(icon: Icon(Icons.messenger), label: 'Message'),
               NavigationDestination(icon: Icon(Icons.account_circle_outlined), label: 'User'),
             ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rentify/http/API_implements.dart';
 import 'package:rentify/http/log/log.dart';
+import 'package:rentify/page/lease/lease_cubit.dart';
 import 'package:rentify/page/search/search_cubit.dart';
 import 'main_cubit.dart';
 import 'package:rentify/page/detail/detail_cubit.dart';
@@ -94,6 +95,9 @@ class Provider extends StatelessWidget {
           create: (context) => DetailCubit(context.read<API>()),),
         BlocProvider(create: (context) => SearchCubit(context.read<API>()),
         ),
+        BlocProvider(create: (context) => LeaseCubit(context.read<API>()),
+        ),
+        //BlocProvider(create: (context) => FavoriteCubit(context.read<API>()),
       ],
       child: App(),
     );

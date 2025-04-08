@@ -9,7 +9,7 @@ import '../../../widget/noti_bar.dart';
 import '../../../widget/tabBar_view.dart';
 import '../login_cubit.dart';
 class RegisterScreen extends StatelessWidget {
-  static const String route = "RegisterScreen";
+  static const String route = "/register";
 
   @override
   Widget build(BuildContext context) {

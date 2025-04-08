@@ -126,9 +126,182 @@ class DetailPage extends StatelessWidget {
                             property.title,
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min, // Giữ kích thước nhỏ gọn
+                            children: [
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: property.status == 'available'
+                                      ? Colors.green
+                                      : property.status == 'rented'
+                                      ? Colors.red
+                                      : Colors.orange, // Mặc định là 'pending'
+                                ),
+                              ),
+                              SizedBox(width: 6),
+                              Text(
+                                property.status == 'available'
+                                    ? 'Còn trống'
+                                    : property.status == 'rented'
+                                    ? 'Đã thuê'
+                                    : 'Đang chờ',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Divider(color: Colors.black, thickness: 1),
                           Text(
                             "Nhà ở cho dân | ${double.parse(property.price) / 1000000} triệu/tháng",
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/dorm-room.svg',
+                                      width: 15,
+                                      height: 15,
+                                      color: Colors.black,
+                                      placeholderBuilder: (context) => Icon(Icons.error, color: Colors.red),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "Số phòng: ${property.bedrooms}",
+                                      style: TextStyle(color: Colors.white, fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/user.svg',
+                                      width: 15,
+                                      height: 15,
+                                      color: Colors.black,
+                                      placeholderBuilder: (context) => Icon(Icons.error, color: Colors.red),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "Tối đa: ${property.bedrooms}",
+                                      style: TextStyle(color: Colors.white, fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 8),
+                          Wrap(
+                            spacing: 10,
+                            runSpacing: 8,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/toilet.svg',
+                                      width: 15,
+                                      height: 15,
+                                      color: Colors.black,
+                                      placeholderBuilder: (context) => Icon(Icons.error, color: Colors.red),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Flexible(
+                                      child: Text(
+                                        property.typeRestroom == "private" ? "Vệ sinh khép kín" : "Vệ sinh chung",
+                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                        softWrap: true,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/city.svg',
+                                      width: 15,
+                                      height: 15,
+                                      color: Colors.black,
+                                      placeholderBuilder: (context) => Icon(Icons.error, color: Colors.red),
+                                    ),
+                                    SizedBox(width: 8),
+                                    Flexible(
+                                      child: Text(
+                                        "Loại: ${property.propertyType.toLowerCase()}",
+                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                        softWrap: true,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(height: 8),
                           Row(
@@ -137,7 +310,7 @@ class DetailPage extends StatelessWidget {
                               SizedBox(width: 8),
                               Text(
                                 "4.5 | 120 đánh giá",
-                                style: TextStyle(fontSize: 16, color: Colors.grey),
+                                style: TextStyle(fontSize: 16, color: Colors.black),
                               ),
                             ],
                           ),

@@ -4,6 +4,7 @@ import 'package:rentify/model/propertities.dart';
 import '../model/pay/payment.dart';
 import '../model/pay/paymentAccounts.dart';
 import '../model/user.dart';
+import '../model/viewing.dart';
 abstract class API{
   //Account
   Future<Map<String, dynamic>> checkLogin(String username, String password);
@@ -26,5 +27,7 @@ abstract class API{
   Future<AllPayment> getAllPayment();
   Future<PaymentAccount> getDefaultPaymentAccount();
 
-
+  //Lease
+  Future<List<Viewing>> getLease();
+  Future<Viewing> getDetailLease(int id);
 }

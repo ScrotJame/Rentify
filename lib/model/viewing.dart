@@ -1,77 +1,61 @@
 import 'pay/paymentAccounts.dart';
 
-class Booking {
+class Bookings {
   String message;
-  Data data;
+  List<Viewing> data;
 
-  Booking({
+  Bookings({
     required this.message,
     required this.data,
   });
 
-  factory Booking.fromJson(Map<String, dynamic> json) => Booking(
+  factory Bookings.fromJson(Map<String, dynamic> json) => Bookings(
     message: json["message"],
-    data: Data.fromJson(json["data"]),
+    data: List<Viewing>.from(json["data"].map((x) => Viewing.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "message": message,
-    "data": data.toJson(),
-  };
-}
-
-class Data {
-  Viewing viewing;
-
-  Data({
-    required this.viewing,
-  });
-
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-    viewing: Viewing.fromJson(json["viewing"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "viewing": viewing.toJson(),
+    "data": List<dynamic>.from(data.map((x) => x.toJson())),
   };
 }
 
 class Viewing {
-  int propertyId;
-  int userId;
-  DateTime viewingTime;
-  int paymentId;
-  String status;
   int id;
-  PaymentAccount paymentAccount;
+  DateTime viewingTime;
+  dynamic message;
+  String status;
+  int paymentId;
+  String title;
+  String imageUrl;
 
   Viewing({
-    required this.propertyId,
-    required this.userId,
-    required this.viewingTime,
-    required this.paymentId,
-    required this.status,
     required this.id,
-    required this.paymentAccount,
+    required this.viewingTime,
+    required this.message,
+    required this.status,
+    required this.paymentId,
+    required this.title,
+    required this.imageUrl,
   });
 
   factory Viewing.fromJson(Map<String, dynamic> json) => Viewing(
-    propertyId: json["property_id"],
-    userId: json["user_id"],
-    viewingTime: DateTime.parse(json["viewing_time"]),
-    paymentId: json["payment_id"],
-    status: json["status"],
     id: json["id"],
-    paymentAccount: PaymentAccount.fromJson(json["payment_account"]),
+    viewingTime: DateTime.parse(json["viewing_time"]),
+    message: json["message"],
+    status: json["status"],
+    paymentId: json["payment_id"],
+    title: json["title"],
+    imageUrl: json["image_url"],
   );
 
   Map<String, dynamic> toJson() => {
-    "property_id": propertyId,
-    "user_id": userId,
-    "viewing_time": viewingTime.toIso8601String(),
-    "payment_id": paymentId,
-    "status": status,
     "id": id,
-    "payment_account": paymentAccount.toJson(),
+    "viewing_time": viewingTime.toIso8601String(),
+    "message": message,
+    "status": status,
+    "payment_id": paymentId,
+    "title": title,
+    "image_url": imageUrl,
   };
 }

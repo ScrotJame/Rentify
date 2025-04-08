@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:rentify/model/pay/payment.dart';
 import 'dart:convert';
 import 'package:rentify/model/propertities.dart';
+import 'package:rentify/model/viewing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/amenities.dart';
 import '../model/pay/paymentAccounts.dart';
@@ -11,7 +12,7 @@ import 'log/log.dart';
 
 class API_implements implements API {
   late Log log;
-  final String baseUrl = 'http://192.168.1.15:8000/api';
+  final String baseUrl = 'http://192.168.1.17:8000/api';
 
   API_implements(this.log);
 
@@ -185,7 +186,6 @@ class API_implements implements API {
       rethrow;
     }
   }
-
 //dat phong
   @override
   Future<Map<String, dynamic>> addBooking(int propertyId, String viewingTime,int paymentId, double amount) async {
@@ -242,7 +242,7 @@ class API_implements implements API {
       throw Exception('Booking failed: $e');
     }
   }
-
+//tim kiem
   @override
   Future<List<ResultProperty>> searchProperties(String keyword, {int page = 1}) async {
     await Future.delayed(const Duration(seconds: 1));
@@ -301,7 +301,7 @@ class API_implements implements API {
       rethrow;
     }
   }
-
+//lay thong tin nguoi dung
   @override
   Future<User> getUser() async{
     await delay();
@@ -342,7 +342,7 @@ class API_implements implements API {
       rethrow;
     }
   }
-
+//dang xuat
   @override
   Future<void> logoutUser() async {
     try {
@@ -369,7 +369,7 @@ class API_implements implements API {
       rethrow;
     }
   }
-
+//dang ky
   @override
   Future<Map<String, dynamic>> register(String username,  String password, String email) async {
     print('Debug: Starting register with username: $username, email: $email');
@@ -410,7 +410,7 @@ class API_implements implements API {
       throw Exception('Register failed: $e');
     }
   }
-
+//add payment account
   @override
   Future<Map<String, dynamic>> addPaymentAccount(PaymentAccount paymentAccount) async {
     try {
@@ -476,7 +476,7 @@ class API_implements implements API {
       };
     }
   }
-
+//get all payment
   @override
   Future<AllPayment> getAllPayment() async {
 
@@ -515,7 +515,7 @@ class API_implements implements API {
       rethrow;
     }
   }
-
+//get default payment
   @override
   Future<PaymentAccount> getDefaultPaymentAccount() async{
 
@@ -550,5 +550,61 @@ class API_implements implements API {
       rethrow;
     }
   }
+
+  @override
+  Future<Viewing> getDetailLease(int id) async {
+    // TODO: implement getDetailLease
+    throw UnimplementedError();
+
+  }
+
+  @override
+  Future<List<Viewing>> getLease() async {
+    await delay();
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    print('Debug: Retrieved token from SharedPreferences: $token');
+
+    if (token == null) {
+      throw Exception('No token found. Please login first.');
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/user/viewings'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+        if (!jsonResponse.containsKey('data') || jsonResponse['data'] == null) {
+          return [];
+        }
+
+        final List<dynamic> data = jsonResponse['data'];
+
+        if (data.isEmpty) {
+          print('Debug: No bookings found');
+          return [];
+        }
+
+        return data.map((json) => Viewing.fromJson(json)).toList();
+      } else {
+        throw Exception(
+            'Failed to load properties: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('API Error: $e');
+      rethrow;
+    }
+  }
+
+//get booking
 
 }
