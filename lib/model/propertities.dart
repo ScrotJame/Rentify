@@ -48,15 +48,19 @@ class DetailProperty {
     price: json["price"],
     bedrooms: json["bedrooms"],
     bathrooms: json["bathrooms"],
-    deposit: json["deposit"],
+    deposit: json["deposit"] ?? "0",
     area: json["area"],
     typeRestroom: json["type_restroom"],
     propertyType: json["property_type"],
     status: json["status"],
     userId: json["user_id"],
     user: User.fromJson(json["user"]),
-    image: List<Image>.from(json["image"].map((x) => Image.fromJson(x))),
-    amenities: List<Amenity>.from(json["amenities"].map((x) => Amenity.fromJson(x))),
+    image: json["image"] != null
+        ? List<Image>.from(json["image"].map((x) => Image.fromJson(x)))
+        : [], // Đảm bảo image không null
+    amenities: json["amenities"] != null
+        ? List<Amenity>.from(json["amenities"].map((x) => Amenity.fromJson(x)))
+        : [], // Đảm bảo amenities không null
   );
 
   Map<String, dynamic> toJson() => {

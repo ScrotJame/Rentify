@@ -72,10 +72,10 @@ class BodyProfile extends StatelessWidget {
                             backgroundImage: NetworkImage(user.avatar),
                           ),
                           SizedBox(height: 10,),
-                          Text(
-                              user.roles.join(', ').toUpperCase(),
-                            style: TextStyle(color: Colors.black),
-                          ),
+                          // Text(
+                          //     user.roles.join(', ').toUpperCase(),
+                          //   style: TextStyle(color: Colors.black),
+                          // ),
                         ],
                       ),
                       SizedBox(width: 50),

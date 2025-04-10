@@ -12,19 +12,38 @@ import '../owner.dart';
 import '../viewing/date_cubit.dart';
 import '../viewing/viewings_page.dart';
 import 'detail_cubit.dart';
+import '../../../http/API.dart';
+import 'package:http/http.dart' as http;
+import 'dart:typed_data';
+
 
 class DetailPage extends StatelessWidget {
   final int? id;
   static const String route = 'detail';
-  final String baseUrl = 'http://192.168.1.13:8000/api';
+  final String baseUrl = 'http://192.168.162.227:8000/api';
 
   const DetailPage({super.key, required this.id});
 
+  // Hàm tải hình ảnh với retry logic
+  Future<Uint8List?> fetchImage(String url) async {
+    const int maxRetries = 3;
+    for (int i = 0; i < maxRetries; i++) {
+      try {
+        final response = await http.get(Uri.parse(url)).timeout(Duration(seconds: 10));
+        if (response.statusCode == 200) {
+          return response.bodyBytes;
+        }
+      } catch (e) {
+        print('Retry ${i + 1}/$maxRetries: $e');
+        if (i == maxRetries - 1) return null;
+        await Future.delayed(Duration(seconds: 2));
+      }
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    context.read<DetailCubit>().fetchPropertyDetail(id!);
-    bool isFavorite = false;
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => DetailCubit(context.read<API>())..fetchPropertyDetail(id!)),
@@ -42,8 +61,8 @@ class DetailPage extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(
-                isFavorite ? Icons.favorite : Icons.favorite_border_outlined,
-                color: isFavorite ? Colors.red : Colors.grey,
+                Icons.favorite_border_outlined,
+                color: Colors.grey,
               ),
               onPressed: () {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -87,20 +106,39 @@ class DetailPage extends StatelessWidget {
                       height: 250,
                       child: Stack(
                         children: [
-                          PageView.builder(
-                            itemCount: property.image.length,
-                            itemBuilder: (context, id) {
-                              return CachedNetworkImage(
-                                imageUrl: property.image[id].imageUrl.startsWith('http')
-                                    ? property.image[id].imageUrl
-                                    : '$baseUrl/${property.image[id].imageUrl}',
-                                width: 200,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) => Icon(Icons.error, size: 50),
-                              );
-                            },
-                          ),
+                          if (property.image.isNotEmpty)
+                            PageView.builder(
+                              itemCount: property.image.length,
+                              itemBuilder: (context, index) {
+                                final imageUrl = property.image[index].imageUrl.startsWith('http')
+                                    ? property.image[index].imageUrl
+                                    : '$baseUrl/${property.image[index].imageUrl}';
+                                return FutureBuilder<Uint8List?>(
+                                  future: fetchImage(imageUrl),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return Center(child: CircularProgressIndicator());
+                                    }
+                                    if (snapshot.hasError || snapshot.data == null) {
+                                      print('Error loading image: ${snapshot.error}, URL: $imageUrl');
+                                      return Icon(Icons.error, size: 50);
+                                    }
+                                    return Image.memory(
+                                      snapshot.data!,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                );
+                              },
+                            )
+                          else
+                            Center(
+                              child: Text(
+                                "Không có hình ảnh",
+                                style: TextStyle(fontSize: 16, color: Colors.grey),
+                              ),
+                            ),
                           Positioned(
                             bottom: 10,
                             right: 20,
@@ -109,6 +147,10 @@ class DetailPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.black54,
                                 borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                '${property.image.length} ảnh',
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
@@ -127,7 +169,7 @@ class DetailPage extends StatelessWidget {
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           ),
                           Row(
-                            mainAxisSize: MainAxisSize.min, // Giữ kích thước nhỏ gọn
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(
                                 width: 10,
@@ -138,7 +180,7 @@ class DetailPage extends StatelessWidget {
                                       ? Colors.green
                                       : property.status == 'rented'
                                       ? Colors.red
-                                      : Colors.orange, // Mặc định là 'pending'
+                                      : Colors.orange,
                                 ),
                               ),
                               SizedBox(width: 6),
@@ -160,9 +202,7 @@ class DetailPage extends StatelessWidget {
                             "Nhà ở cho dân | ${double.parse(property.price) / 1000000} triệu/tháng",
                             style: TextStyle(fontSize: 16, color: Colors.black),
                           ),
-                          SizedBox(
-                            height: 8,
-                          ),
+                          SizedBox(height: 8),
                           Row(
                             children: [
                               Container(
@@ -336,15 +376,26 @@ class DetailPage extends StatelessWidget {
                               );
                             },
                             child: ClipOval(
-                              child: CachedNetworkImage(
-                                imageUrl: property.user.avatar.startsWith('http')
-                                    ? property.user.avatar
-                                    : '$baseUrl/${property.user.avatar}',
-                                width: 75,
-                                height: 75,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) => Icon(Icons.error, size: 50),
+                              child: FutureBuilder<Uint8List?>(
+                                future: fetchImage(
+                                  property.user.avatar.startsWith('http')
+                                      ? property.user.avatar
+                                      : '$baseUrl/${property.user.avatar}',
+                                ),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Center(child: CircularProgressIndicator());
+                                  }
+                                  if (snapshot.hasError || snapshot.data == null) {
+                                    return Icon(Icons.error, size: 50);
+                                  }
+                                  return Image.memory(
+                                    snapshot.data!,
+                                    width: 75,
+                                    height: 75,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -377,30 +428,35 @@ class DetailPage extends StatelessWidget {
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 12),
-                          SizedBox(height: 8),
-                          ...(property.amenities ?? []).map((amenity) {
-                            if (amenity == null) return SizedBox.shrink();
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/icons/${amenity.iconAmenities ?? 'default'}.svg',
-                                    width: 35,
-                                    height: 35,
-                                    color: Colors.black,
-                                    placeholderBuilder: (context) => Icon(Icons.error, color: Colors.red),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    amenity.nameAmenities ?? 'Không có tên',
-                                    style: TextStyle(fontSize: 14),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
+                          if (property.amenities != null && property.amenities.isNotEmpty)
+                            ...property.amenities.map((amenity) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/${amenity.iconAmenities ?? 'default'}.svg',
+                                      width: 35,
+                                      height: 35,
+                                      color: Colors.black,
+                                      placeholderBuilder: (context) => Icon(Icons.error, color: Colors.red),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      amenity.nameAmenities ?? 'Không có tên',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList()
+                          else
+                            Text(
+                              "Không có tiện ích nào được liệt kê",
+                              style: TextStyle(fontSize: 14, color: Colors.grey),
+                            ),
+
                           SizedBox(height: 20),
                           Center(
                             child: OutlinedButton(
@@ -457,7 +513,7 @@ class DetailPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Thông tin của chủ nhà:', style: TextStyle(fontSize: 14)),
-                              Text(property.user.bio!, style: TextStyle(fontSize: 14, color: Colors.grey)),
+                              Text(property.user.bio ?? 'Không có thông tin', style: TextStyle(fontSize: 14, color: Colors.grey)),
                             ],
                           ),
                           Align(
@@ -500,7 +556,7 @@ class DetailPage extends StatelessWidget {
               onBookPressed: () {
                 showModalBottomSheet(
                   context: context,
-                  isScrollControlled: false ,
+                  isScrollControlled: false,
                   builder: (context) => PraseAmount(property: _property),
                 );
               },
