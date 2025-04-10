@@ -88,7 +88,6 @@ class UserProfileBody extends StatelessWidget {
               Text(user.name,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               Text(user.phone ?? 'Chưa có số điện thoại', style: TextStyle(color: Colors.grey[600])),
-              Text(user.bio ?? 'Chưa có tiểu sử', style: TextStyle(color: Colors.grey[600])),
             ],
           ),
         ],
@@ -151,7 +150,6 @@ class UserProfileBody extends StatelessWidget {
                   ],
                 ),
               ),
-
             ],
           ),
           ),
