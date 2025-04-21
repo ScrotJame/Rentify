@@ -1,15 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../http/API.dart';
+import 'detail/detail_cubit.dart';
 
 class OwnerPage extends StatelessWidget {
-  const OwnerPage({super.key});
+  final int? id;
+  const OwnerPage({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider(
+  create: (context) => DetailCubit(context.read<API>())
+    ..fetchPropertyDetail(id!),
+  child: Scaffold(
       appBar: AppBar(
         elevation: 0,
       ),
-      body: SingleChildScrollView(
+      body: BlocBuilder<DetailCubit, DetailState>(
+  builder: (context, state) {
+    if (state.isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    if (state.error != null) {
+      return Center(child: Text('Lỗi: ${state.error}'));
+    }
+    if (state.property == null) {
+      return Center(child: Text('Không tìm thấy bất động sản'));
+    }
+    final property = state.property!;
+    return SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -21,19 +41,24 @@ class OwnerPage extends StatelessWidget {
                 CircleAvatar(
                   radius: 40,
                   backgroundImage: NetworkImage(
-                    "https://picsum.photos/200", // Ảnh giả lập
+                    property.user.avatar,
                   ),
                 ),
                 SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Anna Smith",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          property.user.name,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        _buildInfoItem(Icons.verified, "Verified"),
+                      ],
                     ),
                     SizedBox(height: 4),
                     Row(
@@ -64,7 +89,7 @@ class OwnerPage extends StatelessWidget {
 
             // Mô tả về chủ nhà
             Text(
-              "About Anna",
+              property.user.name,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -72,7 +97,7 @@ class OwnerPage extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              "Hi, I'm Anna! I love sharing my cozy spaces with travelers from around the world. I’m passionate about hospitality and making sure my guests feel at home. In my free time, I enjoy hiking and exploring local cuisine.",
+            property.user.bio??" ",
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[800],
@@ -87,7 +112,6 @@ class OwnerPage extends StatelessWidget {
               children: [
                 _buildInfoItem(Icons.comment, "120 Reviews"),
                 _buildInfoItem(Icons.language, "English, French"),
-                _buildInfoItem(Icons.verified, "Verified"),
               ],
             ),
             SizedBox(height: 32),
@@ -97,7 +121,6 @@ class OwnerPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Logic xử lý khi nhấn nút (ví dụ: mở chat)
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Contacting Anna...")),
                   );
@@ -117,8 +140,11 @@ class OwnerPage extends StatelessWidget {
             ), Divider(color: Colors.grey, thickness: 1),
           ],
         ),
-      ),
-    );
+      );
+  },
+),
+    ),
+);
   }
 
   // Widget con để hiển thị thông tin bổ sung

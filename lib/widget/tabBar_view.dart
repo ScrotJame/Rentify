@@ -5,6 +5,7 @@ import 'package:rentify/page/property/home_page_view.dart';
 import 'package:rentify/widget/sreach_bar.dart';
 
 import '../../main_cubit.dart';
+import '../page/favorite/favorite_page.dart';
 import '../page/lease/lease_page.dart';
 import '../page/user/user_page.dart';
 //import '../page/user/profile_page.dart';
@@ -20,8 +21,8 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
     return  BlocBuilder<MainCubit, MainState>(
       builder: (context, state) {
         final pages = [
-          LeasePage(),
-          Container( child: Text('Favorite-đang cập nhật')),
+          LeasePage(),//Hien thi lich dat
+          FavoritePage(),
           HomePageView(), // Tab Home hiển thị HomePageView
           Container(child: Text('Message-đang cập nhật')),
           UserPage(),
@@ -54,12 +55,12 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
             selectedIndex: state.selected.index,
             destinations: const [
               NavigationDestination(icon: Icon(Icons.home), label: 'House'),
-              NavigationDestination(
-                icon: Badge(child: Icon(Icons.favorite), label: Text('1')),
-                label: 'Favorite',
-              ),
+              NavigationDestination(icon: Icon(Icons.favorite),label: 'Favorite',),
               NavigationDestination(icon: Icon(Icons.search), label: 'Explore'),
-              NavigationDestination(icon: Icon(Icons.messenger), label: 'Message'),
+              NavigationDestination(
+                icon: Badge(child: Icon(Icons.messenger), label: Text('1')),
+                label: 'Messenger',
+              ),
               NavigationDestination(icon: Icon(Icons.account_circle_outlined), label: 'User'),
             ],
             onDestinationSelected: (int index) {

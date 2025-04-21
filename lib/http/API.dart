@@ -1,4 +1,5 @@
 import 'package:rentify/model/amenities.dart';
+import 'package:rentify/model/favorite.dart';
 import 'package:rentify/model/propertities.dart';
 
 import '../model/pay/payment.dart';
@@ -30,4 +31,9 @@ abstract class API{
   //Lease
   Future<List<Viewing>> getLease();
   Future<Viewing> getDetailLease(int id);
+
+  // Favorite
+  Future<Map<String, dynamic>> addFavorite(int propertyId);
+  Future<List<Favorite>> getFavorites();
+  Future<Map<String, dynamic>> deleteFavorite(int propertyId);
 }

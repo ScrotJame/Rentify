@@ -16,7 +16,6 @@ import '../../../http/API.dart';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 
-
 class DetailPage extends StatelessWidget {
   final int? id;
   static const String route = 'detail';
@@ -24,7 +23,6 @@ class DetailPage extends StatelessWidget {
 
   const DetailPage({super.key, required this.id});
 
-  // Hàm tải hình ảnh với retry logic
   Future<Uint8List?> fetchImage(String url) async {
     const int maxRetries = 3;
     for (int i = 0; i < maxRetries; i++) {
@@ -372,7 +370,7 @@ class DetailPage extends StatelessWidget {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const OwnerPage()),
+                                MaterialPageRoute(builder: (context) => OwnerPage(id: property.id,)),
                               );
                             },
                             child: ClipOval(
