@@ -655,6 +655,7 @@ class API_implements implements API {
 
   @override
   Future<Map<String, dynamic>> addFavorite(int propertyId) async {
+    await Future.delayed(Duration(seconds: 1));
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('auth_token');
@@ -722,7 +723,7 @@ class API_implements implements API {
 
   @override
   Future<Map<String, dynamic>> deleteFavorite(int propertyId) async{
-    await delay();
+    await Future.delayed(Duration(seconds: 1));
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');

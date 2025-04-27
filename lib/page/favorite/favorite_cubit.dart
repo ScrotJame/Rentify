@@ -2,14 +2,28 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../model/favorite.dart';
 import '../../http/API.dart';
+import '../../model/propertities.dart';
 
 part 'favorite_state.dart';
 
 class FavoriteCubit extends Cubit<FavoriteState> {
   final API api;
   List<Favorite> _favorites = [];
+
   FavoriteCubit(this.api) : super(FavoriteInitial()) {
     loadFavorites();
+  }
+
+  // Phương thức chuyển đổi từ DetailProperty sang AllProperty
+  AllProperty _convertDetailToAllProperty(DetailProperty detail) {
+    return AllProperty(
+      id: detail.id,
+      title: detail.title,
+      location: detail.location,
+      price: detail.price,
+      image: detail.image,
+      // Thêm các trường khác nếu cần
+    );
   }
 
   Future<void> toggleFavorite(int propertyId) async {
@@ -44,22 +58,30 @@ class FavoriteCubit extends Cubit<FavoriteState> {
         response = await api.addFavorite(propertyId);
         print('Add response: ${response.toString()}'); // Debug
 
-        // Lấy thông tin đầy đủ của property vừa thêm vào yêu thích
-        // final newFavoriteProperty = await api.getProperty(propertyId);
-        //
-        // // Thêm vào danh sách local
-        // if (newFavoriteProperty != null) {
-        //   if (_favorites.isEmpty) {
-        //     _favorites = [Favorite(message: "Added", data: [newFavoriteProperty])];
-        //   } else {
-        //     // Thêm vào favorite đầu tiên hoặc tạo mới nếu cần
-        //     if (_favorites[0].data.isEmpty) {
-        //       _favorites[0] = Favorite(message: _favorites[0].message, data: [newFavoriteProperty]);
-        //     } else {
-        //       _favorites[0].data.add(newFavoriteProperty);
-        //     }
-        //   }
-        // }
+        try {
+          // Lấy thông tin đầy đủ của property vừa thêm vào yêu thích
+          final detailProperty = await api.getProperty(propertyId);
+
+          if (detailProperty != null) {
+            // Chuyển đổi từ DetailProperty sang AllProperty
+            final allProperty = _convertDetailToAllProperty(detailProperty);
+
+            // Thêm vào danh sách local
+            if (_favorites.isEmpty) {
+              _favorites = [Favorite(message: "Added", data: [allProperty])];
+            } else {
+              // Thêm vào favorite đầu tiên hoặc tạo mới nếu cần
+              if (_favorites[0].data.isEmpty) {
+                _favorites[0] = Favorite(message: _favorites[0].message, data: [allProperty]);
+              } else {
+                _favorites[0].data.add(allProperty);
+              }
+            }
+          }
+        } catch (e) {
+          print('Error getting property details: $e');
+          // Nếu không lấy được chi tiết, vẫn tiếp tục xử lý
+        }
 
         emit(FavoriteSuccess(
           isFavorite: true,
