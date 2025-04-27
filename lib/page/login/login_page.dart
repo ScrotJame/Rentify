@@ -44,9 +44,7 @@ class Page extends StatelessWidget {
           return Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
-            color: Color(0xFFFFEEDB),
-            ),
+
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(32, 60, 32, 20),
               child: Column(
@@ -81,9 +79,8 @@ class Page extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   backgroundColor: Colors.white,
-                  foregroundColor: Color(0xFFFFEEDB),
                 ),
-                child: const Text("Login", style: TextStyle(fontSize: 16, color: Color(0xFF96705B),)),
+                child: const Text("Login", style: TextStyle(fontSize: 16)),
               ),
                   const SizedBox(height: 20),
                   _buildFooter(context),

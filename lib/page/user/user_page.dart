@@ -15,7 +15,6 @@ class UserPage extends StatelessWidget {
       UserCubit(context.read<API>())
         .. fecthUser(),
       child: Scaffold(
-        backgroundColor: Color(0xFFFFEEDB),
         body: UserProfileBody(),
       ),
     );
@@ -100,7 +99,6 @@ class UserProfileBody extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: Color(0xFFFFEEDB),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
@@ -163,7 +161,6 @@ class UserProfileBody extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: Color(0xFFFFEEDB),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -224,7 +221,6 @@ class UserProfileBody extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: Color(0xFFFFEEDB),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(

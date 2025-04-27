@@ -42,6 +42,18 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (id == null) {
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFF96705B),
+          title: const Text('Lỗi'),
+        ),
+        body: const Center(
+          child: Text('Không tìm thấy ID bất động sản'),
+        ),
+      );
+    }
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => DetailCubit(context.read<API>())..fetchPropertyDetail(id!)),
@@ -83,17 +95,6 @@ class DetailPage extends StatelessWidget {
             }
             final property = state.property!;
             return Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF96705B),
-                    Color(0xFFFFEEDB),
-                  ],
-                  stops: [0.3, 1.0],
-                ),
-              ),
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(16.0),
                 child: Column(

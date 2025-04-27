@@ -15,7 +15,6 @@ class LeasePage extends StatelessWidget {
     return  BlocProvider(
   create: (context) => LeaseCubit(context.read<API>())..fetchLease(),
   child: Scaffold(
-    backgroundColor: Color(0xFFFFEEDB),
     body: LeaseBody(),
     ),
 );

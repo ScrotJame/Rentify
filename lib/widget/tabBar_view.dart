@@ -30,9 +30,7 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
         ];
 
         return Scaffold(
-          backgroundColor: Color(0xFFFFEEDB),
           appBar: AppBar(
-            backgroundColor: Color(0xFFFFEEDB),
             flexibleSpace: Center(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(46.0, 16.0, 46.0, 10),
@@ -51,7 +49,6 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
           body: pages[state.selected.index], // Hiển thị tab theo selected
           bottomNavigationBar: NavigationBar(
             height: 55,
-            backgroundColor: Color(0xFFFFEEDB),
             selectedIndex: state.selected.index,
             destinations: const [
               NavigationDestination(icon: Icon(Icons.home), label: 'House'),

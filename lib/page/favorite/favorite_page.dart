@@ -6,7 +6,7 @@ import '../detail/detailpage.dart';
 import 'favorite_cubit.dart';
 
 class FavoritePage extends StatelessWidget {
-  static const route = '/favorite';
+  static const route = '/favorites';
 
   const FavoritePage({super.key});
 
@@ -64,12 +64,15 @@ class FavoriteCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (item.data.isNotEmpty && item.data[0].id != null) {
-          Navigator.pushNamed(
+          print('Navigating with propertyId: ${item.data[0].id}');
+          Navigator.push(
             context,
-            DetailPage.route,
-            arguments: item.data[0].id,
+            MaterialPageRoute(
+              builder: (context) => DetailPage(id: item.data[0].id),
+            ),
           );
         } else {
+          print('Invalid propertyId: ${item.data.isEmpty ? 'Empty data' : 'Null id'}');
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Không tìm thấy ID bất động sản')),
           );

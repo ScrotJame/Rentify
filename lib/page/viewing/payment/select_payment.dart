@@ -27,17 +27,7 @@ class SelectPaymentPage extends StatelessWidget {
           children: [
             // Gradient nền
             Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF96705B),
-                    Color(0xFFFFEEDB),
-                  ],
-                  stops: [0.3, 1.0],
-                ),
-              ),
+
             ),
             // Nội dung chính
             SelectPaymentBody(

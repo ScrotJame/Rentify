@@ -45,4 +45,3 @@ class FavoriteError extends FavoriteState {
   @override
   List<Object?> get props => [error];
 }
-

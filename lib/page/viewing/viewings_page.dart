@@ -41,17 +41,7 @@ class BookingPage extends StatelessWidget {
           centerTitle: true,
         ),
         body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF96705B),
-                Color(0xFFFFEEDB),
-              ],
-              stops: [0.3, 1.0],
-            ),
-          ),
+
           child: BodyContain(property: property, amount: amount),
         ),
       ),

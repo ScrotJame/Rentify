@@ -13,7 +13,7 @@ import 'log/log.dart';
 
 class API_implements implements API {
   late Log log;
-  final String baseUrl = 'http://192.168.1.17:8000/api';
+  final String baseUrl = 'http://192.168.1.9:8000/api';
 
   API_implements(this.log);
 
@@ -359,7 +359,7 @@ class API_implements implements API {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-        print('Debug: Decoded getProperty data: $data');
+        print('Debug: Decoded get User data: $data');
         if (data.isEmpty) {
           throw Exception('Không tìm thấy bất động sản');
         }
@@ -671,7 +671,7 @@ class API_implements implements API {
           'Debug: Sending favorite data - property_id: $propertyId');
 
       final response = await http.post(
-        Uri.parse('$baseUrl/favorites'),
+        Uri.parse('$baseUrl/user/addfavorites'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -721,9 +721,39 @@ class API_implements implements API {
   }
 
   @override
-  Future<Map<String, dynamic>> deleteFavorite(int propertyId) {
-    // TODO: implement deleteFavorite
-    throw UnimplementedError();
+  Future<Map<String, dynamic>> deleteFavorite(int propertyId) async{
+    await delay();
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    print('Debug: Retrieved token from SharedPreferences: $token');
+
+    if (token == null) {
+      throw Exception('No token found. Please login first.');
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/user/favorites/delete/$propertyId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body:jsonEncode({
+          'property_id': propertyId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to load properties: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Error fetching properties: $e');
+      rethrow;
+    }
   }
 
   @override
@@ -750,7 +780,7 @@ class API_implements implements API {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        print('API Response: $jsonResponse'); // Debug để kiểm tra JSON
+        print('API Favorite Response: $jsonResponse'); // Debug để kiểm tra JSON
 
         // Giả sử JSON có dạng {"message": String, "data": List}
         final message = jsonResponse['message'] ?? 'Success';
