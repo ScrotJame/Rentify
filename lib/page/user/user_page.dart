@@ -183,7 +183,7 @@ class UserProfileBody extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Đăng nhập và bảo mật",
+                            "Xác minh tài khoản",
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),
@@ -197,7 +197,7 @@ class UserProfileBody extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Thanh toán và chi trả",
+                            "Lịch sử giao dịch",
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),
@@ -243,7 +243,7 @@ class UserProfileBody extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Đăng nhập và bảo mật",
+                            "Hỗ trợ",
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),
@@ -257,7 +257,7 @@ class UserProfileBody extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Thanh toán và chi trả",
+                            "Chính sách ứng dụng",
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),

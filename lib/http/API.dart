@@ -18,7 +18,8 @@ abstract class API{
   Future<DetailProperty> getProperty(int userId);
   Future<List<Amenity>> getAmenitiesProperty(int userId);
 
-  Future<List<ResultProperty>> searchProperties(String keyword);
+  Future<List<ResultProperty>> searchProperties(String keyword, {int? tenant,
+    int? totalRooms});
 
   Future<Map<String, dynamic>> addBooking(int propertyId, String viewingTime,int paymentId, double amount);
 

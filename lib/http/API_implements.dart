@@ -13,7 +13,7 @@ import 'log/log.dart';
 
 class API_implements implements API {
   late Log log;
-  final String baseUrl = 'http://192.168.1.9:8000/api';
+  final String baseUrl = 'http://192.168.195.188:8000/api';
 
   API_implements(this.log);
 
@@ -271,7 +271,11 @@ class API_implements implements API {
 //tim kiem
   @override
   Future<List<ResultProperty>> searchProperties(String keyword,
-      {int page = 1}) async {
+      {
+        int page = 1,
+        int? tenant,
+        int? totalRooms,
+      }) async {
     await Future.delayed(const Duration(seconds: 1));
     log.i1('API_implements',
         'Fetching properties for keyword: $keyword, page: $page');
@@ -280,11 +284,16 @@ class API_implements implements API {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('auth_token');
       if (token == null) {
-        log.i('API_implements', 'No token found.');
         throw Exception('No token found. Please login first.');
       }
 
-      final url = Uri.parse('$baseUrl/search?keyword=$keyword&page=$page');
+      final queryParameters = {
+        'keyword': keyword,
+        'page': page.toString(),
+        if (tenant != null) 'bedrooms': tenant.toString(),
+        if (totalRooms != null) 'bathrooms': totalRooms.toString(),
+      };
+      final url = Uri.parse('$baseUrl/search').replace(queryParameters: queryParameters);
       final response = await http.get(
         url,
         headers: {
@@ -294,37 +303,27 @@ class API_implements implements API {
         },
       );
 
-      print('Debug: Response status: ${response.statusCode}');
-      print('Debug: Response body: ${response.body}');
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         if (response.body.isEmpty) {
-          log.i('API_implements', 'Empty response body');
           return [];
         }
 
         final dynamic decoded = jsonDecode(response.body);
-        log.i('API_implements', 'Invalid JSON response a1: $decoded');
         if (decoded == null || decoded is! Map<String, dynamic>) {
-          log.i('API_implements', 'Invalid JSON response a: $decoded');
           return [];
         }
 
-        final Map<String, dynamic> jsonResponse = decoded as Map<String,
-            dynamic>;
-        print('Debug: Decoded JSON response 1: $jsonResponse');
+        final Map<String, dynamic> jsonResponse = decoded;
         final List<dynamic> data = jsonResponse['data'] ?? [];
         return data
-            .where((item) => item != null) // Loại bỏ null
-            .map((item) {
-          print('Debug: Parsing Property JSON 2: $item');
-          return ResultProperty.fromJson(item as Map<String, dynamic>);
-        })
+            .where((item) => item != null)
+            .map((item) => ResultProperty.fromJson(item as Map<String, dynamic>))
             .toList();
       } else {
-        throw Exception(
-            'Failed to search properties: ${response.statusCode} - ${response
-                .body}');
+        throw Exception('Failed to search properties: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       print('Debug: Exception in searchProperties: $e');

@@ -11,7 +11,7 @@ class Search_Bar extends StatelessWidget {
     GestureDetector(
       onTap: () {  Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Search_Page(),),
+        MaterialPageRoute(builder: (context) => SearchPage(),),
       ); },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),

@@ -17,8 +17,8 @@ Route<dynamic>? mainRoute(RouteSettings settings){
      return MaterialPageRoute(builder: (context)=> RegisterScreen());
    case PageMain.route:
      return MaterialPageRoute(builder: (context) => PageMain());
-   case Search_Page.route:
-     return MaterialPageRoute(builder: (context) => Search_Page());
+   case SearchPage.route:
+     return MaterialPageRoute(builder: (context) => SearchPage());
    case ResultPage.route:
      return MaterialPageRoute(builder: (context) => ResultPage());
    case DetailPage.route:
