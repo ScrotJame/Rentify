@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:rentify/model/pay/payment.dart';
 import 'dart:convert';
 import 'package:rentify/model/propertities.dart';
 import 'package:rentify/model/viewing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http_parser/http_parser.dart';
 import '../model/amenities.dart';
 import '../model/favorite.dart';
+import '../model/images.dart';
 import '../model/pay/paymentAccounts.dart';
 import '../model/user.dart';
 import 'API.dart';
@@ -13,7 +17,7 @@ import 'log/log.dart';
 
 class API_implements implements API {
   late Log log;
-  final String baseUrl = 'http://192.168.195.188:8000/api';
+  final String baseUrl = 'http://192.168.2.29:8000/api';
 
   API_implements(this.log);
 
@@ -480,8 +484,8 @@ class API_implements implements API {
           'account_name': paymentAccount.accountName,
           'payment_method': paymentAccount.paymentMethod,
           'is_default': paymentAccount.isDefault,
-          'expiration_date': paymentAccount.expirationDate, // Thêm trường mới
-          'cvv': paymentAccount.cvv, // Thêm trường mới
+          'expiration_date': paymentAccount.expirationDate,
+          'cvv': paymentAccount.cvv,
         }),
       );
 
@@ -780,9 +784,8 @@ class API_implements implements API {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        print('API Favorite Response: $jsonResponse'); // Debug để kiểm tra JSON
+        print('API Favorite Response: $jsonResponse');
 
-        // Giả sử JSON có dạng {"message": String, "data": List}
         final message = jsonResponse['message'] ?? 'Success';
         final List<dynamic> data = jsonResponse['data'] ?? [];
         final properties = data.map((json) => AllProperty.fromJson(json)).toList();
@@ -799,6 +802,178 @@ class API_implements implements API {
       }
     } catch (e) {
       print('Error fetching properties: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> addProperty(Property property,List<File> imageFiles, List<AllAmenity> amenities)  async{
+    await delay();
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+
+    if (token == null) {
+      return {
+        'success': false,
+        'message': 'No authentication token found',
+        'errors': {'token': ['Token is missing or invalid']},
+      };
+    }
+
+    try {
+      // Tạo multipart request để upload files
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('$baseUrl/insert/properties'),
+      );
+
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      });
+
+      request.fields['title'] = property.title;
+      request.fields['description'] = property.description;
+      request.fields['location'] = property.location;
+      request.fields['price'] = property.price.toString();
+      request.fields['bedrooms'] = property.bedrooms.toString();
+      request.fields['bathrooms'] = property.bathrooms.toString();
+      request.fields['area'] = property.area.toString();
+      request.fields['deposit'] = property.deposit.toString();
+      request.fields['type_restroom'] = property.typeRestroom;
+      request.fields['property_type'] = property.propertyType;
+
+      // Thêm amenities dưới dạng mảng (sử dụng ID của Amenity)
+      for (int i = 0; i < amenities.length; i++) {
+        request.fields['amenities[$i]'] = amenities[i].id.toString();
+      }
+
+      // Thêm files ảnh
+      for (int i = 0; i < imageFiles.length; i++) {
+        final file = imageFiles[i];
+        final fileName = file.path.split('/').last;
+        final fileExtension = fileName.split('.').last.toLowerCase();
+
+        // Xác định MIME type dựa trên phần mở rộng file
+        String mimeType;
+        if (fileExtension == 'jpg' || fileExtension == 'jpeg') {
+          mimeType = 'image/jpeg';
+        } else if (fileExtension == 'png') {
+          mimeType = 'image/png';
+        } else {
+          mimeType = 'application/octet-stream';
+        }
+
+        // Thêm file vào request
+        request.files.add(await http.MultipartFile.fromPath(
+          'image[$i]',
+          file.path,
+          contentType: MediaType.parse(mimeType),
+        ));
+      }
+
+      // Gửi request và nhận response
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 201) {
+        // Code 201 cho Created
+        final responseData = json.decode(response.body);
+
+        // Parse dữ liệu trả về để tạo đối tượng Image từ response
+        if (responseData['data'] != null && responseData['data']['image'] != null) {
+          List<dynamic> imageData = responseData['data']['image'];
+          List<Image> images = imageData.map((img) => Image.fromJson(img)).toList();
+          responseData['data']['parsed_images'] = images;
+        }
+
+        return responseData;
+      } else {
+        throw Exception('Failed to create property: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Error creating property: $e');
+      return {
+        'success': false,
+        'message': 'Failed to create property: $e',
+      };
+    }
+  }
+
+  @override
+  Future<List<AllAmenity>> getAmenities() async {
+    await delay();
+
+    // final prefs = await SharedPreferences.getInstance();
+    // final token = prefs.getString('auth_token');
+    // print('Debug: Retrieved token from SharedPreferences: $token');
+    //
+    // if (token == null) {
+    //   throw Exception('No token found. Please login first.');
+    // }
+
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/amentities'),
+        // headers: {
+        //   'Authorization': 'Bearer $token',
+        //   'Content-Type': 'application/json',
+        //   'Accept': 'application/json',
+        // },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        print('Debug: Decoded amenities data length: ${data.length}');
+        return data.map((item) {
+          print('Debug: Parsing Amenity JSON: $item');
+          return AllAmenity.fromJson(item as Map<String, dynamic>);
+        }).toList();
+      } else {
+        throw Exception(
+            'Failed to load properties: ${response.statusCode} - ${response
+                .body}');
+      }
+    } catch (e) {
+      log.i('API_AllProperty', 'Error fetching properties: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<List<AllPropertyByOwner>> getAllPropertyByOwner() async {
+    await delay();
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    print('Debug: Retrieved token from SharedPreferences: $token');
+
+    if (token == null) {
+      throw Exception('No token found. Please login first.');
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/properties/user'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) {
+          return AllPropertyByOwner.fromJson(json);
+        }).toList();
+      } else {
+        throw Exception(
+            'Failed to load properties: ${response.statusCode} - ${response
+                .body}');
+      }
+    } catch (e) {
+      log.i('API_AllProperty', 'Error fetching properties: $e');
       rethrow;
     }
   }

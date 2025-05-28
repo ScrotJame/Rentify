@@ -26,3 +26,27 @@ class Amenity {
     "pivot": pivot.toJson(),
   };
 }
+
+class AllAmenity {
+  int id;
+  String nameAmenities;
+  String iconAmenities;
+
+  AllAmenity({
+    required this.id,
+    required this.nameAmenities,
+    required this.iconAmenities,
+  });
+
+  factory AllAmenity.fromJson(Map<String, dynamic> json) => AllAmenity(
+    id: json["id"],
+    nameAmenities: json["name_amenities"],
+    iconAmenities: json["icon_amenities"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name_amenities": nameAmenities,
+    "icon_amenities": iconAmenities,
+  };
+}

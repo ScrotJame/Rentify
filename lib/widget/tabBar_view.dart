@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/common/enum/drawer_item.dart';
 import 'package:rentify/page/property/home_page_view.dart';
-import 'package:rentify/widget/sreach_bar.dart';
+import 'package:rentify/widget/header_bar.dart';
 
 import '../../main_cubit.dart';
 import '../page/favorite/favorite_page.dart';
@@ -69,5 +69,15 @@ class PageMain extends StatelessWidget { // Callback để thông báo khi chọ
     );
   }
 }
+
+class PageMainOwner extends StatelessWidget {
+  const PageMainOwner({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
 
 

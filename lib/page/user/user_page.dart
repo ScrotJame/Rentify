@@ -5,6 +5,7 @@ import 'package:rentify/page/user/profile/profile_page.dart';
 import 'package:rentify/page/user/user_cubit.dart';
 
 import '../../http/API.dart';
+import '../host/room_manager/room_manager_page.dart';
 import '../viewing/payment/payment_page.dart';
 
 class UserPage extends StatelessWidget {
@@ -192,12 +193,31 @@ class UserProfileBody extends StatelessWidget {
                     ),
                     Divider(thickness: 0.5, color: Colors.grey),
                     GestureDetector(
-                      onTap: (){},
+                      onTap: (){
+
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             "Lịch sử giao dịch",
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),
+                        ],
+                      ),
+                    ),
+                    Divider(thickness: 0.5, color: Colors.grey),
+                    GestureDetector(
+                      onTap: (){Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RoomManagerPage()),
+                      );},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Phòng (Chủ)",
                             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           Icon(Icons.arrow_forward_ios, color: Colors.black54, size: 15),

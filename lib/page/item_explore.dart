@@ -10,6 +10,7 @@ class AirbnbExploreItem2 extends StatelessWidget {
   final String title;
   final double price;
   final double rating;
+  final String? status ;
 
   const AirbnbExploreItem2({
     Key? key,
@@ -19,6 +20,7 @@ class AirbnbExploreItem2 extends StatelessWidget {
     required this.title,
     required this.price,
     required this.rating,
+    this.status ,
   }) : super(key: key);
 
   factory AirbnbExploreItem2.fromAllProperty(AllProperty property) {
@@ -43,6 +45,19 @@ class AirbnbExploreItem2 extends StatelessWidget {
       location: property.location,
       title: property.title,
       price: double.parse(property.price) / 1000000,
+      rating: 4.7,
+    );
+  }
+  factory AirbnbExploreItem2.fromAllPropertyByOwner(AllPropertyByOwner property) {
+    return AirbnbExploreItem2(
+      id: property.id!,
+      imageUrl: property.image.isNotEmpty
+          ? property.image.first.imageUrl
+          : 'https://encrypted-tbn0.gstatic.com/images?q=tbniGTPGbuIGw19IKId0kGKreJbLPkccOMJ0NFU5A&s',
+      location: property.location,
+      title: property.title,
+      price: double.parse(property.price) / 1000000,
+      status: property.status,
       rating: 4.7,
     );
   }

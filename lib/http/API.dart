@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:rentify/model/amenities.dart';
 import 'package:rentify/model/favorite.dart';
 import 'package:rentify/model/propertities.dart';
@@ -12,11 +14,11 @@ abstract class API{
   Future<Map<String, dynamic>> register(String username,  String password, String email);
   Future<User> getUser();
   Future <void> logoutUser();
-
   //property
   Future<List<AllProperty>> getAllProperty();
   Future<DetailProperty> getProperty(int userId);
   Future<List<Amenity>> getAmenitiesProperty(int userId);
+  Future<List<AllPropertyByOwner>> getAllPropertyByOwner();
 
   Future<List<ResultProperty>> searchProperties(String keyword, {int? tenant,
     int? totalRooms});
@@ -37,4 +39,7 @@ abstract class API{
   Future<Map<String, dynamic>> addFavorite(int propertyId);
   Future<List<Favorite>> getFavorites();
   Future<Map<String, dynamic>> deleteFavorite(int propertyId);
+  //Host
+  Future<Map<String, dynamic>> addProperty(Property property, List<File> imageFiles, List<AllAmenity> amenities);
+  Future<List<AllAmenity>> getAmenities();
 }

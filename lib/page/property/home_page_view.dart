@@ -4,7 +4,7 @@ import 'package:rentify/page/property/property_cubit.dart';
 import '../../http/API.dart';
 import '../../main_cubit.dart';
 import '../../widget/Properties_list.dart';
-import '../../widget/sreach_bar.dart';
+import '../../widget/header_bar.dart';
 import 'package:rentify/page/detail/detailpage.dart';
 import 'package:rentify/page/item_explore.dart';
 
