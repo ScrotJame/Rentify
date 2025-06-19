@@ -21,25 +21,6 @@ class HomePageView extends StatelessWidget {
   }
 }
 
-class BodyHomePage extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<PropertyCubit, PropertyState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (state.error != null) {
-            return Center(child: Text('Lỗi: ${state.error}'));
-          }
-          return BodyHomePage2();
-        },
-      ),
-    );
-  }
-}
 
 class BodyHomePage2 extends StatelessWidget {
   @override

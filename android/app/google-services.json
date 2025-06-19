@@ -12,7 +12,20 @@
           "package_name": "com.example.rentify"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1019215614982-61k0ci5u7q6n8m8fluqejf320j4ip15u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.rentify",
+            "certificate_hash": "2d667c6650e62ad13027d4e53bcbd1d0813aa5bb"
+          }
+        },
+        {
+          "client_id": "1019215614982-ip85sru3d9ekaahkpraelo5vh75595dl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD70Od6JTX39ttk0YbtecStt-pMXYZzsDE"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019215614982-ip85sru3d9ekaahkpraelo5vh75595dl.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1019215614982-jqv0je5p0k91u2igr33nmlnkba6pb2vu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rentify"
+              }
+            }
+          ]
         }
       }
     }

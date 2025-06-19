@@ -81,39 +81,36 @@ class PropertyByOwnerList extends StatelessWidget {
           );
         }
       },
-      child: Container(
-
-        width: 450,
-        child:
-        ListView.separated(
-          padding: const EdgeInsets.all(20),
-          itemCount: properties.length,
-          itemBuilder: (context, index) {
-            final property = properties[index];
-            return GestureDetector(
-              onTap: () {
-                if (property.id != null) {
-                  context.read<DetailCubit>().fetchPropertyDetail(property.id!);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailPage(id: property.id),
-                    ),
-                  );
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('ID không hợp lệ cho bất động sản này')),
-                  );
-                }
-              },
-              child: AirbnbExploreItem2.fromAllPropertyByOwner(property),
-              key: UniqueKey(), // Đảm bảo mỗi widget độc lập
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(height: 10);
-          },
-        ),
+      child: ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.all(20),
+        itemCount: properties.length,
+        itemBuilder: (context, index) {
+          final property = properties[index];
+          return GestureDetector(
+            onTap: () {
+              if (property.id != null) {
+                context.read<DetailCubit>().fetchPropertyDetail(property.id!);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailPage(id: property.id),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('ID không hợp lệ cho bất động sản này')),
+                );
+              }
+            },
+            child: AirbnbExploreItem2.fromAllPropertyByOwner(property),
+            key: UniqueKey(),
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          return const SizedBox(height: 10);
+        },
       ),
     );
   }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../common/enum/load_status.dart';
+import '../../http/auth/google_login.dart';
 import '../../model/login.dart';
 import '../../http/API.dart';
 
@@ -10,20 +13,22 @@ import '../../widget/tabBar_view.dart';
 import 'login_cubit.dart';
 class LoginScreen extends StatelessWidget {
   static const String route = "LoginScreen";
-
+  final authService = AuthService();
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LoginCubit(context.read<API>()),
-      child: Page(),
+      child: Page(auth: authService),
     );
   }
 }
 
 class Page extends StatelessWidget {
+  final AuthService auth;
+
+  Page({Key? key, required this.auth}) : super(key: key);
   String _username = "";
   String _password = "";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,7 +157,8 @@ class Page extends StatelessWidget {
           children: [
             _buildSocialLoginButton(Icons.facebook, Colors.blue),
             const SizedBox(width: 20),
-            _buildSocialLoginButton(Icons.g_mobiledata, Colors.red),
+            _buildGoogleLoginButton('assets/icons/google_48.svg', Colors.white, auth,
+              context,),
             const SizedBox(width: 20),
             _buildSocialLoginButton(Icons.clear, Colors.black),
           ],
@@ -161,7 +167,7 @@ class Page extends StatelessWidget {
     );
   }
 
-  Widget _buildSocialLoginButton(IconData icon, Color color) {
+  Widget _buildSocialLoginButton(IconData icon, Color color,) {
     return IconButton(
       onPressed: () {},
       icon: Icon(icon, color: Colors.white),
@@ -174,4 +180,21 @@ class Page extends StatelessWidget {
       ),
     );
   }
+}
+Widget _buildGoogleLoginButton(String assetPath, Color backgroundColor, AuthService authService,
+    BuildContext context,) {
+  return RawMaterialButton(
+    onPressed: () {
+       authService.signInWithGoogle();
+    },
+    elevation: 2.0,
+    fillColor: backgroundColor,
+    padding: const EdgeInsets.all(14.0),
+    shape: const CircleBorder(),
+    child: SvgPicture.asset(
+      assetPath,
+      width: 24,
+      height: 24,
+    ),
+  );
 }

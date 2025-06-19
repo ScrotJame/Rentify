@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rentify/http/API_implements.dart';
 import 'package:rentify/http/log/log.dart';
@@ -61,6 +62,7 @@ class SimpleBlocObserver extends BlocObserver {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Log log = LogImplement();
+  await Firebase.initializeApp();
   Bloc.observer = SimpleBlocObserver(log);
   runApp(
     RepositoryProvider<Log>.value(

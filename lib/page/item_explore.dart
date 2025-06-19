@@ -50,7 +50,7 @@ class AirbnbExploreItem2 extends StatelessWidget {
   }
   factory AirbnbExploreItem2.fromAllPropertyByOwner(AllPropertyByOwner property) {
     return AirbnbExploreItem2(
-      id: property.id!,
+      id: property.id,
       imageUrl: property.image.isNotEmpty
           ? property.image.first.imageUrl
           : 'https://encrypted-tbn0.gstatic.com/images?q=tbniGTPGbuIGw19IKId0kGKreJbLPkccOMJ0NFU5A&s',
@@ -114,9 +114,31 @@ class AirbnbExploreItem2 extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        if (status != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              '$status',
+                              style: TextStyle(
+                                color: getStatusColor(status),
+                                fontWeight: FontWeight.w600,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                      ],
+                    ),
                     SizedBox(height: 5),
                     Text(location, style: TextStyle(color: Colors.grey)),
                     SizedBox(height: 5),
@@ -137,5 +159,18 @@ class AirbnbExploreItem2 extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+Color getStatusColor(String? status) {
+  switch (status) {
+    case 'available':
+      return Colors.green;
+    case 'pending':
+      return Colors.orange;
+    case 'rented':
+      return Colors.red;
+    default:
+      return Colors.grey;
   }
 }
