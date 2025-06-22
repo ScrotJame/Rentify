@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/morewidget/widText.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:rentify/page/moreamenities/more_amenities_page.dart';
 import '../../http/API.dart';
-import '../../widget/booking/booking_bar.dart';
-import '../../widget/booking/booking_cubit.dart';
+import '../booking/booking_bar.dart';
+import '../booking/booking_cubit.dart';
 import '../owner.dart';
-
 import '../viewing/date_cubit.dart';
-import '../viewing/viewings_page.dart';
 import 'detail_cubit.dart';
-import '../../../http/API.dart';
 import 'package:http/http.dart' as http;
 import 'dart:typed_data';
 

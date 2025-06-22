@@ -11,7 +11,7 @@ import '../page/user/user_page.dart';
 //import '../page/user/profile_page.dart';
 
 
-class PageMain extends StatelessWidget { // Callback để thông báo khi chọn tab
+class PageMain extends StatelessWidget {
   static const String route= '/pagemain';
   PageMain({
     super.key,

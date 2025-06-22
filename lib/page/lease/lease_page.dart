@@ -83,7 +83,7 @@ class LeaseBody extends StatelessWidget {
             },
           );
         } else if (state is LeaseError) {
-          return Center(child: Text('Lỗi: ${state.message}'));
+          return Center(child: Text('Bạn chưa đặt phòng'));
         } else {
           return const Center(child: Text('Chưa có dữ liệu'));
         }

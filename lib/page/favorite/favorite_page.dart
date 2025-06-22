@@ -50,7 +50,7 @@ class FavoriteBody extends StatelessWidget {
             },
           );
         } else if (state is FavoriteError) {
-          return Center(child: Text('Lỗi: ${state.error}'));
+          return Center(child: Text('Hãy chọn phòng bạn thích'));
         }
         return const Center(child: Text('Nhấn để tải danh sách yêu thích'));
       },

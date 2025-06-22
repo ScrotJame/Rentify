@@ -941,7 +941,7 @@ class API_implements implements API {
   }
 
   @override
-  Future<List<AllPropertyByOwner>> getAllPropertyByOwner() async {
+  Future<List<AllPropertyByOwner>> getAllPropertyByOwner({String status = 'all'}) async {
     await delay();
 
     final prefs = await SharedPreferences.getInstance();
@@ -953,14 +953,13 @@ class API_implements implements API {
     }
 
     try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/properties/user'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
+      final uri = Uri.parse('$baseUrl/landlord/properties/status').replace(queryParameters: {
+        if (status != 'all') 'status': status });
+
+        final response = await http.get(uri, headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+        });
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);

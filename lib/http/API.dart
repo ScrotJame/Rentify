@@ -18,7 +18,7 @@ abstract class API{
   Future<List<AllProperty>> getAllProperty();
   Future<DetailProperty> getProperty(int userId);
   Future<List<Amenity>> getAmenitiesProperty(int userId);
-  Future<List<AllPropertyByOwner>> getAllPropertyByOwner();
+  Future<List<AllPropertyByOwner>> getAllPropertyByOwner({String status});
 
   Future<List<ResultProperty>> searchProperties(String keyword, {int? tenant,
     int? totalRooms});

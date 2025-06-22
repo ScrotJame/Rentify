@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rentify/morewidget/widText.dart';
-import 'package:flutter_svg/svg.dart'; // Đã có
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:rentify/page/item_explore.dart';
-import 'package:rentify/page/moreamenities/more_amenities_page.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:rentify/page/moreamenities/moreamenities_cubit.dart';
-import '../../../model/propertities.dart';
-import '../../widget/booking/booking_bar.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-
 import '../../http/API.dart';
-import '../detail/detail_cubit.dart';
 
 class UtilitiesPage extends StatelessWidget {
   final int? id; // Đổi thành required để tránh null
