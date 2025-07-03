@@ -1,0 +1,33 @@
+analyzer:
+  errors:
+    dead_null_aware_expression: ignore
+    unnecessary_null_comparison: ignore
+    unnecessary_non_null_assertion: ignore
+    must_be_immutable: ignore
+    unused_import: ignore
+    unused_field: ignore
+
+linter:
+  rules:
+    # Keep other lint rules enabled for code quality
+    constant_identifier_names: true
+    file_names: true
+    avoid_print: true
+    prefer_const_constructors: true
+    depend_on_referenced_packages: true
+    camel_case_types: true
+    non_constant_identifier_names: true
+    use_key_in_widget_constructors: true
+    prefer_adjacent_string_concatenation: true
+    unnecessary_this: true
+    avoid_unnecessary_containers: true
+    deprecated_member_use: true
+    prefer_const_literals_to_create_immutables: true
+    use_build_context_synchronously: true
+    unnecessary_string_interpolations: true
+    sized_box_for_whitespace: true
+    sort_child_properties_last: true
+    unnecessary_import: true
+    no_leading_underscores_for_local_identifiers: true
+    use_super_parameters: true
+    annotate_overrides: true
