@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:rentify/model/pay/paymentAccounts.dart';
 class AllPayment {
   String message;

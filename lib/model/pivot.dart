@@ -1,4 +1,3 @@
-import 'dart:convert';
 class Pivot {
   int propertyId;
   int amenityId;

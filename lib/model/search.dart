@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:rentify/model/propertities.dart';
 
 class SreachProperty {

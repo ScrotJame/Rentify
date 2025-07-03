@@ -3,8 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../http/API.dart';
 import '../../../model/pay/paymentAccounts.dart';
-import 'package:flutter/foundation.dart' show listEquals;
-import '../../../model/pay/paymentAccounts.dart';
 part 'payment_state.dart';
 
 class PaymentCubit extends Cubit<PaymentState> {

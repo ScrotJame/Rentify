@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/http/API.dart';
 import 'package:rentify/page/viewing/payment/payment_cubit.dart';
-import 'package:rentify/page/viewing/payment/payment_page.dart';
 import 'package:rentify/page/viewing/payment/select_payment.dart';
 import 'package:rentify/page/viewing/viewing_cubit.dart';
 import 'package:rentify/model/propertities.dart';

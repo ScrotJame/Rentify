@@ -14,7 +14,7 @@ class DetailCubit extends Cubit<DetailState> {
     try {
       final property = await api.getProperty(id);
       emit(state.copyWith(property: property, isLoading: false));
-    } catch (e, stackTrace) {
+    } catch (e) {
       emit(state.copyWith(error: e.toString(), isLoading: false));
     }
   }

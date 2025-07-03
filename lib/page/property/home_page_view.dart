@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rentify/page/property/property_cubit.dart';
 import '../../http/API.dart';
-import '../../main_cubit.dart';
 import '../../widget/Properties_list.dart';
-import '../../widget/header_bar.dart';
-import 'package:rentify/page/detail/detailpage.dart';
-import 'package:rentify/page/item_explore.dart';
 
 class HomePageView extends StatelessWidget {
 

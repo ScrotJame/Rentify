@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../../http/API.dart';
 import '../../../widget/Properties_list.dart';
 import '../../../widget/custom_nav_bar.dart';
 import '../../../widget/header_bar.dart';
 import '../../property/property_cubit.dart';
+import '../room_management/room_management_page.dart';
 
 class RoomManagerPage extends StatelessWidget {
   static const String route= '/roommanager';
@@ -82,96 +82,101 @@ Widget ContainerRoom(BuildContext context){
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-             Row(
-               mainAxisSize: MainAxisSize.max,
-               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               crossAxisAlignment: CrossAxisAlignment.start,
-               children: [
-                 Expanded(
-                     child:Column(
-                       mainAxisSize: MainAxisSize.max,
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                     children: [
-                       Row(
+              InkWell(
+               onTap: () {
+                 Navigator.pushNamed(context, RoomManagementPage.route);
+                 }
+               ,child: Row(
+                 mainAxisSize: MainAxisSize.max,
+                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                   Expanded(
+                       child:Column(
                          mainAxisSize: MainAxisSize.max,
-                         children: [
-                           Text('Title room',
-                           style: TextStyle(
-                               fontWeight: FontWeight.bold,
-                               fontSize: 26),
-                           ),
-                           SizedBox(width: 10),
-                           Container(
-                             height: 24,
-                             decoration: BoxDecoration(
-                               color: const Color(0xFF96705B),// mau theo status
-                               borderRadius: BorderRadius.circular(12),
+                         crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         Row(
+                           mainAxisSize: MainAxisSize.max,
+                           children: [
+                             Text('Title room',
+                             style: TextStyle(
+                                 fontWeight: FontWeight.bold,
+                                 fontSize: 26),
                              ),
-                             child:
-                             Align(
-                               alignment: AlignmentDirectional(0, 0),
-                               child: Padding(
-                                   padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
-                                 child: 
-                                 Text('status',
-                                   style: TextStyle(
-                                     fontWeight: FontWeight.bold,
-                                     fontSize: 16,
-                                   color: const Color(0xFFFFFFFF),
+                             SizedBox(width: 10),
+                             Container(
+                               height: 24,
+                               decoration: BoxDecoration(
+                                 color: const Color(0xFF96705B),// mau theo status
+                                 borderRadius: BorderRadius.circular(12),
+                               ),
+                               child:
+                               Align(
+                                 alignment: AlignmentDirectional(0, 0),
+                                 child: Padding(
+                                     padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                                   child: 
+                                   Text('status',
+                                     style: TextStyle(
+                                       fontWeight: FontWeight.bold,
+                                       fontSize: 16,
+                                     color: const Color(0xFFFFFFFF),
+                                     ),
                                    ),
                                  ),
                                ),
                              ),
-                           ),
-                         ],
+                           ],
+                         ),
+                         Padding(
+                           padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                           child: Text('Price',
+                             style: TextStyle(
+                               fontWeight: FontWeight.bold,
+                               fontSize: 16,
+                               color: const Color(0xFF000000),
+                             ),),
+                         ),
+                         Padding(
+                           padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                           child: Text('Service cost',
+                             style: TextStyle(
+                               fontWeight: FontWeight.bold,
+                               fontSize: 16,
+                               color: const Color(0xFF000000),
+                             ),),
+                         ),
+                       ],
                        ),
-                       Padding(
-                         padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                         child: Text('Price',
-                           style: TextStyle(
-                             fontWeight: FontWeight.bold,
-                             fontSize: 16,
-                             color: const Color(0xFF000000),
-                           ),),
-                       ),
-                       Padding(
-                         padding: EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                         child: Text('Service cost',
-                           style: TextStyle(
-                             fontWeight: FontWeight.bold,
-                             fontSize: 16,
-                             color: const Color(0xFF000000),
-                           ),),
-                       ),
-                     ],
+                   ),
+                   //more action
+                   Container(
+                     width: 36,
+                     height: 36,
+                     decoration: BoxDecoration(
+                       shape: BoxShape.circle,
+                       color: Colors.white,
+                       boxShadow: [
+                         BoxShadow(
+                           color: Colors.grey.withOpacity(0.5),
+                           spreadRadius: 1,
+                           blurRadius: 3,
+                         ),
+                       ],
                      ),
-                 ),
-                 //more action
-                 Container(
-                   width: 36,
-                   height: 36,
-                   decoration: BoxDecoration(
-                     shape: BoxShape.circle,
-                     color: Colors.white,
-                     boxShadow: [
-                       BoxShadow(
-                         color: Colors.grey.withOpacity(0.5),
-                         spreadRadius: 1,
-                         blurRadius: 3,
-                       ),
-                     ],
+                     child: IconButton(
+                       icon: Icon(Icons.more_vert, size: 20),
+                       onPressed: () {
+                         // Xử lý khi nhấn
+                       },
+                       padding: EdgeInsets.zero,
+                       splashRadius: 20,
+                     ),
                    ),
-                   child: IconButton(
-                     icon: Icon(Icons.more_vert, size: 20),
-                     onPressed: () {
-                       // Xử lý khi nhấn
-                     },
-                     padding: EdgeInsets.zero,
-                     splashRadius: 20,
-                   ),
-                 ),
-               ],
-
+                 ],
+               
+               ),
              ),
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
@@ -246,7 +251,7 @@ Widget ContainerRoom(BuildContext context){
                               ),
                             ]
                           ),
-                          SizedBox(width: 26),
+                          SizedBox(width: 16),
                           Column(
                               mainAxisSize: MainAxisSize.max,
                               children: [
@@ -287,11 +292,11 @@ Widget ContainerRoom(BuildContext context){
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orangeAccent,
-                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50),
                             ),
-                            elevation: 2,
+                            elevation: 3,
                           ),
                           onPressed: () {
                             print('Button pressed ...');
@@ -299,7 +304,7 @@ Widget ContainerRoom(BuildContext context){
                           child: Text(
                             "Nhắn tin",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
                             ),
@@ -307,13 +312,27 @@ Widget ContainerRoom(BuildContext context){
                         ),
                       ],
                     ),
-                    Text(
-                      "Số tháng còn lại",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Text(
+                          "Số tháng còn lại",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+                        Text(
+                          "11 tháng",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ]
                     ),
                   ],
                 ),

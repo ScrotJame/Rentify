@@ -1,5 +1,3 @@
-import 'pay/paymentAccounts.dart';
-
 class Bookings {
   String message;
   List<Viewing> data;

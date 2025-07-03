@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../common/enum/load_status.dart';
-import '../../../model/login.dart';
 import '../../../http/API.dart';
-
-import '../../../widget/noti_bar.dart';
-import '../../../widget/tabBar_view.dart';
 import '../login_cubit.dart';
 class RegisterScreen extends StatelessWidget {
   static const String route = "/register";

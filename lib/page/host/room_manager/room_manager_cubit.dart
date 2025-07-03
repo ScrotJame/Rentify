@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:dio/dio.dart';
-
 import '../../../http/API.dart';
 import '../../../model/propertities.dart';
 

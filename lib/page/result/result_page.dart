@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rentify/model/propertities.dart';
-import '../../http/API.dart';
 import '../detail/detail_cubit.dart';
 import '../detail/detailpage.dart';
 import '../item_explore.dart';

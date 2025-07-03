@@ -3,78 +3,128 @@ import 'package:flutter/material.dart';
 class CustomBottomNavBar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTabSelected;
+  final List<BottomNavigationBarItem> items;
+  final Color? backgroundColor;
+  final Color? selectedItemColor;
+  final Color? unselectedItemColor;
+  final double? selectedFontSize;
+  final double? unselectedFontSize;
+  final double? iconSize;
+  final BottomNavigationBarType type;
+  final bool showSelectedLabels;
+  final bool showUnselectedLabels;
 
   const CustomBottomNavBar({
     Key? key,
     required this.selectedIndex,
     required this.onTabSelected,
+    required this.items,
+    this.backgroundColor,
+    this.selectedItemColor,
+    this.unselectedItemColor,
+    this.selectedFontSize = 12.0,
+    this.unselectedFontSize = 10.0,
+    this.iconSize = 24.0,
+    this.type = BottomNavigationBarType.fixed,
+    this.showSelectedLabels = true,
+    this.showUnselectedLabels = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        // Nền bar bo tròn
-        Container(
-          margin: const EdgeInsets.only(bottom: 20),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          height: 60,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildIcon(Icons.bar_chart, 0),
-              _buildIcon(Icons.message, 1),
-              const SizedBox(width: 50), // khoảng cho nút trung tâm
-              _buildIcon(Icons.group, 3),
-            ],
-          ),
-        ),
+    final theme = Theme.of(context);
+    final effectiveBackgroundColor = backgroundColor ?? theme.bottomNavigationBarTheme.backgroundColor ?? Colors.white;
+    final effectiveSelectedItemColor = selectedItemColor ?? theme.bottomNavigationBarTheme.selectedItemColor ?? theme.primaryColor;
+    final effectiveUnselectedItemColor = unselectedItemColor ?? theme.bottomNavigationBarTheme.unselectedItemColor ?? Colors.grey;
 
-        // Nút Home trung tâm nổi bật
-        Positioned(
-          bottom: 40,
-          child: GestureDetector(
-            onTap: () => onTabSelected(2),
-            child: Container(
-              height: 60,
-              width: 60,
-              decoration: BoxDecoration(
-                color: Colors.orange,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: const Icon(Icons.home, color: Colors.white, size: 30),
-            ),
+    return Container(
+      height: 60,
+      decoration: BoxDecoration(
+        color: effectiveBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            offset: const Offset(0, -2),
+            blurRadius: 8,
           ),
-        ),
-      ],
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: items.asMap().entries.map((entry) {
+          final index = entry.key;
+          final item = entry.value;
+          final isSelected = index == selectedIndex;
+
+          return Expanded(
+            child: _buildNavigationItem(
+              item,
+              index,
+              isSelected,
+              effectiveSelectedItemColor,
+              effectiveUnselectedItemColor,
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 
-  Widget _buildIcon(IconData icon, int index) {
-    final isSelected = index == selectedIndex;
-    return GestureDetector(
+  Widget _buildNavigationItem(
+      BottomNavigationBarItem item,
+      int index,
+      bool isSelected,
+      Color selectedColor,
+      Color unselectedColor,
+      ) {
+    final color = isSelected ? selectedColor : unselectedColor;
+    final fontSize = isSelected ? selectedFontSize! : unselectedFontSize!;
+
+    return InkWell(
       onTap: () => onTabSelected(index),
-      child: Icon(
-        icon,
-        color: isSelected ? Colors.orange : Colors.orange[200],
-        size: 28,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Icon
+            Container(
+              padding: const EdgeInsets.all(2),
+              child: isSelected && item.activeIcon != null
+                  ? IconTheme(
+                data: IconThemeData(
+                  color: color,
+                  size: iconSize,
+                ),
+                child: item.activeIcon!,
+              )
+                  : IconTheme(
+                data: IconThemeData(
+                  color: color,
+                  size: iconSize,
+                ),
+                child: item.icon,
+              ),
+            ),
+
+            // Label
+            if ((isSelected && showSelectedLabels) || (!isSelected && showUnselectedLabels))
+              Container(
+                margin: const EdgeInsets.only(top: 2),
+                child: Text(
+                  item.label ?? '',
+                  style: TextStyle(
+                    color: color,
+                    fontSize: fontSize,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

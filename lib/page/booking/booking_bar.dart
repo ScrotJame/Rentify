@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rentify/model/pay/paymentAccounts.dart';
 import '../../model/propertities.dart';
 import '../../page/viewing/viewings_page.dart';
 

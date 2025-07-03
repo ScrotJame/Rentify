@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
-import '../../common/enum/load_status.dart';
 import '../../http/auth/google_login.dart';
-import '../../model/login.dart';
 import '../../http/API.dart';
-
-import '../../widget/noti_bar.dart';
 import '../../widget/tabBar_view.dart';
 import 'login_cubit.dart';
 class LoginScreen extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 class Image {
   int propertyId;
   String imageUrl;
