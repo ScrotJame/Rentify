@@ -7,24 +7,25 @@ import '../../main_cubit.dart';
 import '../page/favorite/favorite_page.dart';
 import '../page/lease/lease_page.dart';
 import '../page/user/user_page.dart';
-
+import 'custom_nav_bar.dart';
 
 class PageMain extends StatelessWidget {
-  static const String route= '/pagemain';
+  static const String route = '/pagemain';
   PageMain({
     super.key,
   });
-  int selectedIndex =2;
+  int selectedIndex = 2;
+
+  @override
   Widget build(BuildContext context) {
-    return  BlocBuilder<MainCubit, MainState>(
+    return BlocBuilder<MainCubit, MainState>(
       builder: (context, state) {
         final pages = [
-          LeasePage(),//Hien thi lich dat
-          FavoritePage(),
-          HomePageView(), // Tab Home hiển thị HomePageView
-          Container(child: Text('Message-đang cập nhật')),
-          UserPage(),
-          //UserProfilePage(),
+          LeasePage(), // Tab 0: House
+          FavoritePage(), // Tab 1: Favorite
+          HomePageView(), // Tab 2: Explore (sẽ được kích hoạt bởi centerIcon)
+          Container(child: Text('Message-đang cập nhật')), // Tab 3: Messenger
+          UserPage(), // Tab 4: User
         ];
 
         return Scaffold(
@@ -45,22 +46,64 @@ class PageMain extends StatelessWidget {
             ],
           ),
           body: pages[state.selected.index], // Hiển thị tab theo selected
-          bottomNavigationBar: NavigationBar(
-            height: 55,
+          bottomNavigationBar: LodgeBottomNavBar(
             selectedIndex: state.selected.index,
-            destinations: const [
-              NavigationDestination(icon: Icon(Icons.home), label: 'House'),
-              NavigationDestination(icon: Icon(Icons.favorite),label: 'Favorite',),
-              NavigationDestination(icon: Icon(Icons.search), label: 'Explore'),
-              NavigationDestination(
-                icon: Badge(child: Icon(Icons.messenger), label: Text('1')),
-                label: 'Messenger',
-              ),
-              NavigationDestination(icon: Icon(Icons.account_circle_outlined), label: 'User'),
-            ],
-            onDestinationSelected: (int index) {
+            onTabSelected: (int index) {
               context.read<MainCubit>().changeTab(TabItem.values[index]);
             },
+            // Xử lý khi nhấn vào centerIcon (Tab Explore)
+            onCenterButtonPressed: () {
+              // Chuyển đến Tab 2 (Explore)
+              context.read<MainCubit>().changeTab(TabItem.values[2]);
+            },
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_outlined),
+                activeIcon: Icon(Icons.home),
+                label: 'House',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite_border),
+                activeIcon: Icon(Icons.favorite),
+                label: 'Favorite',
+              ),
+              // Tab 2: Explore - sẽ được thay thế bằng centerIcon
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search_outlined),
+                activeIcon: Icon(Icons.search),
+                label: 'Explore',
+              ),
+              // Tab 3: Messenger với Badge
+              BottomNavigationBarItem(
+                icon: Badge(
+                  label: Text('1'),
+                  child: Icon(Icons.messenger_outline),
+                ),
+                activeIcon: Badge(
+                  label: Text('1'),
+                  child: Icon(Icons.messenger),
+                ),
+                label: 'Messenger',
+              ),
+              // Tab 4: User
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle_outlined),
+                activeIcon: Icon(Icons.account_circle),
+                label: 'User',
+              ),
+            ],
+            backgroundColor: Colors.white,
+            selectedItemColor: const Color(0xFF96705B),
+            unselectedItemColor: Colors.grey,
+            centerButtonColor: const Color(0xFF96705B),
+            centerButtonSize: 60.0,
+            iconSize: 24.0,
+            // centerIcon đại diện cho Tab 2: Explore
+            centerIcon: Icon(
+              Icons.search_outlined,
+              color: Colors.white,
+              size: 30,
+            ),
           ),
         );
       },
@@ -76,6 +119,3 @@ class PageMainOwner extends StatelessWidget {
     return const Placeholder();
   }
 }
-
-
-
