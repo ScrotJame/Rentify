@@ -39,7 +39,7 @@ jobs:
       # Bước 6: Phân tích mã nguồn - chỉ fail nếu có lỗi thực sự
       - name: 🔎 Analyze Dart code (fail only on errors)
         run: |
-          flutter analyze > analyze.log
+          flutter analyze > analyze.log || true
           cat analyze.log
           if grep -q "error •" analyze.log; then
             echo "❌ Có lỗi nghiêm trọng (error) trong flutter analyze"
