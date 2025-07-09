@@ -39,7 +39,7 @@ class LodgeBottomNavBar extends StatelessWidget {
     final effectiveCenterButtonColor = centerButtonColor ?? const Color(0xFFFF6B4A);
 
     return Container(
-      height: 100,
+      height: 97,
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [

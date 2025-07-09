@@ -12,8 +12,8 @@ class FavoritePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const FavoriteBody(),
+    return const Scaffold(
+      body: FavoriteBody(),
     );
   }
 }
@@ -49,7 +49,7 @@ class FavoriteBody extends StatelessWidget {
             },
           );
         } else if (state is FavoriteError) {
-          return Center(child: Text('Hãy chọn phòng bạn thích'));
+          return const Center(child: Text('Hãy chọn phòng bạn thích'));
         }
         return const Center(child: Text('Nhấn để tải danh sách yêu thích'));
       },
@@ -131,7 +131,7 @@ class FavoriteCard extends StatelessWidget {
                 onTap: () {
                   context.read<FavoriteCubit>().toggleFavorite(property.id);
                 },
-                child: Icon(Icons.favorite, color: Colors.red, size: 26),
+                child: const Icon(Icons.favorite, color: Colors.red, size: 26),
 
               ),
             ),

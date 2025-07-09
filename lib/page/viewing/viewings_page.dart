@@ -29,9 +29,9 @@ class BookingPage extends StatelessWidget {
         BlocProvider<PaymentCubit>(create: (context) => PaymentCubit(context.read<API>()),),
       ],
       child: Scaffold(
-        backgroundColor: Color(0xFF96705B),
+        backgroundColor: const Color(0xFF96705B),
         appBar: AppBar(
-          backgroundColor: Color(0xFF96705B),
+          backgroundColor: const Color(0xFF96705B),
           elevation: 0,
           title: const Text(
             'Yêu cầu đặt phòng',
@@ -162,7 +162,7 @@ class BodyContain extends StatelessWidget {
               },
             ),
             const SizedBox(height: 20),
-            PaymentWidget(),
+            const PaymentWidget(),
             const SizedBox(height: 26),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

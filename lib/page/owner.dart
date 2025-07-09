@@ -20,13 +20,13 @@ class OwnerPage extends StatelessWidget {
       body: BlocBuilder<DetailCubit, DetailState>(
   builder: (context, state) {
     if (state.isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
     if (state.error != null) {
       return Center(child: Text('Lỗi: ${state.error}'));
     }
     if (state.property == null) {
-      return Center(child: Text('Không tìm thấy bất động sản'));
+      return const Center(child: Text('Không tìm thấy bất động sản'));
     }
     final property = state.property!;
     return SingleChildScrollView(
@@ -44,7 +44,7 @@ class OwnerPage extends StatelessWidget {
                     property.user.avatar,
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -52,7 +52,7 @@ class OwnerPage extends StatelessWidget {
                       children: [
                         Text(
                           property.user.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -60,11 +60,11 @@ class OwnerPage extends StatelessWidget {
                         _buildInfoItem(Icons.verified, "Verified"),
                       ],
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(Icons.star, color: Colors.yellow, size: 20),
-                        SizedBox(width: 4),
+                        const Icon(Icons.star, color: Colors.yellow, size: 20),
+                        const SizedBox(width: 4),
                         Text(
                           "Superhost",
                           style: TextStyle(
@@ -85,17 +85,17 @@ class OwnerPage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Mô tả về chủ nhà
             Text(
               property.user.name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
             property.user.bio??" ",
               style: TextStyle(
@@ -104,7 +104,7 @@ class OwnerPage extends StatelessWidget {
                 height: 1.5, // Khoảng cách dòng
               ),
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
 
             // Thông tin bổ sung
             Row(
@@ -114,7 +114,7 @@ class OwnerPage extends StatelessWidget {
                 _buildInfoItem(Icons.language, "English, French"),
               ],
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
 
             // Nút liên hệ
             SizedBox(
@@ -122,22 +122,22 @@ class OwnerPage extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Contacting Anna...")),
+                    const SnackBar(content: Text("Contacting Anna...")),
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   "Contact Host",
                   style: TextStyle(fontSize: 16),
                 ),
               ),
 
-            ), Divider(color: Colors.grey, thickness: 1),
+            ), const Divider(color: Colors.grey, thickness: 1),
           ],
         ),
       );
@@ -152,7 +152,7 @@ class OwnerPage extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, size: 20, color: Colors.grey[700]),
-        SizedBox(width: 4),
+        const SizedBox(width: 4),
         Text(
           text,
           style: TextStyle(fontSize: 14, color: Colors.grey[700]),
@@ -186,7 +186,7 @@ class OwnerWigget extends StatelessWidget{
                         color: Colors.grey.withOpacity(0.5),
                         spreadRadius: 2,
                         blurRadius: 7,
-                        offset: Offset(0, 10),
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
@@ -223,8 +223,8 @@ class OwnerWigget extends StatelessWidget{
             ),
             // Khoảng cách giữa Container và tên user
             const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Column(
 
               ),

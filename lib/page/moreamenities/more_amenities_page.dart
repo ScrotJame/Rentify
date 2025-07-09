@@ -35,13 +35,13 @@ class ListAmenities extends StatelessWidget {
     return BlocBuilder<MoreamenitiesCubit, MoreamenitiesState>(
       builder: (context, state) {
         if (state.isLoading) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         if (state.error != null) {
           return Center(child: Text('Lỗi: ${state.error}'));
         }
         if (state.amenities == null) {
-          return Center(child: Text('Không tìm thấy bất động sản'));
+          return const Center(child: Text('Không tìm thấy bất động sản'));
         }
         final property = state.amenities!;
     return SingleChildScrollView(
@@ -50,14 +50,14 @@ class ListAmenities extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Nơi này có",
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 12),
-            SizedBox(height: 8),
+            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             ...(state.amenities ?? []).map((amenity) {
-              if (amenity == null) return SizedBox.shrink();
+              if (amenity == null) return const SizedBox.shrink();
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Row(
@@ -68,18 +68,18 @@ class ListAmenities extends StatelessWidget {
                       width: 35,
                       height: 35,
                       color: Colors.black,
-                      placeholderBuilder: (context) => Icon(Icons.error, color: Colors.red),
+                      placeholderBuilder: (context) => const Icon(Icons.error, color: Colors.red),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Text(
                       amenity.nameAmenities ?? 'Không có tên',
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ],
                 ),
               );
             }).toList(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         ),
       ),

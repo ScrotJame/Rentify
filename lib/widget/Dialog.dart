@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 CupertinoAlertDialog dialog(String message, BuildContext context) {
   return CupertinoAlertDialog(
-  title: Text('Xác nhận hành động này ?'),
+  title: const Text('Xác nhận hành động này ?'),
     actions: [
       CupertinoDialogAction(
-        child: Text('Hủy'),
+        child: const Text('Hủy'),
         onPressed: () => Navigator.of(context).pop(),
       ),
       CupertinoDialogAction(
-        child: Text('Xác nhận'),
+        child: const Text('Xác nhận'),
         onPressed: () {
           // Xử lý hành động xác nhận ở đây
           Navigator.of(context).pop();

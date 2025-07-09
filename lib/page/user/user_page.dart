@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rentify/page/host/host.dart';
 import 'package:rentify/page/user/profile/profile_page.dart';
 import 'package:rentify/page/user/user_cubit.dart';
 
 import '../../http/API.dart';
+import '../../widget/tabBar_view.dart';
 import '../host/room_manager/room_manager_page.dart';
 import '../viewing/payment/payment_page.dart';
 
@@ -30,33 +32,33 @@ class UserProfileBody extends StatelessWidget {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, state) {
         if (state.isLoading) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
         if (state.error != null) {
           return Center(child: Text('Lỗi: ${state.error}'));
         }
         if (state.userCb == null) {
-          return Center(child: Text('Không tìm thấy bất động sản'));
+          return const Center(child: Text('Không tìm thấy bất động sản'));
         }
         final user = state.userCb!;
         return SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildProfileHeader(context, user),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildSectionTitle("Settings"),
               _buildSettingWigdet(context),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildSectionTitle("Welcome tenant"),
               _buildWelcomeWigdet(context),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildSectionTitle("Supports"),
               _buildSupportsWigdet(context),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildSectionTitle("Legal"),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildLogoutButton(context),
             ],
           ),
@@ -81,12 +83,12 @@ class UserProfileBody extends StatelessWidget {
               user.avatar,
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(user.name,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               Text(user.phone ?? 'Chưa có số điện thoại', style: TextStyle(color: Colors.grey[600])),
             ],
           ),
@@ -118,7 +120,7 @@ class UserProfileBody extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: (){print("Đăng nhập và bảo mật được nhấn");},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
@@ -129,13 +131,13 @@ class UserProfileBody extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Divider(thickness: 0.5, color: Colors.grey),
+                    const Divider(thickness: 0.5, color: Colors.grey),
                     GestureDetector(
                       onTap: (){Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PaymentPage()),
+                        MaterialPageRoute(builder: (context) => const PaymentPage()),
                       );},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
@@ -180,7 +182,7 @@ class UserProfileBody extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: (){},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
@@ -191,12 +193,12 @@ class UserProfileBody extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Divider(thickness: 0.5, color: Colors.grey),
+                    const Divider(thickness: 0.5, color: Colors.grey),
                     GestureDetector(
                       onTap: (){
 
                       },
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
@@ -207,13 +209,13 @@ class UserProfileBody extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Divider(thickness: 0.5, color: Colors.grey),
+                    const Divider(thickness: 0.5, color: Colors.grey),
                     GestureDetector(
                       onTap: (){Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => RoomManagerPage()),
+                        MaterialPageRoute(builder: (context) => HostMain()),
                       );},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
@@ -258,8 +260,13 @@ class UserProfileBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
-                      onTap: (){},
-                      child: Row(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => PageMain()),
+                        );
+                      },
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
@@ -270,10 +277,10 @@ class UserProfileBody extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Divider(thickness: 0.5, color: Colors.grey),
+                    const Divider(thickness: 0.5, color: Colors.grey),
                     GestureDetector(
                       onTap: (){},
-                      child: Row(
+                      child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
@@ -297,7 +304,7 @@ class UserProfileBody extends StatelessWidget {
 
   Widget _buildSectionTitle(String title) {
     return Text(
-        title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
+        title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold));
   }
 
 

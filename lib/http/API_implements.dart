@@ -66,7 +66,6 @@ class API_implements implements API {
         };
       }
     } catch (e) {
-      print('Debug: Exception during login: $e');
       return {
         "success": false,
         "message": "An error occurred: $e"
@@ -81,7 +80,6 @@ class API_implements implements API {
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
-    print('Debug: Retrieved token from SharedPreferences: $token');
 
     if (token == null) {
       throw Exception('No token found. Please login first.');
@@ -126,8 +124,6 @@ class API_implements implements API {
     }
 
     try {
-      print(
-          'Debug: Sending GET request to $baseUrl/detailproperty/$userId with token: $token');
       final response = await http.get(
         Uri.parse('$baseUrl/detailproperty/$userId'),
         headers: {
@@ -175,26 +171,20 @@ class API_implements implements API {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
     try {
-      print(
-          'Debug: Sending GET request to $baseUrl/protities/$propertyId/amenities');
       final response = await http.get(
         Uri.parse('$baseUrl/protities/$propertyId/amenities'), headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },);
-
-      print('Debug: GetAmenitiesProperty response status: ${response
-          .statusCode}');
-      print('Debug: GetAmenitiesProperty response body: ${response.body}');
       log.i1('API_implements', 'GetAmenitiesProperty API Response: ${response
           .statusCode} - ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
-        print('Debug: Decoded amenities data length: ${data.length}');
+        log.i('API_implements','Debug: Decoded amenities data length: ${data.length}');
         return data.map((item) {
-          print('Debug: Parsing Amenity JSON: $item');
+          log.i1('API_implements','Debug: Parsing Amenity JSON: $item');
           return Amenity.fromJson(item as Map<String, dynamic>);
         }).toList();
       } else {
@@ -366,16 +356,13 @@ class API_implements implements API {
         if (data.isEmpty) {
           throw Exception('Không tìm thấy bất động sản');
         }
-        print('Debug: Before parsing DetailProperty');
         final user = User.fromJson(data);
-        print('Debug: After parsing profile: ${user.toJson()}');
         return user;
       } else {
         throw Exception(
             'Failed to load profile properties: ${response.statusCode}');
       }
     } catch (e) {
-      print('Debug: Exception in getProperty: $e');
       log.i('API_implements', 'Error fetching profile properties: $e');
       rethrow;
     }

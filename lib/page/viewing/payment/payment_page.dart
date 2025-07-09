@@ -112,7 +112,7 @@ class BodyPage extends StatelessWidget {
                     ),
                   );
                 },
-                child: Row(
+                child: const Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(Icons.add_circle_outline, color: Colors.black54, size: 15),

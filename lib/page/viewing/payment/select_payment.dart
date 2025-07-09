@@ -18,10 +18,10 @@ class SelectPaymentPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => ViewngCubit(context.read<API>())..fetchPaymentAccounts(),
       child: Scaffold(
-        backgroundColor: Color(0xFF96705B),
+        backgroundColor: const Color(0xFF96705B),
         appBar: AppBar(
-          backgroundColor: Color(0xFF96705B),
-          title: Text('Chọn tài khoản thanh toán'),
+          backgroundColor: const Color(0xFF96705B),
+          title: const Text('Chọn tài khoản thanh toán'),
         ),
         body: Stack(
           children: [

@@ -118,23 +118,23 @@ class RoomManagementBody extends StatelessWidget {
                     width: 1,
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
+                child: const Padding(
+                  padding: EdgeInsets.all(16),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         "Thông tin phòng",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                             fontSize: 20)
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Loại phòng: ",
+                          Text("Loại phòng: ",
                               style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16)
@@ -142,11 +142,11 @@ class RoomManagementBody extends StatelessWidget {
                           Text("data")
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Giá phòng: ",
+                          Text("Giá phòng: ",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16)
@@ -154,11 +154,11 @@ class RoomManagementBody extends StatelessWidget {
                           Text("data")
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Số người ở: ",
+                          Text("Số người ở: ",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16)
@@ -166,11 +166,11 @@ class RoomManagementBody extends StatelessWidget {
                           Text("data")
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Ngày nhận phòng: ",
+                          Text("Ngày nhận phòng: ",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16)
@@ -178,11 +178,11 @@ class RoomManagementBody extends StatelessWidget {
                           Text("data")
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("Thời gian thuê đến: ",
+                          Text("Thời gian thuê đến: ",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16)
@@ -244,8 +244,8 @@ class RoomManagementBody extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding:const EdgeInsets.all(6),
+                                  const Padding(
+                                    padding:EdgeInsets.all(6),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.max,
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -255,7 +255,7 @@ class RoomManagementBody extends StatelessWidget {
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16)
                                         ),
-                                        const SizedBox(height: 5),
+                                        SizedBox(height: 5),
                                         Row(
                                           children: [
                                             Text("Join in: ",
@@ -266,7 +266,7 @@ class RoomManagementBody extends StatelessWidget {
                                             Text("data")
                                           ],
                                         ),
-                                        const SizedBox(height: 5),
+                                        SizedBox(height: 5),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
@@ -299,7 +299,7 @@ class RoomManagementBody extends StatelessWidget {
           MaintenanceRequests(context),
           const SizedBox(height: 16),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -308,16 +308,16 @@ class RoomManagementBody extends StatelessWidget {
                 onPressed: (){
                   print("Nhan tin nhom");
                   },
-                  child: Text("Nhắn tin"),
+                  child: const Text("Nhắn tin"),
               ),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                 child: OutlinedButton(
                   onPressed: (){
                     print("Xem hop dong phong");
                   },
-                  child: Text("Xem hợp đồng"),
+                  child: const Text("Xem hợp đồng"),
                 ),
               ),
             ],
@@ -346,7 +346,7 @@ Widget PaymentHistory(BuildContext context){
             width: 1,
         ),
         ),
-        child: Padding(
+        child: const Padding(
           padding: EdgeInsets.all(16),
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -354,7 +354,7 @@ Widget PaymentHistory(BuildContext context){
             children: [
               Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
-                child: const Text("Lịch sử thanh toán",
+                child: Text("Lịch sử thanh toán",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20
@@ -422,9 +422,9 @@ Widget MaintenanceRequests(BuildContext context){
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(16),
-              child: const Text("Yêu cầu bảo trì",
+              child: Text("Yêu cầu bảo trì",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20
@@ -432,7 +432,7 @@ Widget MaintenanceRequests(BuildContext context){
               ),
             ),
             Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16, 0, 16, 16),
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 16),
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -443,21 +443,21 @@ Widget MaintenanceRequests(BuildContext context){
               ),
             ),
               child: Padding(
-                  padding: EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(12),
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Container(
                     width: 8,
                     height: 8,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.yellow,
                       shape: BoxShape.circle,
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.all(8),
+                        padding: EdgeInsets.all(8),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,

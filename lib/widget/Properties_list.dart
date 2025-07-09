@@ -10,7 +10,7 @@ import '../page/favorite/favorite_cubit.dart';
 class PropertyList extends StatelessWidget {
   final List<AllProperty> properties;
 
-  const PropertyList({Key? key, required this.properties}) : super(key: key);
+  const PropertyList({super.key, required this.properties});
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +45,12 @@ class PropertyList extends StatelessWidget {
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('ID không hợp lệ cho bất động sản này')),
+                    const SnackBar(content: Text('ID không hợp lệ cho bất động sản này')),
                   );
                 }
               },
-              child: AirbnbExploreItem2.fromAllProperty(property),
-              key: UniqueKey(), // Đảm bảo mỗi widget độc lập
+              key: UniqueKey(),
+              child: AirbnbExploreItem2.fromAllProperty(property), // Đảm bảo mỗi widget độc lập
             );
           },
           separatorBuilder: (BuildContext context, int index) {
@@ -65,7 +65,7 @@ class PropertyList extends StatelessWidget {
 class PropertyByOwnerList extends StatelessWidget {
   final List<AllPropertyByOwner> properties;
 
-  const PropertyByOwnerList({Key? key, required this.properties}) : super(key: key);
+  const PropertyByOwnerList({super.key, required this.properties});
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,7 @@ class PropertyByOwnerList extends StatelessWidget {
       },
       child: ListView.separated(
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.all(20),
         itemCount: properties.length,
         itemBuilder: (context, index) {
@@ -100,12 +100,12 @@ class PropertyByOwnerList extends StatelessWidget {
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('ID không hợp lệ cho bất động sản này')),
+                  const SnackBar(content: Text('ID không hợp lệ cho bất động sản này')),
                 );
               }
             },
-            child: AirbnbExploreItem2.fromAllPropertyByOwner(property),
             key: UniqueKey(),
+            child: AirbnbExploreItem2.fromAllPropertyByOwner(property),
           );
         },
         separatorBuilder: (BuildContext context, int index) {

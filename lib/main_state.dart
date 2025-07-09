@@ -1,6 +1,6 @@
 part of 'main_cubit.dart';
 
-class MainState {
+class MainState extends Equatable {
   final bool isLightTheme;
   final TabItem selected;
 
@@ -10,8 +10,8 @@ class MainState {
   });
 
   factory MainState.initial() => const MainState(
-    isLightTheme: true, // Mặc định theme sáng
-    selected: TabItem.Home, // Mặc định tab Home
+    isLightTheme: true,
+    selected: TabItem.home,
   );
 
   MainState copyWith({
@@ -25,20 +25,5 @@ class MainState {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          (other is MainState &&
-              runtimeType == other.runtimeType &&
-              isLightTheme == other.isLightTheme &&
-              selected == other.selected);
-
-  @override
-  int get hashCode => isLightTheme.hashCode ^ selected.hashCode;
-
-  @override
-  String toString() {
-    return 'MainState{isLightTheme: $isLightTheme, selected: $selected}';
-  }
+  List<Object?> get props => [isLightTheme, selected];
 }
-
-

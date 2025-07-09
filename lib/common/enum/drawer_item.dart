@@ -1,1 +1,1 @@
-enum TabItem { Travel, Favorite, Home, Message, User }
+enum TabItem { travel, favorite, home, message, user }

@@ -27,6 +27,7 @@ Route<dynamic>? mainRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => SearchPage());
 
     case ResultPage.route:
+    // ignore: prefer_const_constructors
       return MaterialPageRoute(builder: (context) => ResultPage());
 
     case DetailPage.route:

@@ -16,7 +16,7 @@ class ProfilePage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(),
-        body: SafeArea(
+        body: const SafeArea(
           child: BodyProfile(),
         ),
       ),
@@ -34,13 +34,13 @@ class BodyProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UserCubit, UserState>(
       builder: (context, state) {if (state.isLoading) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       }
       if (state.error != null) {
         return Center(child: Text('Lỗi: ${state.error}'));
       }
       if (state.userCb == null) {
-        return Center(child: Text('Không tìm thấy bất động sản'));
+        return const Center(child: Text('Không tìm thấy bất động sản'));
       }
       final user = state.userCb!;
         return SingleChildScrollView(
@@ -71,32 +71,32 @@ class BodyProfile extends StatelessWidget {
                             radius: 50,
                             backgroundImage: NetworkImage(user.avatar),
                           ),
-                          SizedBox(height: 10,),
+                          const SizedBox(height: 10,),
                           // Text(
                           //     user.roles.join(', ').toUpperCase(),
                           //   style: TextStyle(color: Colors.black),
                           // ),
                         ],
                       ),
-                      SizedBox(width: 50),
+                      const SizedBox(width: 50),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               user.name ?? "Unknown User",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 22, fontWeight: FontWeight
                                   .bold),
                             ),
-                            Divider(color: Colors.grey, thickness: 1),
+                            const Divider(color: Colors.grey, thickness: 1),
                             SelectableText(
                               "📞 ${user.phone ?? "N/A"}",
                               style: TextStyle(fontSize: 16, color: Colors
                                   .grey[700]),
                             ),
-                            Divider(color: Colors.grey, thickness: 1),
-                            Row(
+                            const Divider(color: Colors.grey, thickness: 1),
+                            const Row(
                               children: [
                                 Icon(Icons.star, color: Colors.amber, size: 20),
                                 Text("4.5 ", style: TextStyle(
@@ -110,18 +110,18 @@ class BodyProfile extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Bio
                 Text(
                   user.bio ?? "Chưa có mô tả",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 // Button Edit Profile
                 ElevatedButton(
                   onPressed: () {},
-                  child: Text("Chỉnh sửa hồ sơ"),
+                  child: const Text("Chỉnh sửa hồ sơ"),
                 ),
               ],
             ),

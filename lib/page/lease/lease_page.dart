@@ -14,7 +14,7 @@ class LeasePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return  BlocProvider(
   create: (context) => LeaseCubit(context.read<API>())..fetchLease(),
-  child: Scaffold(
+  child: const Scaffold(
     body: LeaseBody(),
     ),
 );
@@ -83,7 +83,7 @@ class LeaseBody extends StatelessWidget {
             },
           );
         } else if (state is LeaseError) {
-          return Center(child: Text('Bạn chưa đặt phòng'));
+          return const Center(child: Text('Bạn chưa đặt phòng'));
         } else {
           return const Center(child: Text('Chưa có dữ liệu'));
         }

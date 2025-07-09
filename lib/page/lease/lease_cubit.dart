@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../http/API.dart';
 import '../../model/viewing.dart';
@@ -17,14 +17,14 @@ class LeaseCubit extends Cubit<LeaseState> {
       print('Debug: Dữ liệu nhận được - ${leases.length} bookings');
 
       if (leases.isEmpty) {
-        emit(LeaseSuccess([]));
+        emit(const LeaseSuccess([]));
         print('Debug: Không có lịch đặt phòng nào.');
       } else {
         emit(LeaseSuccess(leases));
       }
     } catch (e) {
       print('Debug: Lỗi khi fetch lịch đặt phòng - $e');
-      emit(LeaseError('Lỗi khi lấy dữ liệu lịch đặt phòng.'));
+      emit(const LeaseError('Lỗi khi lấy dữ liệu lịch đặt phòng.'));
     }
   }
 

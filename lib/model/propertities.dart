@@ -5,7 +5,7 @@ import 'user.dart';
 class DetailProperty {
   int id;
   String title;
-  String description;
+  String? description;
   String location;
   String price;
   int bedrooms;
@@ -23,7 +23,7 @@ class DetailProperty {
   DetailProperty({
     required this.id,
     required this.title,
-    required this.description,
+    this.description,
     required this.location,
     required this.price,
     required this.bedrooms,

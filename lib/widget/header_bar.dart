@@ -13,7 +13,7 @@ class Search_Bar extends StatelessWidget {
     GestureDetector(
       onTap: () {  Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SearchPage(),),
+        MaterialPageRoute(builder: (context) => const SearchPage(),),
       ); },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -21,15 +21,15 @@ class Search_Bar extends StatelessWidget {
           color: Colors.grey,
     borderRadius: BorderRadius.circular(30.0),
         ),
-    child: Row(
+    child: const Row(
       children: [
-    const Expanded(
+    Expanded(
       child: Text(
         "Bạn muốn tìm gì ?",
         style: TextStyle(color: Colors.white70, fontSize: 11),
       ),
     ),
-        const Icon(Icons.location_on, color: Colors.white, size: 16),
+        Icon(Icons.location_on, color: Colors.white, size: 16),
       ],
     ),
       ),
@@ -45,11 +45,11 @@ class Search_Bar extends StatelessWidget {
 //host
 PreferredSizeWidget Add_Room_Bar(BuildContext context) {
   return PreferredSize(
-    preferredSize: Size.fromHeight(60),
+    preferredSize: const Size.fromHeight(60),
     child: Padding(
       padding: const EdgeInsets.fromLTRB(6, 10, 6, 6),
       child: AppBar(
-        // automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,
         actions: [
           // Thêm phòng
           IconButton(
@@ -57,7 +57,7 @@ PreferredSizeWidget Add_Room_Bar(BuildContext context) {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddRoomPage()),
+                MaterialPageRoute(builder: (context) => const AddRoomPage()),
               );
             },
           ),
