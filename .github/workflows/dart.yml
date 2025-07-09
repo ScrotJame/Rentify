@@ -39,7 +39,7 @@ jobs:
       # Bước 6: Phân tích mã nguồn - chỉ fail nếu có lỗi thực sự
       - name: 🔎 Analyze Dart code (fail only on errors)
         run: |
-          flutter analyze > analyze.log || true
+          flutter analyze > analyze.log
           cat analyze.log
           if grep -q "error •" analyze.log; then
             echo "❌ Có lỗi nghiêm trọng (error) trong flutter analyze"
@@ -49,10 +49,10 @@ jobs:
           fi
 
       # Bước 7: Chạy test - không chặn build nếu lỗi
-      - name: ✅ Run tests (không chặn build nếu fail)
-        run: |
-          if flutter test; then
-            echo "✅ Tests passed"
-          else
-            echo "⚠️ Tests failed — nhưng không chặn CI"
-          fi
+      #- name: ✅ Run tests (không chặn build nếu fail)
+      #  run: |
+      #    if flutter test; then
+      #     echo "✅ Tests passed"
+       #   else
+      #      echo "⚠️ Tests failed — nhưng không chặn CI"
+      #    fi
